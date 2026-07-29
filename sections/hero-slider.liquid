@@ -59,7 +59,7 @@
     {% if section.blocks.size > 1 %}
       <div class="hero-slider__controls">
         <div class="hero-slider__fraction" aria-live="polite">
-          <span data-hero-current>01</span>
+          <span data-hero-current>1</span>
           <span aria-hidden="true">/</span>
           <span data-hero-total>{{ section.blocks.size }}</span>
         </div>
@@ -134,9 +134,9 @@
   }
 
   .hero-slider__content {
-    align-self: center;
+    align-self: start;
     width: min(100%, 31rem);
-    padding: clamp(8rem, 19vh, 13.5rem) clamp(2rem, 3.9vw, 3.15rem) 5rem;
+    padding: clamp(12.5rem, 30vh, 14.5rem) clamp(2rem, 3.9vw, 3.15rem) 5rem;
   }
 
   .hero-slider__content--center {
@@ -322,8 +322,8 @@
 
       const updateControls = (swiper) => {
         const current = swiper.realIndex + 1;
-        if (currentElement) currentElement.textContent = String(current).padStart(2, '0');
-        if (totalElement) totalElement.textContent = String(slideCount).padStart(2, '0');
+        if (currentElement) currentElement.textContent = String(current);
+        if (totalElement) totalElement.textContent = String(slideCount);
         if (progressElement) progressElement.style.width = `${(current / slideCount) * 100}%`;
       };
 
