@@ -1,0 +1,43 @@
+<section class="blank-page">
+  <div class="blank-page__content">
+    <h1>{{ 'general.blank_theme.title' | t }}</h1>
+    <p>{{ 'general.blank_theme.message' | t }}</p>
+  </div>
+</section>
+
+{% style %}
+  .blank-page {
+    display: grid;
+    min-height: 100vh;
+    place-items: center;
+    padding: 2rem;
+    text-align: center;
+  }
+
+  .blank-page__content {
+    max-width: 40rem;
+  }
+
+  .blank-page h1 {
+    margin: 0 0 0.75rem;
+    font-size: clamp(2rem, 8vw, 4rem);
+  }
+
+  .blank-page p {
+    margin: 0;
+    color: #666666;
+    font-size: 1.125rem;
+  }
+{% endstyle %}
+
+{% schema %}
+{
+  "name": "t:sections.main_index.name",
+  "settings": [],
+  "presets": [
+    {
+      "name": "t:sections.main_index.name"
+    }
+  ]
+}
+{% endschema %}
