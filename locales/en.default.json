@@ -1,0 +1,13 @@
+{
+  "general": {
+    "blank_theme": {
+      "title": "Blank Shopify theme",
+      "message": "Start building your storefront here."
+    }
+  },
+  "sections": {
+    "main_index": {
+      "name": "Blank page"
+    }
+  }
+}
