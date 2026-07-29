@@ -8,5 +8,15 @@
   "buttons": {
     "previous_slide": "Previous slide",
     "next_slide": "Next slide"
+  },
+  "header": {
+    "primary_navigation": "Primary navigation",
+    "home": "Home",
+    "catalog": "Catalog",
+    "contact": "Contact",
+    "search_prompt": "What are you looking for?",
+    "search": "Search",
+    "account": "Account",
+    "cart": "Cart"
   }
 }
