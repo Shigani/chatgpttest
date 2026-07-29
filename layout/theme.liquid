@@ -27,7 +27,8 @@
       }
     </style>
   </head>
-  <body>
+  <body class="template-{{ template.name | handle }}">
+    {% section 'site-header' %}
     <main id="MainContent">
       {{ content_for_layout }}
     </main>
