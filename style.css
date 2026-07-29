@@ -1,0 +1,11 @@
+:root{
+  --bg: #0b0b0b;
+  --panel: #111;
+  --accent: #e6e6e6;
+}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial}
+body{display:flex;align-items:center;justify-content:center;background:linear-gradient(180deg,#050505,#0f0f0f);color:var(--accent)}
+.container{text-align:center}
+canvas{display:block;background:#000;border:4px solid rgba(255,255,255,0.08);box-shadow:0 8px 30px rgba(0,0,0,0.6);border-radius:6px}
+.info{margin-top:10px;color:rgba(230,230,230,0.85);font-size:14px}
