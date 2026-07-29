@@ -1,0 +1,29 @@
+{
+  "sections": {
+    "main_index": {
+      "name": "Blank page"
+    },
+    "hero_slider": {
+      "name": "Hero slider",
+      "slide": "Slide"
+    }
+  },
+  "labels": {
+    "height": "Section height",
+    "autoplay": "Automatically rotate slides",
+    "autoplay_delay": "Time between slides",
+    "image": "Image",
+    "eyebrow": "Eyebrow",
+    "heading": "Heading",
+    "button_label": "Button label",
+    "button_link": "Button link",
+    "alignment": "Content alignment"
+  },
+  "options": {
+    "alignment": {
+      "left": "Left",
+      "center": "Center",
+      "right": "Right"
+    }
+  }
+}
