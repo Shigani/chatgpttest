@@ -1,11 +1,39 @@
 {
   "sections": {
-    "main": {
-      "type": "main-index",
-      "settings": {}
+    "hero": {
+      "type": "hero-slider",
+      "blocks": {
+        "slide_one": {
+          "type": "slide",
+          "settings": {
+            "eyebrow": "New campaign",
+            "heading": "Softness in comfort",
+            "button_label": "Shop collection",
+            "alignment": "left"
+          }
+        },
+        "slide_two": {
+          "type": "slide",
+          "settings": {
+            "eyebrow": "Little moments",
+            "heading": "Wrapped in warmth",
+            "button_label": "Shop collection",
+            "alignment": "left"
+          }
+        }
+      },
+      "block_order": [
+        "slide_one",
+        "slide_two"
+      ],
+      "settings": {
+        "height": 760,
+        "autoplay": true,
+        "autoplay_delay": 5000
+      }
     }
   },
   "order": [
-    "main"
+    "hero"
   ]
 }
