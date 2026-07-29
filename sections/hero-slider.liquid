@@ -44,7 +44,11 @@
                 {% endif %}
               >
                 {{ block.settings.button_label | escape }}
-                <span aria-hidden="true">↗</span>
+                <span class="hero-slider__button-icon" aria-hidden="true">
+                  <svg viewBox="0 0 20 20" role="presentation">
+                    <path d="m7 5 5 5-5 5"></path>
+                  </svg>
+                </span>
               </a>
             {% endif %}
           </div>
@@ -65,11 +69,15 @@
         </div>
 
         <button class="hero-slider__arrow hero-slider__arrow--previous" type="button" aria-label="{{ 'buttons.previous_slide' | t }}">
-          <span aria-hidden="true">←</span>
+          <svg viewBox="0 0 20 20" aria-hidden="true">
+            <path d="m12 4-6 6 6 6"></path>
+          </svg>
         </button>
 
         <button class="hero-slider__arrow hero-slider__arrow--next" type="button" aria-label="{{ 'buttons.next_slide' | t }}">
-          <span aria-hidden="true">→</span>
+          <svg viewBox="0 0 20 20" aria-hidden="true">
+            <path d="m8 4 6 6-6 6"></path>
+          </svg>
         </button>
       </div>
     {% endif %}
@@ -81,7 +89,7 @@
     position: relative;
     min-height: min(var(--hero-height), 100svh);
     overflow: hidden;
-    background: #d8d6d0;
+    background: #c6c6c6;
     color: #ffffff;
   }
 
@@ -111,23 +119,24 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
+    filter: grayscale(1) contrast(0.72);
+    opacity: 0.42;
   }
 
   .hero-slider__placeholder {
-    background: #d8d6d0;
-    color: #a6a39b;
+    background: #c6c6c6;
+    color: #676767;
   }
 
   .hero-slider__overlay {
     z-index: -1;
-    background: linear-gradient(90deg, rgb(0 0 0 / 0.52), transparent 62%);
+    background: linear-gradient(90deg, rgb(118 118 118 / 0.24), transparent 58%);
   }
 
   .hero-slider__content {
-    align-self: end;
-    width: min(100%, 46rem);
-    padding: clamp(2rem, 5vw, 6rem);
-    padding-bottom: clamp(7rem, 11vw, 10rem);
+    align-self: center;
+    width: min(100%, 31rem);
+    padding: clamp(8rem, 19vh, 13.5rem) clamp(2rem, 3.9vw, 3.15rem) 5rem;
   }
 
   .hero-slider__content--center {
@@ -141,19 +150,19 @@
   }
 
   .hero-slider__eyebrow {
-    margin: 0 0 1rem;
-    font-size: 0.8rem;
+    margin: 0 0 1.75rem;
+    font-size: 0.9rem;
     font-weight: 700;
-    letter-spacing: 0.16em;
+    letter-spacing: 0;
     text-transform: uppercase;
   }
 
   .hero-slider__heading {
     margin: 0;
-    font-size: clamp(3rem, 7vw, 7rem);
-    font-weight: 650;
-    letter-spacing: -0.055em;
-    line-height: 0.92;
+    font-size: clamp(3.5rem, 5.1vw, 4.2rem);
+    font-weight: 750;
+    letter-spacing: -0.045em;
+    line-height: 1.2;
     text-wrap: balance;
   }
 
@@ -161,12 +170,12 @@
     display: inline-flex;
     align-items: center;
     justify-content: space-between;
-    min-width: 12rem;
-    margin-top: 2rem;
-    padding: 0.95rem 1.25rem;
+    min-width: 11.8rem;
+    margin-top: 1.85rem;
+    padding: 0.63rem 0.68rem 0.63rem 1.55rem;
     border-radius: 999px;
-    background: #ffffff;
-    color: #111111;
+    background: rgb(255 255 255 / 0.72);
+    color: #5d5d5d;
     font-size: 0.9rem;
     font-weight: 700;
     text-decoration: none;
@@ -175,36 +184,57 @@
 
   .hero-slider__button:hover {
     transform: translateY(-2px);
-    background: #f2f2f2;
+    background: #ffffff;
   }
 
   .hero-slider__button[aria-disabled="true"] {
     cursor: default;
   }
 
+  .hero-slider__button-icon {
+    display: grid;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    background: #666666;
+    color: #ffffff;
+    place-items: center;
+  }
+
+  .hero-slider__button-icon svg,
+  .hero-slider__arrow svg {
+    width: 1rem;
+    height: 1rem;
+    fill: none;
+    stroke: currentColor;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 2;
+  }
+
   .hero-slider__controls {
     position: absolute;
-    right: clamp(1rem, 4vw, 4rem);
-    bottom: clamp(1rem, 3vw, 2.5rem);
+    right: clamp(1.7rem, 3.4vw, 3.2rem);
+    bottom: clamp(1.6rem, 3vw, 2.25rem);
     z-index: 2;
     display: flex;
     align-items: center;
-    gap: 0.75rem;
+    gap: 0.85rem;
   }
 
   .hero-slider__fraction {
     display: flex;
     gap: 0.25rem;
-    min-width: 3.25rem;
-    font-size: 0.82rem;
+    min-width: 2.8rem;
+    font-size: 0.88rem;
     font-weight: 700;
   }
 
   .hero-slider__progress {
-    width: clamp(4rem, 8vw, 8rem);
+    width: clamp(5rem, 10vw, 8.75rem);
     height: 1px;
     overflow: hidden;
-    background: rgb(255 255 255 / 0.4);
+    background: rgb(255 255 255 / 0.22);
   }
 
   .hero-slider__progress span {
@@ -217,22 +247,20 @@
 
   .hero-slider__arrow {
     display: grid;
-    width: 2.75rem;
-    height: 2.75rem;
+    width: 1rem;
+    height: 2rem;
     padding: 0;
-    border: 1px solid rgb(255 255 255 / 0.55);
-    border-radius: 50%;
-    background: rgb(255 255 255 / 0.08);
+    border: 0;
+    background: transparent;
     color: #ffffff;
     cursor: pointer;
     font: inherit;
     place-items: center;
-    transition: background 180ms ease, color 180ms ease;
+    transition: opacity 180ms ease;
   }
 
   .hero-slider__arrow:hover {
-    background: #ffffff;
-    color: #111111;
+    opacity: 0.6;
   }
 
   .hero-slider__arrow:focus-visible,
@@ -243,11 +271,17 @@
 
   @media (max-width: 749px) {
     .hero-slider__overlay {
-      background: linear-gradient(0deg, rgb(0 0 0 / 0.58), transparent 72%);
+      background: linear-gradient(0deg, rgb(90 90 90 / 0.3), transparent 72%);
     }
 
     .hero-slider__content {
+      align-self: end;
       padding-bottom: 8.5rem;
+    }
+
+    .hero-slider__heading {
+      font-size: clamp(3rem, 14vw, 4rem);
+      line-height: 1.05;
     }
 
     .hero-slider__controls {
