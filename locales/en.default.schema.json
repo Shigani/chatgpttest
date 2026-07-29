@@ -6,9 +6,13 @@
     "hero_slider": {
       "name": "Hero slider",
       "slide": "Slide"
+    },
+    "site_header": {
+      "name": "Header"
     }
   },
   "labels": {
+    "menu": "Menu",
     "height": "Section height",
     "autoplay": "Automatically rotate slides",
     "autoplay_delay": "Time between slides",
