@@ -1,20 +1,23 @@
 {% assign theme_slide_count = section.blocks | where: 'type', '_hero-slide' | size %}
-{% assign legacy_slide_count = section.blocks | where: 'type', 'slide' | size %}
+{% assign legacy_content_count = 0 %}
+{% for block in section.blocks %}
+  {% if block.settings.eyebrow != blank or block.settings.heading != blank or block.settings.button_label != blank %}
+    {% assign legacy_content_count = legacy_content_count | plus: 1 %}
+  {% endif %}
+{% endfor %}
 
 <section
   class="hero-slider hero-slider--height-{{ section.settings.height }} hero-slider--container-{{ section.settings.container }} hero-slider--content-{{ section.settings.content_position }}{% if section.settings.header_overlay %} hero-slider--header-overlay{% endif %}{% if section.settings.allow_next_overlap %} hero-slider--overlap-next{% endif %}"
   data-hero-slider
-  data-slide-count="{% if theme_slide_count > 0 %}{{ theme_slide_count }}{% else %}{{ legacy_slide_count }}{% endif %}"
+  data-slide-count="{% if legacy_content_count > 0 %}{{ legacy_content_count }}{% else %}{{ theme_slide_count }}{% endif %}"
   data-autoplay="{{ section.settings.autoplay }}"
   data-autoplay-delay="{{ section.settings.autoplay_delay }}"
 >
   <div class="swiper hero-slider__swiper">
     <div class="swiper-wrapper">
-      {% if theme_slide_count > 0 %}
-        {% content_for 'blocks' %}
-      {% else %}
+      {% if legacy_content_count > 0 %}
         {% for block in section.blocks %}
-          {% if block.type == 'slide' %}
+          {% if block.settings.eyebrow != blank or block.settings.heading != blank or block.settings.button_label != blank %}
             <article class="swiper-slide hero-slider__slide" {{ block.shopify_attributes }}>
               <div class="hero-slider__media">
                 {% if block.settings.image != blank %}
@@ -60,15 +63,17 @@
             </article>
           {% endif %}
         {% endfor %}
+      {% else %}
+        {% content_for 'blocks' %}
       {% endif %}
     </div>
 
-    {% if theme_slide_count > 1 or legacy_slide_count > 1 %}
+    {% if legacy_content_count > 1 or theme_slide_count > 1 %}
       <div class="hero-slider__controls hero-slider__controls--{{ section.settings.control_alignment }}">
         <div class="hero-slider__fraction" aria-live="polite">
           <span data-hero-current>1</span>
           <span aria-hidden="true">/</span>
-          <span data-hero-total>{% if theme_slide_count > 0 %}{{ theme_slide_count }}{% else %}{{ legacy_slide_count }}{% endif %}</span>
+          <span data-hero-total>{% if legacy_content_count > 0 %}{{ legacy_content_count }}{% else %}{{ theme_slide_count }}{% endif %}</span>
         </div>
 
         <div class="hero-slider__progress" aria-hidden="true">
