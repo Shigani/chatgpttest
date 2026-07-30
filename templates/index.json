@@ -22,17 +22,26 @@
             "alignment": "left"
           },
           "blocks": {
-            "hero_eyebrow_Rhhtmz": {
-              "type": "_hero-eyebrow",
+            "hero_heading_68JHEp": {
+              "type": "_hero-heading",
+              "name": "t:blocks.hero_text.name",
               "settings": {
-                "text": "New campaign"
+                "text": "<p>NEW CAMPAIGN</p>",
+                "preset": "custom",
+                "custom_font": "assistant_n4",
+                "font_weight": "750",
+                "font_size": 15,
+                "font_size_mobile": 15,
+                "line_height": "1.2",
+                "color": "white",
+                "disable_mobile_break": false
               },
               "blocks": {}
             },
             "hero_heading_wQVNgA": {
               "type": "_hero-heading",
               "settings": {
-                "text": "<p>Softness</p><p>in comfort</p>",
+                "text": "<p>Softness<br/>in Comfort</p>",
                 "preset": "custom",
                 "custom_font": "assistant_n4",
                 "font_weight": "750",
@@ -54,7 +63,7 @@
             }
           },
           "block_order": [
-            "hero_eyebrow_Rhhtmz",
+            "hero_heading_68JHEp",
             "hero_heading_wQVNgA",
             "hero_button_Qd3KFJ"
           ]
@@ -69,17 +78,26 @@
             "alignment": "left"
           },
           "blocks": {
-            "hero_eyebrow_jhQCgA": {
-              "type": "_hero-eyebrow",
+            "hero_heading_twc6EB": {
+              "type": "_hero-heading",
+              "name": "t:blocks.hero_text.name",
               "settings": {
-                "text": "New campaign"
+                "text": "<p>LITTLE MOMENTS</p>",
+                "preset": "custom",
+                "custom_font": "assistant_n4",
+                "font_weight": "750",
+                "font_size": 15,
+                "font_size_mobile": 15,
+                "line_height": "1.2",
+                "color": "white",
+                "disable_mobile_break": false
               },
               "blocks": {}
             },
             "hero_heading_8Jf8fx": {
               "type": "_hero-heading",
               "settings": {
-                "text": "<p>Softness<br/>in comfort</p>",
+                "text": "<p>Wrapped<br/>in Warmth</p>",
                 "preset": "custom",
                 "custom_font": "assistant_n4",
                 "font_weight": "750",
@@ -101,7 +119,7 @@
             }
           },
           "block_order": [
-            "hero_eyebrow_jhQCgA",
+            "hero_heading_twc6EB",
             "hero_heading_8Jf8fx",
             "hero_button_NU4tWJ"
           ]
@@ -117,10 +135,10 @@
         "content_position": "inside",
         "header_overlay": true,
         "allow_next_overlap": true,
-        "autoplay": true,
+        "autoplay": false,
         "autoplay_delay": 5000,
         "control_type": "progress_text",
-        "control_alignment": "left"
+        "control_alignment": "right"
       }
     }
   },
