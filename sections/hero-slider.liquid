@@ -257,7 +257,7 @@
     width: 50%;
     height: 100%;
     background: #ffffff;
-    transition: width 500ms ease;
+    transition: width var(--hero-progress-duration, 500ms) linear;
   }
 
   .hero-slider__arrow {
@@ -337,12 +337,32 @@
 
       if (!Number.isFinite(slideCount) || slideCount < 1) return;
 
+      const restartProgress = () => {
+        if (!progressElement) return;
+
+        progressElement.style.setProperty(
+          '--hero-progress-duration',
+          autoplayEnabled && autoplayDelay > 0 ? `${autoplayDelay}ms` : '0ms'
+        );
+        progressElement.style.width = '0%';
+
+        if (autoplayEnabled && autoplayDelay > 0) {
+          window.requestAnimationFrame(() => {
+            progressElement.style.width = '100%';
+          });
+        }
+      };
+
       const updateControls = (swiper) => {
         const currentIndex = Number(swiper.realIndex);
         const current = (Number.isFinite(currentIndex) ? currentIndex : 0) + 1;
         if (currentElement) currentElement.textContent = String(current);
         if (totalElement) totalElement.textContent = String(slideCount);
-        if (progressElement) progressElement.style.width = `${(current / slideCount) * 100}%`;
+        if (autoplayEnabled) {
+          restartProgress();
+        } else if (progressElement) {
+          progressElement.style.width = `${(current / slideCount) * 100}%`;
+        }
       };
 
       const options = {
