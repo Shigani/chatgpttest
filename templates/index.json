@@ -4,64 +4,20 @@
       "type": "hero-slider",
       "blocks": {
         "slide_one": {
-          "type": "_hero-slide",
-          "blocks": {
-            "eyebrow_one": {
-              "type": "_hero-eyebrow",
-              "settings": {
-                "text": "<p>New campaign</p>"
-              }
-            },
-            "heading_one": {
-              "type": "_hero-heading",
-              "settings": {
-                "text": "<p>Softness in comfort</p>"
-              }
-            },
-            "button_one": {
-              "type": "_hero-button",
-              "settings": {
-                "label": "Shop collection"
-              }
-            }
-          },
-          "block_order": [
-            "eyebrow_one",
-            "heading_one",
-            "button_one"
-          ],
+          "type": "slide",
           "settings": {
+            "eyebrow": "New campaign",
+            "heading": "<p>Softness in comfort</p>",
+            "button_label": "Shop collection",
             "alignment": "left"
           }
         },
         "slide_two": {
-          "type": "_hero-slide",
-          "blocks": {
-            "eyebrow_two": {
-              "type": "_hero-eyebrow",
-              "settings": {
-                "text": "<p>Little moments</p>"
-              }
-            },
-            "heading_two": {
-              "type": "_hero-heading",
-              "settings": {
-                "text": "<p>Wrapped in warmth</p>"
-              }
-            },
-            "button_two": {
-              "type": "_hero-button",
-              "settings": {
-                "label": "Shop collection"
-              }
-            }
-          },
-          "block_order": [
-            "eyebrow_two",
-            "heading_two",
-            "button_two"
-          ],
+          "type": "slide",
           "settings": {
+            "eyebrow": "Little moments",
+            "heading": "<p>Wrapped in warmth</p>",
+            "button_label": "Shop collection",
             "alignment": "left"
           }
         }
