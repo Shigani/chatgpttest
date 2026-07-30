@@ -53,9 +53,20 @@
     min-height: min(var(--hero-height), 100svh);
   }
 
+  .hero-slider__swiper {
+    width: 100%;
+    overflow: hidden;
+  }
+
+  .hero-slider__swiper .swiper-wrapper {
+    display: flex;
+  }
+
   .hero-slider__slide {
     position: relative;
     display: grid;
+    flex-shrink: 0;
+    width: 100%;
     isolation: isolate;
   }
 
@@ -271,12 +282,15 @@
       const currentElement = section.querySelector('[data-hero-current]');
       const totalElement = section.querySelector('[data-hero-total]');
       const progressElement = section.querySelector('[data-hero-progress]');
-      const slideCount = Number(section.dataset.slideCount);
+      const slideCount = Number.parseInt(section.dataset.slideCount, 10);
       const autoplayEnabled = section.dataset.autoplay === 'true';
       const autoplayDelay = Number(section.dataset.autoplayDelay);
 
+      if (!Number.isFinite(slideCount) || slideCount < 1) return;
+
       const updateControls = (swiper) => {
-        const current = swiper.realIndex + 1;
+        const currentIndex = Number(swiper.realIndex);
+        const current = (Number.isFinite(currentIndex) ? currentIndex : 0) + 1;
         if (currentElement) currentElement.textContent = String(current);
         if (totalElement) totalElement.textContent = String(slideCount);
         if (progressElement) progressElement.style.width = `${(current / slideCount) * 100}%`;
@@ -285,6 +299,7 @@
       const options = {
         effect: 'fade',
         loop: slideCount > 1,
+        slidesPerView: 1,
         speed: 800,
         navigation: {
           prevEl: previousButton,
