@@ -1,21 +1,21 @@
 {% if block.settings.text != blank %}
-  <p class="hero-slider__eyebrow" {{ block.shopify_attributes }}>{{ block.settings.text | escape }}</p>
+  <div class="hero-slider__eyebrow" {{ block.shopify_attributes }}>{{ block.settings.text }}</div>
 {% endif %}
 
 {% schema %}
 {
-  "name": "t:labels.eyebrow",
+  "name": "t:blocks.hero_text.name",
   "settings": [
     {
-      "type": "text",
+      "type": "richtext",
       "id": "text",
-      "label": "t:labels.eyebrow",
-      "default": "New campaign"
+      "label": "t:labels.text",
+      "default": "<p>New campaign</p>"
     }
   ],
   "presets": [
     {
-      "name": "t:labels.eyebrow"
+      "name": "t:blocks.hero_text.name"
     }
   ]
 }
