@@ -1,36 +1,67 @@
-/*
- * ------------------------------------------------------------
- * IMPORTANT: The contents of this file are auto-generated.
- *
- * This file may be updated by the Shopify admin theme editor
- * or related systems. Please exercise caution as any changes
- * made to this file may be overwritten.
- * ------------------------------------------------------------
- */
 {
   "sections": {
     "hero": {
       "type": "hero-slider",
       "blocks": {
         "slide_one": {
-          "type": "slide",
+          "type": "_hero-slide",
+          "blocks": {
+            "eyebrow_one": {
+              "type": "_hero-eyebrow",
+              "settings": {
+                "text": "<p>New campaign</p>"
+              }
+            },
+            "heading_one": {
+              "type": "_hero-heading",
+              "settings": {
+                "text": "<p>Softness in comfort</p>"
+              }
+            },
+            "button_one": {
+              "type": "_hero-button",
+              "settings": {
+                "label": "Shop collection"
+              }
+            }
+          },
+          "block_order": [
+            "eyebrow_one",
+            "heading_one",
+            "button_one"
+          ],
           "settings": {
-            "image": "shopify://shop_images/slide-2-v2.webp",
-            "eyebrow": "New campaign",
-            "heading": "Softness in comfort",
-            "button_label": "Shop collection",
-            "button_link": "",
             "alignment": "left"
           }
         },
         "slide_two": {
-          "type": "slide",
+          "type": "_hero-slide",
+          "blocks": {
+            "eyebrow_two": {
+              "type": "_hero-eyebrow",
+              "settings": {
+                "text": "<p>Little moments</p>"
+              }
+            },
+            "heading_two": {
+              "type": "_hero-heading",
+              "settings": {
+                "text": "<p>Wrapped in warmth</p>"
+              }
+            },
+            "button_two": {
+              "type": "_hero-button",
+              "settings": {
+                "label": "Shop collection"
+              }
+            }
+          },
+          "block_order": [
+            "eyebrow_two",
+            "heading_two",
+            "button_two"
+          ],
           "settings": {
-            "image": "shopify://shop_images/slide-1-v2.webp",
-            "eyebrow": "Little moments",
-            "heading": "Wrapped in warmth",
-            "button_label": "Shop collection",
-            "button_link": "",
             "alignment": "left"
           }
         }
