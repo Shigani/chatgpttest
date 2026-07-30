@@ -7,53 +7,7 @@
 >
   <div class="swiper hero-slider__swiper">
     <div class="swiper-wrapper">
-      {% for block in section.blocks %}
-        {% if block.settings.eyebrow != blank or block.settings.heading != blank or block.settings.button_label != blank %}
-            <article class="swiper-slide hero-slider__slide" {{ block.shopify_attributes }}>
-              <div class="hero-slider__media">
-                {% if block.settings.image != blank %}
-                  {{ block.settings.image | image_url: width: 2400 | image_tag: class: 'hero-slider__image', loading: 'lazy', sizes: '100vw' }}
-                {% else %}
-                  {{ 'lifestyle-1' | placeholder_svg_tag: 'hero-slider__placeholder' }}
-                {% endif %}
-              </div>
-
-              <div class="hero-slider__overlay"></div>
-
-              <div class="hero-slider__content hero-slider__content--{{ block.settings.alignment }}">
-                {% if block.settings.eyebrow != blank %}
-                  <p class="hero-slider__eyebrow">{{ block.settings.eyebrow | escape }}</p>
-                {% endif %}
-
-                {% if block.settings.heading != blank %}
-                  <div class="hero-slider__heading" role="heading" aria-level="2">{{ block.settings.heading }}</div>
-                {% endif %}
-
-                {% if block.settings.button_label != blank %}
-                  <a
-                    class="hero-slider__button"
-                    {% if block.settings.button_link != blank %}
-                      href="{{ block.settings.button_link }}"
-                    {% else %}
-                      role="link"
-                      aria-disabled="true"
-                    {% endif %}
-                  >
-                    <span class="hero-slider__button-label">{{ block.settings.button_label | escape }}</span>
-                    <span class="hero-slider__button-icon" aria-hidden="true">
-                      <span class="hero-slider__button-icon-label">{{ block.settings.button_label | escape }}</span>
-                      <span class="hero-slider__button-icon-circle">
-                        <svg viewBox="0 0 20 20" role="presentation">
-                          <path d="m7 5 5 5-5 5"></path>
-                        </svg>
-                      </span>
-                    </span>
-                  </a>
-                {% endif %}
-              </div>
-            </article>
-        {% endif %}
-      {% endfor %}
+      {% content_for 'blocks' %}
     </div>
 
     {% if section.blocks.size > 1 %}
@@ -689,58 +643,7 @@
   ],
   "blocks": [
     {
-      "type": "slide",
-      "name": "t:sections.hero_slider.slide",
-      "settings": [
-        {
-          "type": "image_picker",
-          "id": "image",
-          "label": "t:labels.image"
-        },
-        {
-          "type": "text",
-          "id": "eyebrow",
-          "label": "t:labels.eyebrow",
-          "default": "New campaign"
-        },
-        {
-          "type": "richtext",
-          "id": "heading",
-          "label": "t:labels.heading",
-          "default": "<p>Softness in comfort</p>"
-        },
-        {
-          "type": "text",
-          "id": "button_label",
-          "label": "t:labels.button_label",
-          "default": "Shop collection"
-        },
-        {
-          "type": "url",
-          "id": "button_link",
-          "label": "t:labels.button_link"
-        },
-        {
-          "type": "select",
-          "id": "alignment",
-          "label": "t:labels.alignment",
-          "options": [
-            {
-              "value": "left",
-              "label": "t:options.alignment.left"
-            },
-            {
-              "value": "center",
-              "label": "t:options.alignment.center"
-            },
-            {
-              "value": "right",
-              "label": "t:options.alignment.right"
-            }
-          ],
-          "default": "left"
-        }
-      ]
+      "type": "_hero-slide"
     }
   ],
   "presets": [
@@ -748,10 +651,20 @@
       "name": "t:sections.hero_slider.name",
       "blocks": [
         {
-          "type": "slide"
+          "type": "_hero-slide",
+          "blocks": [
+            {"type": "_hero-eyebrow"},
+            {"type": "_hero-heading"},
+            {"type": "_hero-button"}
+          ]
         },
         {
-          "type": "slide"
+          "type": "_hero-slide",
+          "blocks": [
+            {"type": "_hero-eyebrow", "settings": {"text": "<p>Little moments</p>"}},
+            {"type": "_hero-heading", "settings": {"text": "<p>Wrapped in warmth</p>"}},
+            {"type": "_hero-button"}
+          ]
         }
       ]
     }
