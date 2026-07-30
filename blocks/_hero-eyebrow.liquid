@@ -1,0 +1,22 @@
+{% if block.settings.text != blank %}
+  <p class="hero-slider__eyebrow" {{ block.shopify_attributes }}>{{ block.settings.text | escape }}</p>
+{% endif %}
+
+{% schema %}
+{
+  "name": "t:labels.eyebrow",
+  "settings": [
+    {
+      "type": "text",
+      "id": "text",
+      "label": "t:labels.eyebrow",
+      "default": "New campaign"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:labels.eyebrow"
+    }
+  ]
+}
+{% endschema %}
