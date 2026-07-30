@@ -54,19 +54,23 @@
   }
 
   .hero-slider__swiper {
+    position: relative;
     width: 100%;
     overflow: hidden;
   }
 
   .hero-slider__swiper .swiper-wrapper {
     display: flex;
+    width: 100%;
   }
 
   .hero-slider__slide {
     position: relative;
     display: grid;
-    flex-shrink: 0;
-    width: 100%;
+    flex: 0 0 100% !important;
+    width: 100% !important;
+    min-width: 100%;
+    max-width: 100%;
     isolation: isolate;
   }
 
