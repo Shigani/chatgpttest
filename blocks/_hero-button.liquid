@@ -9,11 +9,14 @@
     {% endif %}
     {{ block.shopify_attributes }}
   >
-    {{ block.settings.label | escape }}
+    <span class="hero-slider__button-label">{{ block.settings.label | escape }}</span>
     <span class="hero-slider__button-icon" aria-hidden="true">
-      <svg viewBox="0 0 20 20" role="presentation">
-        <path d="m7 5 5 5-5 5"></path>
-      </svg>
+      <span class="hero-slider__button-icon-label">{{ block.settings.label | escape }}</span>
+      <span class="hero-slider__button-icon-circle">
+        <svg viewBox="0 0 20 20" role="presentation">
+          <path d="m7 5 5 5-5 5"></path>
+        </svg>
+      </span>
     </span>
   </a>
 {% endif %}
