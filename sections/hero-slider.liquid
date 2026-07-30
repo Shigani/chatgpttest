@@ -57,17 +57,15 @@
 
     {% if section.blocks.size > 1 %}
       <div class="hero-slider__controls hero-slider__controls--{{ section.settings.control_alignment }}">
-        {% if section.settings.control_type == 'progress_text' %}
-          <div class="hero-slider__fraction" aria-live="polite">
-            <span data-hero-current>1</span>
-            <span aria-hidden="true">/</span>
-            <span data-hero-total>{{ section.blocks.size }}</span>
-          </div>
+        <div class="hero-slider__fraction" aria-live="polite">
+          <span data-hero-current>1</span>
+          <span aria-hidden="true">/</span>
+          <span data-hero-total>{{ section.blocks.size }}</span>
+        </div>
 
-          <div class="hero-slider__progress" aria-hidden="true">
-            <span data-hero-progress></span>
-          </div>
-        {% endif %}
+        <div class="hero-slider__progress" aria-hidden="true">
+          <span data-hero-progress></span>
+        </div>
 
         <button class="hero-slider__arrow hero-slider__arrow--previous" type="button" aria-label="{{ 'buttons.previous_slide' | t }}">
           <svg viewBox="0 0 20 20" aria-hidden="true">
