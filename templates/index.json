@@ -1,32 +1,93 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "hero": {
       "type": "hero-slider",
       "blocks": {
-        "slide_one": {
+        "hero_slide_kCwjfy": {
           "type": "_hero-slide",
-          "blocks": {
-            "eyebrow": {"type": "_hero-eyebrow"},
-            "heading": {"type": "_hero-heading"},
-            "button": {"type": "_hero-button"}
+          "name": "t:sections.hero_slider.slide",
+          "settings": {
+            "alignment": "left"
           },
-          "block_order": ["eyebrow", "heading", "button"],
-          "settings": {"alignment": "left"}
+          "blocks": {
+            "hero_eyebrow_Rhhtmz": {
+              "type": "_hero-eyebrow",
+              "settings": {
+                "text": "New campaign"
+              },
+              "blocks": {}
+            },
+            "hero_heading_wQVNgA": {
+              "type": "_hero-heading",
+              "settings": {
+                "text": "<p>Softness in comfort</p>"
+              },
+              "blocks": {}
+            },
+            "hero_button_Qd3KFJ": {
+              "type": "_hero-button",
+              "settings": {
+                "label": "Shop collection",
+                "link": ""
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "hero_eyebrow_Rhhtmz",
+            "hero_heading_wQVNgA",
+            "hero_button_Qd3KFJ"
+          ]
         },
-        "slide_two": {
+        "hero_slide_AcQ88d": {
           "type": "_hero-slide",
-          "blocks": {
-            "eyebrow": {"type": "_hero-eyebrow", "settings": {"text": "<p>Little moments</p>"}},
-            "heading": {"type": "_hero-heading", "settings": {"text": "<p>Wrapped in warmth</p>"}},
-            "button": {"type": "_hero-button"}
+          "name": "t:sections.hero_slider.slide",
+          "settings": {
+            "alignment": "left"
           },
-          "block_order": ["eyebrow", "heading", "button"],
-          "settings": {"alignment": "left"}
+          "blocks": {
+            "hero_eyebrow_jhQCgA": {
+              "type": "_hero-eyebrow",
+              "settings": {
+                "text": "New campaign"
+              },
+              "blocks": {}
+            },
+            "hero_heading_8Jf8fx": {
+              "type": "_hero-heading",
+              "settings": {
+                "text": "<p>Softness in comfort</p>"
+              },
+              "blocks": {}
+            },
+            "hero_button_NU4tWJ": {
+              "type": "_hero-button",
+              "settings": {
+                "label": "Shop collection",
+                "link": ""
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "hero_eyebrow_jhQCgA",
+            "hero_heading_8Jf8fx",
+            "hero_button_NU4tWJ"
+          ]
         }
       },
       "block_order": [
-        "slide_one",
-        "slide_two"
+        "hero_slide_kCwjfy",
+        "hero_slide_AcQ88d"
       ],
       "settings": {
         "height": "adapt",
