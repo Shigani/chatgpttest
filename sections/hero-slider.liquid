@@ -305,7 +305,7 @@
     }
 
     .hero-slider__button:hover .hero-slider__button-icon-circle svg {
-      animation: hero-slider-slide-in-out 1s ease infinite;
+      animation: hero-slider-slide-in-out 900ms cubic-bezier(0.22, 1, 0.36, 1);
     }
   }
 
@@ -395,27 +395,54 @@
   }
 
   @media (max-width: 749px) {
+    .hero-slider,
+    .hero-slider__swiper,
+    .hero-slider__slide {
+      min-height: 0;
+      height: 84.533vw;
+    }
+
     .hero-slider__overlay {
       background: linear-gradient(0deg, rgb(90 90 90 / 0.3), transparent 72%);
     }
 
-    .hero-slider__content {
-      align-self: end;
-      padding-bottom: 8.5rem;
+    .hero-slider__content,
+    .hero-slider__content--center,
+    .hero-slider__content--right {
+      align-self: start;
+      justify-self: center;
+      width: 100%;
+      padding: 1.5rem 1rem 0;
+      text-align: center;
     }
 
     .hero-slider__heading {
-      font-size: clamp(3rem, 14vw, 4rem);
-      line-height: 1.05;
+      font-size: 2.375rem;
+      line-height: 1.2;
+    }
+
+    .hero-slider__eyebrow {
+      margin-bottom: 1rem;
+    }
+
+    .hero-slider__button {
+      width: 100%;
+      min-width: 0;
+      height: 3.125rem;
+      margin-top: 1.5rem;
     }
 
     .hero-slider__controls {
-      right: 1.25rem;
-      left: 1.25rem;
+      right: 1rem;
+      bottom: 0;
+      left: 1rem;
+      height: 4rem;
+      padding-bottom: 2.5rem;
     }
 
     .hero-slider__progress {
       flex: 1;
+      width: auto;
     }
   }
 
