@@ -4,22 +4,66 @@
       "type": "hero-slider",
       "blocks": {
         "slide_one": {
-          "type": "slide",
+          "type": "_hero-slide",
           "settings": {
-            "eyebrow": "New campaign",
-            "heading": "Softness in comfort",
-            "button_label": "Shop collection",
             "alignment": "left"
-          }
+          },
+          "blocks": {
+            "eyebrow_one": {
+              "type": "_hero-eyebrow",
+              "settings": {
+                "text": "New campaign"
+              }
+            },
+            "heading_one": {
+              "type": "_hero-heading",
+              "settings": {
+                "text": "Softness in comfort"
+              }
+            },
+            "button_one": {
+              "type": "_hero-button",
+              "settings": {
+                "label": "Shop collection"
+              }
+            }
+          },
+          "block_order": [
+            "eyebrow_one",
+            "heading_one",
+            "button_one"
+          ]
         },
         "slide_two": {
-          "type": "slide",
+          "type": "_hero-slide",
           "settings": {
-            "eyebrow": "Little moments",
-            "heading": "Wrapped in warmth",
-            "button_label": "Shop collection",
             "alignment": "left"
-          }
+          },
+          "blocks": {
+            "eyebrow_two": {
+              "type": "_hero-eyebrow",
+              "settings": {
+                "text": "Little moments"
+              }
+            },
+            "heading_two": {
+              "type": "_hero-heading",
+              "settings": {
+                "text": "Wrapped in warmth"
+              }
+            },
+            "button_two": {
+              "type": "_hero-button",
+              "settings": {
+                "label": "Shop collection"
+              }
+            }
+          },
+          "block_order": [
+            "eyebrow_two",
+            "heading_two",
+            "button_two"
+          ]
         }
       },
       "block_order": [
