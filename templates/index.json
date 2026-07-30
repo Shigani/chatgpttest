@@ -4,22 +4,24 @@
       "type": "hero-slider",
       "blocks": {
         "slide_one": {
-          "type": "slide",
-          "settings": {
-            "eyebrow": "New campaign",
-            "heading": "<p>Softness in comfort</p>",
-            "button_label": "Shop collection",
-            "alignment": "left"
-          }
+          "type": "_hero-slide",
+          "blocks": {
+            "eyebrow": {"type": "_hero-eyebrow"},
+            "heading": {"type": "_hero-heading"},
+            "button": {"type": "_hero-button"}
+          },
+          "block_order": ["eyebrow", "heading", "button"],
+          "settings": {"alignment": "left"}
         },
         "slide_two": {
-          "type": "slide",
-          "settings": {
-            "eyebrow": "Little moments",
-            "heading": "<p>Wrapped in warmth</p>",
-            "button_label": "Shop collection",
-            "alignment": "left"
-          }
+          "type": "_hero-slide",
+          "blocks": {
+            "eyebrow": {"type": "_hero-eyebrow", "settings": {"text": "<p>Little moments</p>"}},
+            "heading": {"type": "_hero-heading", "settings": {"text": "<p>Wrapped in warmth</p>"}},
+            "button": {"type": "_hero-button"}
+          },
+          "block_order": ["eyebrow", "heading", "button"],
+          "settings": {"alignment": "left"}
         }
       },
       "block_order": [
