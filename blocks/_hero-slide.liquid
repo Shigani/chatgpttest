@@ -1,0 +1,75 @@
+<article class="swiper-slide hero-slider__slide" {{ block.shopify_attributes }}>
+  <div class="hero-slider__media">
+    {% if block.settings.image != blank %}
+      {{ block.settings.image | image_url: width: 2400 | image_tag: class: 'hero-slider__image', loading: 'eager', sizes: '100vw' }}
+    {% else %}
+      {{ 'lifestyle-1' | placeholder_svg_tag: 'hero-slider__placeholder' }}
+    {% endif %}
+  </div>
+
+  <div class="hero-slider__overlay"></div>
+
+  <div class="hero-slider__content hero-slider__content--{{ block.settings.alignment }}">
+    {% content_for 'blocks' %}
+  </div>
+</article>
+
+{% schema %}
+{
+  "name": "t:sections.hero_slider.slide",
+  "blocks": [
+    {
+      "type": "_hero-eyebrow"
+    },
+    {
+      "type": "_hero-heading"
+    },
+    {
+      "type": "_hero-button"
+    }
+  ],
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "t:labels.image"
+    },
+    {
+      "type": "select",
+      "id": "alignment",
+      "label": "t:labels.alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "t:options.alignment.left"
+        },
+        {
+          "value": "center",
+          "label": "t:options.alignment.center"
+        },
+        {
+          "value": "right",
+          "label": "t:options.alignment.right"
+        }
+      ],
+      "default": "left"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.hero_slider.slide",
+      "blocks": [
+        {
+          "type": "_hero-eyebrow"
+        },
+        {
+          "type": "_hero-heading"
+        },
+        {
+          "type": "_hero-button"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
