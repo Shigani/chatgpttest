@@ -179,16 +179,41 @@
 
   .hero-slider__heading {
     margin: 0;
-    font-size: clamp(3.5rem, 5.1vw, 4.2rem);
-    font-weight: 750;
+    font-family: var(--hero-heading-custom-font, "Bricolage Grotesque"), sans-serif;
+    font-size: var(--hero-heading-size, clamp(3.5rem, 5.1vw, 4.2rem));
+    font-weight: var(--hero-heading-weight, 750);
     letter-spacing: -0.045em;
-    line-height: 1.2;
+    line-height: var(--hero-heading-line-height, 1.2);
     text-wrap: balance;
     will-change: opacity, transform;
   }
 
+  .hero-slider__heading--preset-body {
+    font-family: var(--font-body-family, "Bricolage Grotesque"), sans-serif;
+  }
+
+  .hero-slider__heading--preset-heading {
+    font-family: var(--font-heading-family, "Bricolage Grotesque"), sans-serif;
+  }
+
+  .hero-slider__heading--color-text {
+    color: inherit;
+  }
+
+  .hero-slider__heading--color-white {
+    color: #ffffff;
+  }
+
+  .hero-slider__heading--color-black {
+    color: #000000;
+  }
+
   .hero-slider__heading p {
     margin: 0;
+  }
+
+  .hero-slider__heading--no-mobile-break {
+    white-space: nowrap;
   }
 
   .hero-slider__eyebrow p {
@@ -404,8 +429,7 @@
     }
 
     .hero-slider__heading {
-      font-size: 2.25rem;
-      line-height: 1.05;
+      font-size: var(--hero-heading-size-mobile, 2.25rem);
     }
 
     .hero-slider__eyebrow {
