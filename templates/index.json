@@ -32,7 +32,15 @@
             "hero_heading_wQVNgA": {
               "type": "_hero-heading",
               "settings": {
-                "text": "<p>Softness</p><p>in comfort</p>"
+                "text": "<p>Softness</p><p>in comfort</p>",
+                "preset": "custom",
+                "custom_font": "assistant_n4",
+                "font_weight": "750",
+                "font_size": 68,
+                "font_size_mobile": 38,
+                "line_height": "1.2",
+                "color": "white",
+                "disable_mobile_break": false
               },
               "blocks": {}
             },
@@ -71,7 +79,15 @@
             "hero_heading_8Jf8fx": {
               "type": "_hero-heading",
               "settings": {
-                "text": "<p>Softness</p><p>in comfort</p>"
+                "text": "<p>Softness<br/>in comfort</p>",
+                "preset": "custom",
+                "custom_font": "assistant_n4",
+                "font_weight": "750",
+                "font_size": 68,
+                "font_size_mobile": 38,
+                "line_height": "1.2",
+                "color": "white",
+                "disable_mobile_break": false
               },
               "blocks": {}
             },
