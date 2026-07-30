@@ -11,6 +11,11 @@
       "name": "Header"
     }
   },
+  "blocks": {
+    "hero_button": {
+      "name": "Button"
+    }
+  },
   "labels": {
     "menu": "Menu",
     "height": "Section height",
