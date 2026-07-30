@@ -100,7 +100,7 @@
         "autoplay": true,
         "autoplay_delay": 5000,
         "control_type": "progress_text",
-        "control_alignment": "right"
+        "control_alignment": "left"
       }
     }
   },
