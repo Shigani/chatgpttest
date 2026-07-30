@@ -198,6 +198,7 @@
     font-weight: 700;
     letter-spacing: 0;
     text-transform: uppercase;
+    will-change: opacity, transform;
   }
 
   .hero-slider__heading {
@@ -207,6 +208,7 @@
     letter-spacing: -0.045em;
     line-height: 1.2;
     text-wrap: balance;
+    will-change: opacity, transform;
   }
 
   .hero-slider__button {
@@ -226,6 +228,21 @@
     font-weight: 700;
     text-decoration: none;
     transition: transform 180ms ease, background 180ms ease;
+    will-change: opacity, transform;
+  }
+
+  .hero-slider__slide.swiper-slide-active .hero-slider__eyebrow,
+  .hero-slider__slide.swiper-slide-active .hero-slider__heading,
+  .hero-slider__slide.swiper-slide-active .hero-slider__button {
+    animation: hero-slider-content-fade-up 700ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  .hero-slider__slide.swiper-slide-active .hero-slider__heading {
+    animation-delay: 120ms;
+  }
+
+  .hero-slider__slide.swiper-slide-active .hero-slider__button {
+    animation-delay: 220ms;
   }
 
   .hero-slider__button:hover {
@@ -297,6 +314,17 @@
     50% { transform: translateX(2rem); }
     50.001% { transform: translateX(-2rem); }
     100% { transform: translateX(0); }
+  }
+
+  @keyframes hero-slider-content-fade-up {
+    from {
+      opacity: 0;
+      transform: translateY(1.25rem);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 
   .hero-slider__controls {
@@ -396,6 +424,12 @@
     .hero-slider__arrow,
     .hero-slider__progress span {
       transition: none;
+    }
+
+    .hero-slider__slide.swiper-slide-active .hero-slider__eyebrow,
+    .hero-slider__slide.swiper-slide-active .hero-slider__heading,
+    .hero-slider__slide.swiper-slide-active .hero-slider__button {
+      animation: none;
     }
 
     .hero-slider__button-icon-circle svg {
