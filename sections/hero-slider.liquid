@@ -42,11 +42,14 @@
                   aria-disabled="true"
                 {% endif %}
               >
-                {{ block.settings.button_label | escape }}
+                <span class="hero-slider__button-label">{{ block.settings.button_label | escape }}</span>
                 <span class="hero-slider__button-icon" aria-hidden="true">
-                  <svg viewBox="0 0 20 20" role="presentation">
-                    <path d="m7 5 5 5-5 5"></path>
-                  </svg>
+                  <span class="hero-slider__button-icon-label">{{ block.settings.button_label | escape }}</span>
+                  <span class="hero-slider__button-icon-circle">
+                    <svg viewBox="0 0 20 20" role="presentation">
+                      <path d="m7 5 5 5-5 5"></path>
+                    </svg>
+                  </span>
                 </span>
               </a>
             {% endif %}
@@ -207,9 +210,11 @@
   }
 
   .hero-slider__button {
+    position: relative;
     display: inline-flex;
     align-items: center;
     justify-content: space-between;
+    overflow: hidden;
     min-width: 11.8rem;
     margin-top: 1.85rem;
     padding: 0.63rem 0.68rem 0.63rem 1.55rem;
@@ -231,17 +236,41 @@
     cursor: default;
   }
 
+  .hero-slider__button-label,
+  .hero-slider__button-icon-label {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
   .hero-slider__button-icon {
+    position: absolute;
+    top: 0;
+    right: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    height: 100%;
+    gap: 0.65rem;
+    padding: 0.63rem 0.68rem 0.63rem 1.55rem;
+    overflow: hidden;
+    clip-path: circle(1rem at calc(100% - 1rem - 0.68rem) 50%);
+    background: #666666;
+    color: #ffffff;
+    transition: clip-path 600ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .hero-slider__button-icon-circle {
     display: grid;
     width: 2rem;
     height: 2rem;
+    flex-shrink: 0;
     border-radius: 50%;
-    background: #666666;
-    color: #ffffff;
     place-items: center;
   }
 
-  .hero-slider__button-icon svg,
+  .hero-slider__button-icon-circle svg,
   .hero-slider__arrow svg {
     width: 1rem;
     height: 1rem;
@@ -250,6 +279,23 @@
     stroke-linecap: round;
     stroke-linejoin: round;
     stroke-width: 2;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .hero-slider__button:hover .hero-slider__button-icon {
+      clip-path: circle(150% at calc(100% - 1rem - 0.68rem) 50%);
+    }
+
+    .hero-slider__button:hover .hero-slider__button-icon-circle svg {
+      animation: hero-slider-slide-in-out 1s ease infinite;
+    }
+  }
+
+  @keyframes hero-slider-slide-in-out {
+    0% { transform: translateX(0); }
+    50% { transform: translateX(2rem); }
+    50.001% { transform: translateX(-2rem); }
+    100% { transform: translateX(0); }
   }
 
   .hero-slider__controls {
@@ -349,6 +395,10 @@
     .hero-slider__arrow,
     .hero-slider__progress span {
       transition: none;
+    }
+
+    .hero-slider__button-icon-circle svg {
+      animation: none;
     }
   }
 {% endstylesheet %}
