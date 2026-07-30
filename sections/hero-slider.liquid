@@ -1,10 +1,9 @@
 <section
-  class="hero-slider"
+  class="hero-slider hero-slider--height-{{ section.settings.height }} hero-slider--container-{{ section.settings.container }} hero-slider--content-{{ section.settings.content_position }}{% if section.settings.header_overlay %} hero-slider--header-overlay{% endif %}{% if section.settings.allow_next_overlap %} hero-slider--overlap-next{% endif %}"
   data-hero-slider
   data-slide-count="{{ section.blocks.size }}"
   data-autoplay="{{ section.settings.autoplay }}"
   data-autoplay-delay="{{ section.settings.autoplay_delay }}"
-  style="--hero-height: {{ section.settings.height }}px;"
 >
   <div class="swiper hero-slider__swiper">
     <div class="swiper-wrapper">
@@ -57,16 +56,18 @@
     </div>
 
     {% if section.blocks.size > 1 %}
-      <div class="hero-slider__controls">
-        <div class="hero-slider__fraction" aria-live="polite">
-          <span data-hero-current>1</span>
-          <span aria-hidden="true">/</span>
-          <span data-hero-total>{{ section.blocks.size }}</span>
-        </div>
+      <div class="hero-slider__controls hero-slider__controls--{{ section.settings.control_alignment }}">
+        {% if section.settings.control_type == 'progress_text' %}
+          <div class="hero-slider__fraction" aria-live="polite">
+            <span data-hero-current>1</span>
+            <span aria-hidden="true">/</span>
+            <span data-hero-total>{{ section.blocks.size }}</span>
+          </div>
 
-        <div class="hero-slider__progress" aria-hidden="true">
-          <span data-hero-progress></span>
-        </div>
+          <div class="hero-slider__progress" aria-hidden="true">
+            <span data-hero-progress></span>
+          </div>
+        {% endif %}
 
         <button class="hero-slider__arrow hero-slider__arrow--previous" type="button" aria-label="{{ 'buttons.previous_slide' | t }}">
           <svg viewBox="0 0 20 20" aria-hidden="true">
@@ -91,6 +92,32 @@
     overflow: hidden;
     background: #c6c6c6;
     color: #ffffff;
+  }
+
+  .hero-slider--height-adapt {
+    --hero-height: 56.25vw;
+  }
+
+  .hero-slider--height-small {
+    --hero-height: 32rem;
+  }
+
+  .hero-slider--height-medium {
+    --hero-height: 44rem;
+  }
+
+  .hero-slider--height-large {
+    --hero-height: 56rem;
+  }
+
+  .hero-slider--container-fixed .hero-slider__swiper {
+    max-width: 90rem;
+    margin: 0 auto;
+  }
+
+  .hero-slider--overlap-next {
+    z-index: 1;
+    margin-bottom: -4rem;
   }
 
   .hero-slider__swiper,
@@ -235,6 +262,16 @@
     display: flex;
     align-items: center;
     gap: 0.85rem;
+  }
+
+  .hero-slider__controls--left {
+    right: auto;
+    left: clamp(1.7rem, 3.4vw, 3.2rem);
+  }
+
+  .hero-slider__controls--center {
+    right: 50%;
+    transform: translateX(50%);
   }
 
   .hero-slider__fraction {
@@ -406,14 +443,72 @@
   "max_blocks": 5,
   "settings": [
     {
-      "type": "range",
+      "type": "select",
       "id": "height",
-      "min": 500,
-      "max": 900,
-      "step": 20,
-      "unit": "px",
       "label": "t:labels.height",
-      "default": 760
+      "options": [
+        {
+          "value": "adapt",
+          "label": "t:options.height.adapt"
+        },
+        {
+          "value": "small",
+          "label": "t:options.height.small"
+        },
+        {
+          "value": "medium",
+          "label": "t:options.height.medium"
+        },
+        {
+          "value": "large",
+          "label": "t:options.height.large"
+        }
+      ],
+      "default": "adapt"
+    },
+    {
+      "type": "select",
+      "id": "container",
+      "label": "t:labels.container",
+      "options": [
+        {
+          "value": "full",
+          "label": "t:options.container.full"
+        },
+        {
+          "value": "fixed",
+          "label": "t:options.container.fixed"
+        }
+      ],
+      "default": "full"
+    },
+    {
+      "type": "select",
+      "id": "content_position",
+      "label": "t:labels.content_position",
+      "options": [
+        {
+          "value": "inside",
+          "label": "t:options.content_position.inside"
+        },
+        {
+          "value": "outside",
+          "label": "t:options.content_position.outside"
+        }
+      ],
+      "default": "inside"
+    },
+    {
+      "type": "checkbox",
+      "id": "header_overlay",
+      "label": "t:labels.header_overlay",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "allow_next_overlap",
+      "label": "t:labels.allow_next_overlap",
+      "default": true
     },
     {
       "type": "checkbox",
@@ -430,6 +525,42 @@
       "unit": "ms",
       "label": "t:labels.autoplay_delay",
       "default": 5000
+    },
+    {
+      "type": "select",
+      "id": "control_type",
+      "label": "t:labels.control_type",
+      "options": [
+        {
+          "value": "default",
+          "label": "t:options.control_type.default"
+        },
+        {
+          "value": "progress_text",
+          "label": "t:options.control_type.progress_text"
+        }
+      ],
+      "default": "progress_text"
+    },
+    {
+      "type": "select",
+      "id": "control_alignment",
+      "label": "t:labels.control_alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "t:options.alignment.left"
+        },
+        {
+          "value": "center",
+          "label": "t:options.alignment.center"
+        },
+        {
+          "value": "right",
+          "label": "t:options.alignment.right"
+        }
+      ],
+      "default": "right"
     }
   ],
   "blocks": [
