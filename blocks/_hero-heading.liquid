@@ -1,5 +1,16 @@
 {% if block.settings.text != blank %}
-  <div class="hero-slider__heading" role="heading" aria-level="2" {{ block.shopify_attributes }}>{{ block.settings.text }}</div>
+  {% if block.settings.custom_font != blank %}
+    <style>
+      {{ block.settings.custom_font | font_face: font_display: 'swap' }}
+    </style>
+  {% endif %}
+  <div
+    class="hero-slider__heading hero-slider__heading--preset-{{ block.settings.preset }} hero-slider__heading--color-{{ block.settings.color }}{% if block.settings.disable_mobile_break %} hero-slider__heading--no-mobile-break{% endif %}"
+    style="--hero-heading-size: {{ block.settings.font_size }}px; --hero-heading-size-mobile: {{ block.settings.font_size_mobile }}px; --hero-heading-line-height: {{ block.settings.line_height }}; --hero-heading-weight: {{ block.settings.font_weight }}; --hero-heading-custom-font: {{ block.settings.custom_font.family | default: 'Bricolage Grotesque' | json }};"
+    role="heading"
+    aria-level="2"
+    {{ block.shopify_attributes }}
+  >{{ block.settings.text }}</div>
 {% endif %}
 
 {% schema %}
@@ -11,6 +22,134 @@
       "id": "text",
       "label": "t:labels.text",
       "default": "<p>Softness in comfort</p>"
+    },
+    {
+      "type": "select",
+      "id": "preset",
+      "label": "t:labels.typography_preset",
+      "options": [
+        {
+          "value": "custom",
+          "label": "t:options.typography_preset.custom"
+        },
+        {
+          "value": "body",
+          "label": "t:options.typography_preset.body"
+        },
+        {
+          "value": "heading",
+          "label": "t:options.typography_preset.heading"
+        }
+      ],
+      "default": "custom"
+    },
+    {
+      "type": "font_picker",
+      "id": "custom_font",
+      "label": "t:labels.font",
+      "default": "assistant_n4"
+    },
+    {
+      "type": "select",
+      "id": "font_weight",
+      "label": "t:labels.font_weight",
+      "options": [
+        {
+          "value": "inherit",
+          "label": "t:options.font_weight.inherit"
+        },
+        {
+          "value": "400",
+          "label": "t:options.font_weight.normal"
+        },
+        {
+          "value": "500",
+          "label": "t:options.font_weight.medium"
+        },
+        {
+          "value": "600",
+          "label": "t:options.font_weight.semibold"
+        },
+        {
+          "value": "700",
+          "label": "t:options.font_weight.bold"
+        },
+        {
+          "value": "750",
+          "label": "t:options.font_weight.display"
+        },
+        {
+          "value": "800",
+          "label": "t:options.font_weight.extrabold"
+        }
+      ],
+      "default": "750"
+    },
+    {
+      "type": "range",
+      "id": "font_size",
+      "label": "t:labels.font_size",
+      "min": 24,
+      "max": 120,
+      "step": 1,
+      "unit": "px",
+      "default": 68
+    },
+    {
+      "type": "range",
+      "id": "font_size_mobile",
+      "label": "t:labels.font_size_mobile",
+      "min": 18,
+      "max": 80,
+      "step": 1,
+      "unit": "px",
+      "default": 38
+    },
+    {
+      "type": "select",
+      "id": "line_height",
+      "label": "t:labels.line_height",
+      "options": [
+        {
+          "value": "1.05",
+          "label": "t:options.line_height.tight"
+        },
+        {
+          "value": "1.2",
+          "label": "t:options.line_height.normal"
+        },
+        {
+          "value": "1.35",
+          "label": "t:options.line_height.loose"
+        }
+      ],
+      "default": "1.2"
+    },
+    {
+      "type": "select",
+      "id": "color",
+      "label": "t:labels.color",
+      "options": [
+        {
+          "value": "text",
+          "label": "t:options.color.text"
+        },
+        {
+          "value": "white",
+          "label": "t:options.color.white"
+        },
+        {
+          "value": "black",
+          "label": "t:options.color.black"
+        }
+      ],
+      "default": "white"
+    },
+    {
+      "type": "checkbox",
+      "id": "disable_mobile_break",
+      "label": "t:labels.disable_mobile_break",
+      "default": false
     }
   ],
   "presets": [
