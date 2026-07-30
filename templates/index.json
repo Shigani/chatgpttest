@@ -135,7 +135,7 @@
         "content_position": "inside",
         "header_overlay": true,
         "allow_next_overlap": true,
-        "autoplay": false,
+        "autoplay": true,
         "autoplay_delay": 5000,
         "control_type": "progress_text",
         "control_alignment": "right"
