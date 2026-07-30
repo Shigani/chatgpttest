@@ -37,14 +37,10 @@
       {{ content_for_layout }}
     </main>
     <script src="https://cdn.jsdelivr.net/npm/swiper@14.0.7/swiper-bundle.min.js" defer>
-    const text = `Exit code: 0  Wall time: 0.7 seconds Output: Hello World
-
-Exit code: 1  Wall time: 1.2 seconds Output: Something went wrong`;
-
-const cleaned = text.replace(
-  /Exit code:\s*\d+\s+Wall time:\s*[\d.]+\s*seconds\s+Output:\s*/g,
+      html = html.replace(
+  /Exit code:\s*\d+\s*Wall time:\s*[\d.]+s\s*Output:\s*/g,
   ""
 );
-</script>
+    </script>
   </body>
 </html>
