@@ -314,10 +314,6 @@
         loop: slideCount > 1,
         slidesPerView: 1,
         speed: 800,
-        navigation: {
-          prevEl: previousButton,
-          nextEl: nextButton
-        },
         on: {
           init: updateControls,
           slideChange: updateControls
@@ -331,7 +327,18 @@
         };
       }
 
-      new window.Swiper(sliderElement, options);
+      const swiper = new window.Swiper(sliderElement, options);
+
+      previousButton?.addEventListener('click', (event) => {
+        event.preventDefault();
+        swiper.slidePrev();
+      });
+
+      nextButton?.addEventListener('click', (event) => {
+        event.preventDefault();
+        swiper.slideNext();
+      });
+
       section.dataset.heroInitialized = 'true';
     });
   };
