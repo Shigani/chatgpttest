@@ -1,13 +1,25 @@
 <article class="swiper-slide hero-slider__slide" {{ block.shopify_attributes }}>
   <div class="hero-slider__media">
-    {% if block.settings.image != blank %}
-      {{ block.settings.image | image_url: width: 2400 | image_tag: class: 'hero-slider__image', loading: 'eager', sizes: '100vw' }}
+    {% if block.settings.image != blank or block.settings.mobile_image != blank %}
+      <picture class="hero-slider__picture">
+        {% if block.settings.mobile_image != blank %}
+          <source media="(max-width: 749px)" srcset="{{ block.settings.mobile_image | image_url: width: 1600 }}">
+        {% endif %}
+        {% if block.settings.image != blank %}
+          {{ block.settings.image | image_url: width: 2400 | image_tag: class: 'hero-slider__image', loading: 'eager', sizes: '100vw' }}
+        {% else %}
+          {{ block.settings.mobile_image | image_url: width: 1600 | image_tag: class: 'hero-slider__image', loading: 'eager', sizes: '100vw' }}
+        {% endif %}
+      </picture>
     {% else %}
       {{ 'lifestyle-1' | placeholder_svg_tag: 'hero-slider__placeholder' }}
     {% endif %}
   </div>
 
-  <div class="hero-slider__overlay"></div>
+  <div
+    class="hero-slider__overlay{% unless block.settings.media_overlay %} hero-slider__overlay--hidden{% endunless %}"
+    style="--hero-overlay-color: {{ block.settings.overlay_color }};"
+  ></div>
 
   <div class="hero-slider__content hero-slider__content--{{ block.settings.alignment }}">
     {% content_for 'blocks' %}
@@ -33,7 +45,24 @@
     {
       "type": "image_picker",
       "id": "image",
-      "label": "t:labels.image"
+      "label": "t:labels.desktop_image"
+    },
+    {
+      "type": "image_picker",
+      "id": "mobile_image",
+      "label": "t:labels.mobile_image"
+    },
+    {
+      "type": "checkbox",
+      "id": "media_overlay",
+      "label": "t:labels.media_overlay",
+      "default": true
+    },
+    {
+      "type": "color",
+      "id": "overlay_color",
+      "label": "t:labels.overlay_color",
+      "default": "#000000"
     },
     {
       "type": "select",
