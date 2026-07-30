@@ -134,6 +134,12 @@
     padding: clamp(12.5rem, 30vh, 14.5rem) clamp(2rem, 3.9vw, 3.15rem) 5rem;
   }
 
+  .hero-slider__content > *:has(.hero-slider__button) {
+    justify-self: start;
+    width: fit-content;
+    max-width: 100%;
+  }
+
   .hero-slider__content--center {
     justify-self: center;
     text-align: center;
@@ -397,6 +403,11 @@
       height: 3.125rem;
       margin-top: 2rem;
       padding-right: 3rem;
+    }
+
+    .hero-slider__content > *:has(.hero-slider__button) {
+      justify-self: stretch;
+      width: 100%;
     }
 
     .hero-slider__controls {
