@@ -1,0 +1,22 @@
+{% if block.settings.text != blank %}
+  <h2 class="hero-slider__heading" {{ block.shopify_attributes }}>{{ block.settings.text | escape }}</h2>
+{% endif %}
+
+{% schema %}
+{
+  "name": "t:labels.heading",
+  "settings": [
+    {
+      "type": "text",
+      "id": "text",
+      "label": "t:labels.heading",
+      "default": "Softness in comfort"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:labels.heading"
+    }
+  ]
+}
+{% endschema %}
