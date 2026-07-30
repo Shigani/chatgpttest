@@ -29,7 +29,7 @@
             {% endif %}
 
             {% if block.settings.heading != blank %}
-              <h2 class="hero-slider__heading">{{ block.settings.heading | escape }}</h2>
+              <div class="hero-slider__heading" role="heading" aria-level="2">{{ block.settings.heading }}</div>
             {% endif %}
 
             {% if block.settings.button_label != blank %}
@@ -209,6 +209,10 @@
     line-height: 1.2;
     text-wrap: balance;
     will-change: opacity, transform;
+  }
+
+  .hero-slider__heading p {
+    margin: 0;
   }
 
   .hero-slider__button {
@@ -698,10 +702,10 @@
           "default": "New campaign"
         },
         {
-          "type": "text",
+          "type": "richtext",
           "id": "heading",
           "label": "t:labels.heading",
-          "default": "Softness in comfort"
+          "default": "<p>Softness in comfort</p>"
         },
         {
           "type": "text",
