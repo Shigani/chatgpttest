@@ -357,7 +357,7 @@
 
   .hero-slider__progress {
     width: clamp(5rem, 10vw, 8.75rem);
-    height: 1px;
+    height: 2px;
     overflow: hidden;
     background: rgb(255 255 255 / 0.22);
   }
@@ -464,11 +464,16 @@
           '--hero-progress-duration',
           autoplayEnabled && autoplayDelay > 0 ? `${autoplayDelay}ms` : '0ms'
         );
+        progressElement.style.transition = 'none';
         progressElement.style.width = '0%';
+        progressElement.getBoundingClientRect();
+        progressElement.style.removeProperty('transition');
 
         if (autoplayEnabled && autoplayDelay > 0) {
           window.requestAnimationFrame(() => {
-            progressElement.style.width = '100%';
+            window.requestAnimationFrame(() => {
+              progressElement.style.width = '100%';
+            });
           });
         }
       };
