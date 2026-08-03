@@ -98,6 +98,7 @@
     min-width: 100%;
     max-width: 100%;
     border-radius: var(--hero-slide-radius, 0px);
+    overflow: hidden;
     isolation: isolate;
   }
 
@@ -156,6 +157,7 @@
   }
 
   .hero-slider__content {
+    display: grid;
     align-self: start;
     width: min(100%, 31rem);
     row-gap: var(--hero-slide-row-gap, 0px);
