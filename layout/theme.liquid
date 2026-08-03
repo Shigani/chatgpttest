@@ -32,10 +32,11 @@
     </style>
   </head>
   <body class="template-{{ template.name | handle }}">
-    {% comment %}Temporarily hidden for layout review.{% endcomment %}
+    {% section 'site-header' %}
     <main id="MainContent">
       {{ content_for_layout }}
     </main>
     <script src="https://cdn.jsdelivr.net/npm/swiper@14.0.7/swiper-bundle.min.js" defer></script>
   </body>
 </html>
+
