@@ -1,4 +1,11 @@
-<article class="swiper-slide hero-slider__slide" {{ block.shopify_attributes }}>
+Exit code: 0
+Wall time: 0.8 seconds
+Output:
+<article
+  class="swiper-slide hero-slider__slide hero-slider__slide--width-{{ block.settings.width }} hero-slider__slide--border-{{ block.settings.border }}{% if block.settings.transparent_background %} hero-slider__slide--transparent{% endif %}{% if block.settings.inherit_color_scheme %} hero-slider__slide--inherit-color-scheme{% endif %}"
+  style="--hero-slide-row-gap: {{ block.settings.row_gap }}px; --hero-slide-row-gap-mobile: {{ block.settings.row_gap_mobile }}px; --hero-slide-custom-width: {{ block.settings.width_custom }}%; --hero-slide-radius: {{ block.settings.corner_radius }}px;"
+  {{ block.shopify_attributes }}
+>
   <div class="hero-slider__media">
     {% if block.settings.image != blank or block.settings.mobile_image != blank %}
       <picture class="hero-slider__picture">
@@ -21,7 +28,7 @@
     style="--hero-overlay-color: {{ block.settings.overlay_color }};"
   ></div>
 
-  <div class="hero-slider__content hero-slider__content--{{ block.settings.alignment }}">
+  <div class="hero-slider__content hero-slider__content--{{ block.settings.alignment }} hero-slider__content--mobile-{{ block.settings.alignment_mobile }} hero-slider__content--width-{{ block.settings.width }}">
     {% content_for 'blocks' %}
   </div>
 </article>
@@ -83,6 +90,114 @@
         }
       ],
       "default": "left"
+    },
+    {
+      "type": "select",
+      "id": "alignment_mobile",
+      "label": "t:labels.alignment_mobile",
+      "options": [
+        {
+          "value": "left",
+          "label": "t:options.alignment.left"
+        },
+        {
+          "value": "center",
+          "label": "t:options.alignment.center"
+        },
+        {
+          "value": "right",
+          "label": "t:options.alignment.right"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "range",
+      "id": "row_gap",
+      "label": "t:labels.row_gap",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "row_gap_mobile",
+      "label": "t:labels.row_gap_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "select",
+      "id": "width",
+      "label": "t:labels.width",
+      "options": [
+        {
+          "value": "fit",
+          "label": "t:options.width.fit"
+        },
+        {
+          "value": "fill",
+          "label": "t:options.width.fill"
+        },
+        {
+          "value": "custom",
+          "label": "t:options.width.custom"
+        }
+      ],
+      "default": "fit"
+    },
+    {
+      "type": "range",
+      "id": "width_custom",
+      "label": "t:labels.width_custom",
+      "min": 10,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 50
+    },
+    {
+      "type": "checkbox",
+      "id": "inherit_color_scheme",
+      "label": "t:labels.inherit_color_scheme",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "transparent_background",
+      "label": "t:labels.transparent_background",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "border",
+      "label": "t:labels.border",
+      "options": [
+        {
+          "value": "none",
+          "label": "t:options.border.none"
+        },
+        {
+          "value": "solid",
+          "label": "t:options.border.solid"
+        }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "range",
+      "id": "corner_radius",
+      "label": "t:labels.corner_radius",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
     }
   ],
   "presets": [
@@ -103,3 +218,4 @@
   ]
 }
 {% endschema %}
+
