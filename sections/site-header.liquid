@@ -1,5 +1,11 @@
 <header class="site-header">
   <div class="site-header__bar">
+    <button class="site-header__menu-toggle" type="button" aria-label="{{ 'header.menu' | t }}">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M4 7h16M4 12h16M4 17h16"></path>
+      </svg>
+    </button>
+
     <nav class="site-header__navigation" aria-label="{{ 'header.primary_navigation' | t }}">
       {% if section.settings.menu != blank %}
         {% for link in section.settings.menu.links %}
@@ -7,7 +13,7 @@
         {% endfor %}
       {% else %}
         <a href="{{ routes.root_url }}">{{ 'header.home' | t }}</a>
-        <a href="/collections/all">{{ 'header.catalog' | t }}</a>
+        <a href="{{ routes.all_products_collection_url }}">{{ 'header.catalog' | t }}</a>
         <a href="/pages/contact">{{ 'header.contact' | t }}</a>
       {% endif %}
     </nav>
@@ -24,7 +30,7 @@
         <span class="visually-hidden">{{ 'header.search' | t }}</span>
       </a>
 
-      <a class="site-header__icon" href="{{ routes.account_url }}" aria-label="{{ 'header.account' | t }}">
+      <a class="site-header__icon site-header__account" href="{{ routes.account_url }}" aria-label="{{ 'header.account' | t }}">
         <svg viewBox="0 0 24 24" aria-hidden="true">
           <circle cx="12" cy="8" r="4"></circle>
           <path d="M5 21a7 7 0 0 1 14 0"></path>
@@ -63,9 +69,19 @@
   }
 
   .site-header__navigation,
-  .site-header__actions {
+  .site-header__actions,
+  .site-header__menu-toggle {
     display: flex;
     align-items: center;
+  }
+
+  .site-header__menu-toggle {
+    display: none;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
   }
 
   .site-header__navigation {
@@ -139,14 +155,26 @@
   }
 
   @media (max-width: 899px) {
+    .site-header {
+      top: 0;
+      right: 0;
+      left: 0;
+    }
+
     .site-header__bar {
       grid-template-columns: auto 1fr auto;
       min-height: 4.5rem;
       padding: 0 1.25rem;
+      border-radius: 0;
     }
 
     .site-header__navigation {
       display: none;
+    }
+
+    .site-header__menu-toggle {
+      display: grid;
+      place-items: center;
     }
 
     .site-header__brand {
@@ -168,6 +196,10 @@
     }
 
     .site-header__search {
+      display: flex;
+    }
+
+    .site-header__account {
       display: none;
     }
   }
@@ -186,3 +218,4 @@
   ]
 }
 {% endschema %}
+
