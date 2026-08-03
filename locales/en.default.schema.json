@@ -50,6 +50,15 @@
     "button_label": "Button label",
     "button_link": "Button link",
     "alignment": "Content alignment",
+    "alignment_mobile": "Alignment mobile",
+    "row_gap": "Row gap",
+    "row_gap_mobile": "Row gap mobile",
+    "width": "Width",
+    "width_custom": "Custom width",
+    "inherit_color_scheme": "Inherit color scheme",
+    "transparent_background": "Transparent background",
+    "border": "Border",
+    "corner_radius": "Corner radius",
     "typography": "Typography",
     "typography_preset": "Preset",
     "font": "Font",
@@ -84,6 +93,15 @@
       "center": "Center",
       "right": "Right"
     },
+    "width": {
+      "fit": "Fit",
+      "fill": "Fill",
+      "custom": "Custom"
+    },
+    "border": {
+      "none": "None",
+      "solid": "Solid"
+    },
     "typography_preset": {
       "custom": "Custom",
       "body": "Body",
@@ -110,3 +128,4 @@
     }
   }
 }
+
