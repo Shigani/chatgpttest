@@ -165,7 +165,7 @@
     .site-header__bar {
       grid-template-columns: auto 1fr auto;
       min-height: 4.5rem;
-      padding: 0 1.25rem;
+      padding: 0;
       border-radius: 0;
     }
 
@@ -175,11 +175,16 @@
 
     .site-header__menu-toggle {
       display: grid;
+      width: 3.5rem;
+      height: 4.5rem;
+      border-right: 1px solid #dedede;
       place-items: center;
     }
 
     .site-header__brand {
       justify-self: start;
+      min-width: 0;
+      padding: 0 1rem;
     }
 
     .site-header__search span:not(.visually-hidden) {
@@ -189,13 +194,21 @@
     .site-header__search {
       gap: 0;
     }
+
+    .site-header__actions {
+      gap: 0;
+    }
+
+    .site-header__search,
+    .site-header__icon {
+      width: 3.75rem;
+      height: 4.5rem;
+      justify-content: center;
+      border-left: 1px solid #dedede;
+    }
   }
 
   @media (max-width: 479px) {
-    .site-header__actions {
-      gap: 0.9rem;
-    }
-
     .site-header__search {
       display: flex;
     }
