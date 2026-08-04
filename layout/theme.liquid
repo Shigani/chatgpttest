@@ -32,7 +32,13 @@
     </style>
   </head>
   <body class="template-{{ template.name | handle }}">
-    {% comment %}Temporarily hidden for layout review.{% endcomment %}
+    {% assign header_variant = settings.header_variant | default: 'hidden' %}
+    {% case header_variant %}
+      {% when 'legacy' %}
+        {% section 'site-header' %}
+      {% when 'new' %}
+        {% section 'site-header-new' %}
+    {% endcase %}
     <main id="MainContent">
       {{ content_for_layout }}
     </main>
