@@ -6,31 +6,6 @@
     "theme_author": "OpenAI",
     "theme_support_email": "support@openai.com",
     "theme_documentation_url": "https://help.shopify.com/manual/online-store/themes"
-  },
-  {
-    "name": "t:settings.header.name",
-    "settings": [
-      {
-        "type": "select",
-        "id": "header_variant",
-        "label": "t:labels.header_variant",
-        "options": [
-          {
-            "value": "hidden",
-            "label": "t:options.header_variant.hidden"
-          },
-          {
-            "value": "legacy",
-            "label": "t:options.header_variant.legacy"
-          },
-          {
-            "value": "new",
-            "label": "t:options.header_variant.new"
-          }
-        ],
-        "default": "hidden"
-      }
-    ]
   }
 ]
 
