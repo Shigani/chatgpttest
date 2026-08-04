@@ -32,7 +32,7 @@
     </style>
   </head>
   <body class="template-{{ template.name | handle }}">
-    {% section 'site-header' %}
+    {% comment %}Temporarily hidden for layout review.{% endcomment %}
     <main id="MainContent">
       {{ content_for_layout }}
     </main>
