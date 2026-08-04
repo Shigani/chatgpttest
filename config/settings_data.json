@@ -9,7 +9,16 @@
  */
 {
   "current": {
-    "settings": {}
+    "settings": {},
+    "sections": {
+      "site-header": {
+        "type": "site-header",
+        "settings": {
+          "menu": "home"
+        }
+      }
+    },
+    "content_for_index": []
   },
   "presets": {
     "Default": {
@@ -17,4 +26,3 @@
     }
   }
 }
-
