@@ -49,6 +49,7 @@
 
   .hero-slider--height-adapt {
     --hero-height: 56.25vw;
+    --hero-height-mobile: 81.615vw;
   }
 
   .hero-slider--height-small {
@@ -438,8 +439,8 @@
     .hero-slider,
     .hero-slider__swiper,
     .hero-slider__slide {
-      min-height: 0;
-      height: 81.615vw;
+      min-height: min(var(--hero-height-mobile, var(--hero-height)), 100svh);
+      height: min(var(--hero-height-mobile, var(--hero-height)), 100svh);
     }
 
     .hero-slider__overlay {
