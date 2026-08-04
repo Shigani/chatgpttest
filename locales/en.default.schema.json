@@ -1,12 +1,3 @@
-/*
- * ------------------------------------------------------------
- * IMPORTANT: The contents of this file are auto-generated.
- *
- * This file may be updated by the Shopify admin language editor
- * or related systems. Please exercise caution as any changes
- * made to this file may be overwritten.
- * ------------------------------------------------------------
- */
 {
   "sections": {
     "main_index": {
@@ -17,7 +8,19 @@
       "slide": "Slide"
     },
     "site_header": {
-      "name": "Header"
+      "name": "Header",
+      "blocks": {
+        "mega_menu_promo": {
+          "name": "Mega menu promo",
+          "settings": {
+            "menu_item": {
+              "label": "Parent menu item handle",
+              "info": "Enter the handle of the menu item that should show this promo."
+            },
+            "title": "Title"
+          }
+        }
+      }
     },
     "site_header_new": {
       "name": "New header"
@@ -141,4 +144,3 @@
     }
   }
 }
-
