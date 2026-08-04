@@ -1,13 +1,13 @@
 {
   "current": {
     "settings": {
-      "header_variant": "hidden"
+      "header_variant": "new"
     }
   },
   "presets": {
     "Default": {
       "settings": {
-        "header_variant": "hidden"
+        "header_variant": "new"
       }
     }
   }
