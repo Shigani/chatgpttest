@@ -173,6 +173,26 @@
     box-shadow: none;
   }
 
+  .template-index .site-header:not(.site-header--scrolled) {
+    background: transparent;
+  }
+
+  .template-index .site-header:not(.site-header--scrolled) .site-header__bar {
+    background: transparent;
+    color: #ffffff;
+    box-shadow: none;
+  }
+
+  .template-index .site-header:not(.site-header--scrolled):has(.site-header__dropdown[open]) {
+    background: #ffffff;
+  }
+
+  .template-index .site-header:not(.site-header--scrolled):has(.site-header__dropdown[open]) .site-header__bar {
+    background: #ffffff;
+    color: #0b0b0b;
+    box-shadow: none;
+  }
+
   .site-header__navigation,
   .site-header__actions {
     display: flex;
