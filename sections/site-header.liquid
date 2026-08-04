@@ -1,6 +1,6 @@
-<header class="site-header">
+<header class="site-header" data-site-header>
   <div class="site-header__bar">
-    <button class="site-header__menu-toggle" type="button" aria-label="{{ 'header.menu' | t }}">
+    <button class="site-header__menu-toggle" type="button" aria-label="{{ 'header.menu' | t }}" aria-expanded="false">
       <svg viewBox="0 0 24 24" aria-hidden="true">
         <path d="M4 7h16M4 12h16M4 17h16"></path>
       </svg>
@@ -50,29 +50,49 @@
 
 {% stylesheet %}
   .site-header {
-    position: absolute;
-    top: clamp(1rem, 3.9vh, 1.7rem);
+    position: fixed;
+    top: clamp(0.75rem, 2.5vh, 1.5rem);
     right: clamp(1rem, 3.9vw, 3.15rem);
     left: clamp(1rem, 3.9vw, 3.15rem);
     z-index: 20;
+    transition: transform 420ms cubic-bezier(0.22, 1, 0.36, 1);
   }
 
   .site-header__bar {
     display: grid;
-    grid-template-columns: 1fr auto 1fr;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
     align-items: center;
     min-height: 5rem;
-    padding: 0 1.95rem;
-    border-radius: 0.65rem;
+    padding: 0 clamp(1rem, 2.5vw, 1.95rem);
+    border: 1px solid rgb(11 11 11 / 0.06);
+    border-radius: 1rem;
     background: #ffffff;
     color: #0b0b0b;
+    box-shadow: 0 0.75rem 2rem rgb(0 0 0 / 0.08);
+    transition: background-color 350ms ease, border-color 350ms ease, border-radius 350ms ease, box-shadow 350ms ease, color 350ms ease;
+  }
+
+  .template-index .site-header:not(.site-header--scrolled) .site-header__bar {
+    border-color: transparent;
+    background: transparent;
+    color: #ffffff;
+    box-shadow: none;
   }
 
   .site-header__navigation,
-  .site-header__actions,
-  .site-header__menu-toggle {
+  .site-header__actions {
     display: flex;
     align-items: center;
+  }
+
+  .site-header__navigation {
+    justify-self: start;
+    gap: clamp(1.35rem, 2.15vw, 2rem);
+  }
+
+  .site-header__actions {
+    justify-self: end;
+    gap: 1.2rem;
   }
 
   .site-header__menu-toggle {
@@ -82,15 +102,6 @@
     background: transparent;
     color: inherit;
     cursor: pointer;
-  }
-
-  .site-header__navigation {
-    gap: clamp(1.35rem, 2.15vw, 2rem);
-  }
-
-  .site-header__actions {
-    justify-content: flex-end;
-    gap: 1.45rem;
   }
 
   .site-header a {
@@ -104,17 +115,21 @@
   }
 
   .site-header__brand {
+    justify-self: center;
     font-size: clamp(1.35rem, 2.1vw, 1.8rem);
     font-weight: 750;
     letter-spacing: -0.035em;
+    line-height: 1;
+    text-align: center;
   }
 
   .site-header__search {
     display: flex;
     align-items: center;
     gap: clamp(1.2rem, 3.6vw, 3rem);
-    color: #5b5b5b;
+    color: inherit;
     font-size: 0.95rem;
+    white-space: nowrap;
   }
 
   .site-header svg {
@@ -129,10 +144,13 @@
 
   .site-header__icon {
     display: grid;
+    min-width: 2.75rem;
+    min-height: 2.75rem;
     place-items: center;
   }
 
-  .site-header a:hover {
+  .site-header a:hover,
+  .site-header__menu-toggle:hover {
     opacity: 0.62;
   }
 
@@ -154,19 +172,23 @@
     border: 0;
   }
 
-  @media (max-width: 899px) {
+  .site-header--hidden {
+    transform: translateY(calc(-100% - 1rem));
+  }
+
+  @media (max-width: 990px) {
     .site-header {
-      position: relative;
       top: 0;
       right: 0;
       left: 0;
     }
 
     .site-header__bar {
-      grid-template-columns: auto 1fr auto;
-      min-height: 4.5rem;
+      grid-template-columns: 3.5rem minmax(0, 1fr) auto;
+      min-height: 4.25rem;
       padding: 0;
       border-radius: 0;
+      box-shadow: 0 1px 0 rgb(11 11 11 / 0.14);
     }
 
     .site-header__navigation {
@@ -176,15 +198,20 @@
     .site-header__menu-toggle {
       display: grid;
       width: 3.5rem;
-      height: 4.5rem;
-      border-right: 1px solid #dedede;
+      height: 4.25rem;
+      border-right: 1px solid rgb(11 11 11 / 0.14);
       place-items: center;
     }
 
     .site-header__brand {
       justify-self: start;
+      width: min(100%, 8.25rem);
       min-width: 0;
-      padding: 0 1rem;
+      padding: 0.5rem 0.9rem;
+      font-size: 1.25rem;
+      line-height: 1.05;
+      text-align: left;
+      overflow-wrap: anywhere;
     }
 
     .site-header__search span:not(.visually-hidden) {
@@ -202,22 +229,74 @@
     .site-header__search,
     .site-header__icon {
       width: 3.75rem;
-      height: 4.5rem;
+      height: 4.25rem;
       justify-content: center;
-      border-left: 1px solid #dedede;
-    }
-  }
-
-  @media (max-width: 479px) {
-    .site-header__search {
-      display: flex;
+      border-left: 1px solid rgb(11 11 11 / 0.14);
     }
 
     .site-header__account {
       display: none;
     }
+
+    .site-header--hidden {
+      transform: translateY(-100%);
+    }
+
+    .template-index .site-header:not(.site-header--scrolled) .site-header__bar {
+      box-shadow: none;
+    }
+
+    .template-index .site-header:not(.site-header--scrolled) .site-header__menu-toggle,
+    .template-index .site-header:not(.site-header--scrolled) .site-header__search,
+    .template-index .site-header:not(.site-header--scrolled) .site-header__icon {
+      border-color: rgb(255 255 255 / 0.3);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .site-header,
+    .site-header__bar {
+      transition: none;
+    }
   }
 {% endstylesheet %}
+
+{% javascript %}
+  const initializeSiteHeaders = (root = document) => {
+    root.querySelectorAll('[data-site-header]').forEach((header) => {
+      if (header.dataset.siteHeaderInitialized === 'true') return;
+
+      let lastScrollY = window.scrollY;
+
+      const updateHeader = () => {
+        const currentScrollY = Math.max(window.scrollY, 0);
+        const isScrolled = currentScrollY > 12;
+        const isMobile = window.matchMedia('(max-width: 990px)').matches;
+
+        header.classList.toggle('site-header--scrolled', isScrolled);
+
+        if (!isMobile) {
+          header.classList.remove('site-header--hidden');
+        } else if (currentScrollY <= 24 || currentScrollY < lastScrollY - 2) {
+          header.classList.remove('site-header--hidden');
+        } else if (currentScrollY > lastScrollY + 2 && currentScrollY > 80) {
+          header.classList.add('site-header--hidden');
+        }
+
+        lastScrollY = currentScrollY;
+      };
+
+      updateHeader();
+      window.addEventListener('scroll', updateHeader, { passive: true });
+      window.addEventListener('resize', updateHeader);
+      header.dataset.siteHeaderInitialized = 'true';
+    });
+  };
+
+  initializeSiteHeaders();
+  document.addEventListener('DOMContentLoaded', () => initializeSiteHeaders());
+  document.addEventListener('shopify:section:load', (event) => initializeSiteHeaders(event.target));
+{% endjavascript %}
 
 {% schema %}
 {
