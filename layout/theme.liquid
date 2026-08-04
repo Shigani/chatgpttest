@@ -1,3 +1,6 @@
+Exit code: 0
+Wall time: 0.6 seconds
+Output:
 <!doctype html>
 <html lang="{{ request.locale.iso_code }}">
   <head>
@@ -32,13 +35,7 @@
     </style>
   </head>
   <body class="template-{{ template.name | handle }}">
-    {% assign header_variant = settings.header_variant | default: 'hidden' %}
-    {% case header_variant %}
-      {% when 'legacy' %}
-        {% section 'site-header' %}
-      {% when 'new' %}
-        {% section 'site-header-new' %}
-    {% endcase %}
+    {% section 'site-header' %}
     <main id="MainContent">
       {{ content_for_layout }}
     </main>
