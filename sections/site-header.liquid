@@ -9,7 +9,34 @@
     <nav class="site-header__navigation" aria-label="{{ 'header.primary_navigation' | t }}">
       {% if section.settings.menu != blank %}
         {% for link in section.settings.menu.links %}
-          <a href="{{ link.url }}">{{ link.title | escape }}</a>
+          {% if link.links != blank %}
+            <details class="site-header__dropdown" data-site-header-dropdown>
+              <summary class="site-header__dropdown-trigger" aria-controls="site-header-dropdown-{{ section.id }}-{{ forloop.index }}">
+                <span>{{ link.title | escape }}</span>
+                <svg class="site-header__dropdown-chevron" viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="m6 9 6 6 6-6"></path>
+                </svg>
+              </summary>
+              <div class="site-header__dropdown-panel" id="site-header-dropdown-{{ section.id }}-{{ forloop.index }}">
+                <ul class="site-header__dropdown-list" role="list">
+                  {% for child_link in link.links %}
+                    <li>
+                      <a href="{{ child_link.url }}">{{ child_link.title | escape }}</a>
+                      {% if child_link.links != blank %}
+                        <ul class="site-header__dropdown-sublist" role="list">
+                          {% for grandchild_link in child_link.links %}
+                            <li><a href="{{ grandchild_link.url }}">{{ grandchild_link.title | escape }}</a></li>
+                          {% endfor %}
+                        </ul>
+                      {% endif %}
+                    </li>
+                  {% endfor %}
+                </ul>
+              </div>
+            </details>
+          {% else %}
+            <a href="{{ link.url }}">{{ link.title | escape }}</a>
+          {% endif %}
         {% endfor %}
       {% else %}
         <a href="{{ routes.root_url }}">{{ 'header.home' | t }}</a>
@@ -118,6 +145,111 @@
     font-weight: 500;
   }
 
+  .site-header__dropdown {
+    position: relative;
+  }
+
+  .site-header__dropdown-trigger {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.35rem 0;
+    color: inherit;
+    cursor: pointer;
+    font-size: 0.95rem;
+    font-weight: 500;
+    list-style: none;
+  }
+
+  .site-header__dropdown-trigger::-webkit-details-marker {
+    display: none;
+  }
+
+  .site-header__dropdown-trigger::marker {
+    content: '';
+  }
+
+  .site-header__dropdown-chevron {
+    width: 0.9rem;
+    height: 0.9rem;
+    transition: transform 180ms ease;
+  }
+
+  .site-header__dropdown[open] > .site-header__dropdown-trigger .site-header__dropdown-chevron {
+    transform: rotate(180deg);
+  }
+
+  .site-header__dropdown-panel {
+    position: absolute;
+    top: calc(100% + 0.75rem);
+    left: -0.85rem;
+    z-index: 1;
+    min-width: 14rem;
+    padding: 0.55rem;
+    border: 1px solid rgb(11 11 11 / 0.08);
+    border-radius: 0.75rem;
+    background: #ffffff;
+    color: #0b0b0b;
+    box-shadow: 0 0.75rem 2rem rgb(0 0 0 / 0.12);
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-0.4rem);
+    transition: opacity 180ms ease, transform 180ms ease, visibility 180ms ease;
+    visibility: hidden;
+  }
+
+  .site-header__dropdown-panel::before {
+    position: absolute;
+    top: -0.75rem;
+    right: 0;
+    left: 0;
+    height: 0.75rem;
+    content: '';
+  }
+
+  .site-header__dropdown[open] > .site-header__dropdown-panel {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+    visibility: visible;
+  }
+
+  .site-header__dropdown-list,
+  .site-header__dropdown-sublist {
+    display: grid;
+    gap: 0.15rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .site-header__dropdown-list a {
+    display: flex;
+    align-items: center;
+    min-height: 2.5rem;
+    padding: 0.65rem 0.75rem;
+    border-radius: 0.5rem;
+    font-size: 0.9rem;
+    white-space: nowrap;
+  }
+
+  .site-header__dropdown-list a:hover {
+    background: rgb(11 11 11 / 0.06);
+    opacity: 1;
+  }
+
+  .site-header__dropdown-sublist {
+    margin: 0.1rem 0 0.25rem;
+    padding: 0.25rem 0 0.25rem 0.65rem;
+    border-left: 1px solid rgb(11 11 11 / 0.12);
+  }
+
+  .site-header__dropdown-sublist a {
+    min-height: 2.15rem;
+    padding: 0.45rem 0.65rem;
+    font-size: 0.85rem;
+  }
+
   .site-header__brand {
     justify-self: center;
     font-size: clamp(1.35rem, 2.1vw, 1.8rem);
@@ -200,6 +332,10 @@
       display: none;
     }
 
+    .site-header__dropdown-panel {
+      display: none;
+    }
+
     .site-header__menu-toggle {
       display: grid;
       width: 3.5rem;
@@ -253,7 +389,9 @@
 
   @media (prefers-reduced-motion: reduce) {
     .site-header,
-    .site-header__bar {
+    .site-header__bar,
+    .site-header__dropdown-chevron,
+    .site-header__dropdown-panel {
       transition: none;
     }
   }
@@ -287,6 +425,34 @@
       updateHeader();
       window.addEventListener('scroll', updateHeader, { passive: true });
       window.addEventListener('resize', updateHeader);
+
+      const dropdowns = [...header.querySelectorAll('[data-site-header-dropdown]')];
+      const closeDropdowns = (except = null) => {
+        dropdowns.forEach((dropdown) => {
+          if (dropdown !== except) dropdown.removeAttribute('open');
+        });
+      };
+
+      dropdowns.forEach((dropdown) => {
+        dropdown.addEventListener('toggle', () => {
+          if (dropdown.open) closeDropdowns(dropdown);
+        });
+      });
+
+      document.addEventListener('pointerdown', (event) => {
+        if (!header.contains(event.target)) closeDropdowns();
+      });
+
+      document.addEventListener('keydown', (event) => {
+        if (event.key !== 'Escape') return;
+
+        const openDropdown = dropdowns.find((dropdown) => dropdown.open);
+        if (!openDropdown) return;
+
+        openDropdown.removeAttribute('open');
+        openDropdown.querySelector('summary')?.focus();
+      });
+
       header.dataset.siteHeaderInitialized = 'true';
     });
   };
