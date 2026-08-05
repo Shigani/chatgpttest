@@ -260,13 +260,14 @@
     background: currentColor;
     content: '';
     transform: scaleX(0);
-    transform-origin: left;
+    transform-origin: right;
     transition: transform 180ms ease;
   }
 
   .site-header__navigation > a:hover::after,
   .site-header__navigation > a:focus-visible::after {
     transform: scaleX(1);
+    transform-origin: left;
   }
 
   .site-header__dropdown {
@@ -306,13 +307,14 @@
     background: currentColor;
     content: '';
     transform: scaleX(0);
-    transform-origin: left;
+    transform-origin: right;
     transition: transform 180ms ease;
   }
 
   .site-header__dropdown:hover > .site-header__dropdown-trigger > span:first-child::after,
   .site-header__dropdown[open] > .site-header__dropdown-trigger > span:first-child::after {
     transform: scaleX(1);
+    transform-origin: left;
   }
 
   .site-header__dropdown-chevron {
