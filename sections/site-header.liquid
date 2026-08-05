@@ -228,6 +228,28 @@
     font-weight: 500;
   }
 
+  .site-header__navigation > a {
+    position: relative;
+  }
+
+  .site-header__navigation > a::after {
+    position: absolute;
+    right: 0;
+    bottom: -0.45rem;
+    left: 0;
+    height: 1px;
+    background: currentColor;
+    content: '';
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 180ms ease;
+  }
+
+  .site-header__navigation > a:hover::after,
+  .site-header__navigation > a:focus-visible::after {
+    transform: scaleX(1);
+  }
+
   .site-header__dropdown {
     position: static;
   }
