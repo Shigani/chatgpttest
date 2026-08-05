@@ -139,6 +139,20 @@
     transition: transform 420ms cubic-bezier(0.22, 1, 0.36, 1);
   }
 
+  html.site-header-dropdown-active,
+  html.site-header-dropdown-active body {
+    overflow: hidden;
+  }
+
+  #MainContent {
+    transition: filter 220ms ease;
+  }
+
+  body.site-header-dropdown-active #MainContent {
+    filter: blur(0.35rem);
+    pointer-events: none;
+  }
+
   .site-header__bar {
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
@@ -777,6 +791,12 @@
       window.addEventListener('resize', updateHeader);
 
       const dropdowns = [...header.querySelectorAll('[data-site-header-dropdown]')];
+      const syncDropdownState = () => {
+        const isDropdownActive = dropdowns.some((dropdown) => dropdown.open);
+
+        document.documentElement.classList.toggle('site-header-dropdown-active', isDropdownActive);
+        document.body?.classList.toggle('site-header-dropdown-active', isDropdownActive);
+      };
       const closingAnimationHandlers = new WeakMap();
       const switchHeightAnimationHandlers = new WeakMap();
       const cancelClosingAnimation = (panel) => {
@@ -814,6 +834,7 @@
 
         if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
           dropdown.removeAttribute('open');
+          syncDropdownState();
           return;
         }
 
@@ -823,6 +844,7 @@
           closingAnimationHandlers.delete(panel);
           dropdown.removeAttribute('open');
           panel.classList.remove('site-header__dropdown-panel--closing');
+          syncDropdownState();
         };
 
         closingAnimationHandlers.set(panel, finishClosing);
@@ -849,6 +871,7 @@
         if (toPanel) resetDropdownAnimation(toDropdown);
         fromDropdown.removeAttribute('open');
         toDropdown.setAttribute('open', '');
+        syncDropdownState();
 
         if (!toPanel) return;
 
@@ -924,6 +947,7 @@
 
         closeDropdowns(dropdown);
         dropdown.setAttribute('open', '');
+        syncDropdownState();
 
         if (!panel) return;
 
@@ -936,6 +960,7 @@
       dropdowns.forEach((dropdown) => {
         dropdown.addEventListener('toggle', () => {
           if (dropdown.open) closeDropdowns(dropdown);
+          syncDropdownState();
         });
 
         dropdown.querySelector('summary')?.addEventListener('click', (event) => {
