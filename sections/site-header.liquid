@@ -635,6 +635,8 @@
       const isInsideHeader = (target) => target && target.nodeType && header.contains(target);
       const openDropdown = (dropdown) => {
         window.clearTimeout(dropdownCloseTimer);
+        if (dropdown.open) return;
+
         closeDropdowns(dropdown);
         dropdown.setAttribute('open', '');
 
