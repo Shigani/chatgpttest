@@ -791,11 +791,44 @@
       window.addEventListener('resize', updateHeader);
 
       const dropdowns = [...header.querySelectorAll('[data-site-header-dropdown]')];
+      let dropdownScrollLock;
+      const updateDropdownScrollLock = (isActive) => {
+        if (isActive) {
+          if (dropdownScrollLock) return;
+
+          const body = document.body;
+          const scrollY = window.scrollY;
+          const scrollbarWidth = Math.max(window.innerWidth - document.documentElement.clientWidth, 0);
+          const originalPaddingRight = body?.style.paddingRight ?? '';
+          const currentPaddingRight = body ? parseFloat(window.getComputedStyle(body).paddingRight) || 0 : 0;
+
+          dropdownScrollLock = { originalPaddingRight, scrollY };
+
+          if (body && scrollbarWidth > 0) {
+            body.style.paddingRight = `${currentPaddingRight + scrollbarWidth}px`;
+          }
+
+          window.scrollTo(0, scrollY);
+          return;
+        }
+
+        if (!dropdownScrollLock) return;
+
+        const { originalPaddingRight, scrollY } = dropdownScrollLock;
+        if (document.body) document.body.style.paddingRight = originalPaddingRight;
+        window.scrollTo(0, scrollY);
+        dropdownScrollLock = null;
+      };
       const syncDropdownState = () => {
         const isDropdownActive = dropdowns.some((dropdown) => dropdown.open);
 
+        updateDropdownScrollLock(isDropdownActive);
         document.documentElement.classList.toggle('site-header-dropdown-active', isDropdownActive);
         document.body?.classList.toggle('site-header-dropdown-active', isDropdownActive);
+
+        if (isDropdownActive && dropdownScrollLock) {
+          window.scrollTo(0, dropdownScrollLock.scrollY);
+        }
       };
       const closingAnimationHandlers = new WeakMap();
       const switchHeightAnimationHandlers = new WeakMap();
