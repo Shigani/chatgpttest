@@ -651,10 +651,6 @@
           if (dropdown.open) closeDropdowns(dropdown);
         });
 
-        dropdown.addEventListener('pointerenter', () => {
-          if (canHover) openDropdown(dropdown);
-        });
-
         dropdown.querySelector('summary')?.addEventListener('click', (event) => {
           if (canHover && event.detail > 0) {
             event.preventDefault();
