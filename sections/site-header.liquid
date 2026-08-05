@@ -366,6 +366,11 @@
     animation: site-header-dropdown-slide-down-scrolled 300ms cubic-bezier(0.22, 1, 0.36, 1);
   }
 
+  .site-header__dropdown-panel--instant {
+    animation: none !important;
+    transition: none !important;
+  }
+
   .site-header__dropdown-panel--replay .site-header__mega-menu-column,
   .site-header__dropdown-panel--replay .site-header__mega-menu-promo {
     animation: site-header-dropdown-item-fade-up 300ms cubic-bezier(0.22, 1, 0.36, 1) 300ms both;
@@ -779,6 +784,7 @@
         if (!panel) return;
 
         panel.classList.remove('site-header__dropdown-panel--replay');
+        panel.classList.remove('site-header__dropdown-panel--instant');
         cancelClosingAnimation(panel);
       };
       const closeDropdown = (dropdown) => {
@@ -813,9 +819,33 @@
       const dropdownCloseDelay = 600;
       let dropdownCloseTimer;
       const isInsideHeader = (target) => target && target.nodeType && header.contains(target);
+      const switchDropdown = (fromDropdown, toDropdown) => {
+        const toPanel = toDropdown.querySelector('.site-header__dropdown-panel');
+
+        resetDropdownAnimation(fromDropdown);
+        fromDropdown.removeAttribute('open');
+        toDropdown.setAttribute('open', '');
+
+        if (!toPanel) return;
+
+        cancelClosingAnimation(toPanel);
+        toPanel.classList.remove('site-header__dropdown-panel--replay');
+        toPanel.classList.add('site-header__dropdown-panel--instant');
+        void toPanel.offsetWidth;
+        window.requestAnimationFrame(() => {
+          if (toPanel.isConnected) toPanel.classList.remove('site-header__dropdown-panel--instant');
+        });
+      };
       const openDropdown = (dropdown) => {
         window.clearTimeout(dropdownCloseTimer);
         const panel = dropdown.querySelector('.site-header__dropdown-panel');
+        const activeDropdown = dropdowns.find((item) => item !== dropdown && item.open);
+
+        if (activeDropdown) {
+          switchDropdown(activeDropdown, dropdown);
+          return;
+        }
+
         if (dropdown.open) {
           if (!panel?.classList.contains('site-header__dropdown-panel--closing')) return;
 
