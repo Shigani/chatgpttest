@@ -346,15 +346,15 @@
     }
 
     .hero-slider__button:hover .hero-slider__button-icon-circle svg {
-      animation: hero-slider-slide-in-out 900ms cubic-bezier(0.22, 1, 0.36, 1);
+      animation: hero-slider-arrow-flip-vertical 900ms cubic-bezier(0.22, 1, 0.36, 1);
     }
   }
 
-  @keyframes hero-slider-slide-in-out {
-    0% { transform: translateX(0); }
-    50% { transform: translateX(2rem); }
-    50.001% { transform: translateX(-2rem); }
-    100% { transform: translateX(0); }
+  @keyframes hero-slider-arrow-flip-vertical {
+    0% { transform: translateY(0); }
+    50% { transform: translateY(2rem); }
+    50.001% { transform: translateY(-2rem); }
+    100% { transform: translateY(0); }
   }
 
   @keyframes hero-slider-content-fade-up {
@@ -776,4 +776,3 @@
   ]
 }
 {% endschema %}
-
