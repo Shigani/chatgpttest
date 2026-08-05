@@ -724,22 +724,43 @@
       window.addEventListener('resize', updateHeader);
 
       const dropdowns = [...header.querySelectorAll('[data-site-header-dropdown]')];
+      const closingAnimationHandlers = new WeakMap();
+      const cancelClosingAnimation = (panel) => {
+        const handler = closingAnimationHandlers.get(panel);
+        if (handler) {
+          panel.removeEventListener('animationend', handler);
+          closingAnimationHandlers.delete(panel);
+        }
+
+        panel.classList.remove('site-header__dropdown-panel--closing');
+      };
       const resetDropdownAnimation = (dropdown) => {
-        dropdown.querySelector('.site-header__dropdown-panel')?.classList.remove('site-header__dropdown-panel--replay', 'site-header__dropdown-panel--closing');
+        const panel = dropdown.querySelector('.site-header__dropdown-panel');
+        if (!panel) return;
+
+        panel.classList.remove('site-header__dropdown-panel--replay');
+        cancelClosingAnimation(panel);
       };
       const closeDropdown = (dropdown) => {
-        if (!dropdown.open) return;
-
         const panel = dropdown.querySelector('.site-header__dropdown-panel');
-        dropdown.removeAttribute('open');
-        if (!panel) return;
+        if (!dropdown.open || !panel || panel.classList.contains('site-header__dropdown-panel--closing')) return;
+
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+          dropdown.removeAttribute('open');
+          return;
+        }
 
         resetDropdownAnimation(dropdown);
         void panel.offsetWidth;
-        panel.classList.add('site-header__dropdown-panel--closing');
-        panel.addEventListener('animationend', () => {
+        const finishClosing = () => {
+          closingAnimationHandlers.delete(panel);
+          dropdown.removeAttribute('open');
           panel.classList.remove('site-header__dropdown-panel--closing');
-        }, { once: true });
+        };
+
+        closingAnimationHandlers.set(panel, finishClosing);
+        panel.addEventListener('animationend', finishClosing, { once: true });
+        panel.classList.add('site-header__dropdown-panel--closing');
       };
       const closeDropdowns = (except = null) => {
         dropdowns.forEach((dropdown) => {
@@ -754,15 +775,24 @@
       const isInsideHeader = (target) => target && target.nodeType && header.contains(target);
       const openDropdown = (dropdown) => {
         window.clearTimeout(dropdownCloseTimer);
-        if (dropdown.open) return;
+        const panel = dropdown.querySelector('.site-header__dropdown-panel');
+        if (dropdown.open) {
+          if (!panel?.classList.contains('site-header__dropdown-panel--closing')) return;
+
+          cancelClosingAnimation(panel);
+          panel.classList.remove('site-header__dropdown-panel--replay');
+          void panel.offsetWidth;
+          panel.classList.add('site-header__dropdown-panel--replay');
+          return;
+        }
 
         closeDropdowns(dropdown);
         dropdown.setAttribute('open', '');
 
-        const panel = dropdown.querySelector('.site-header__dropdown-panel');
         if (!panel) return;
 
-        panel.classList.remove('site-header__dropdown-panel--replay', 'site-header__dropdown-panel--closing');
+        cancelClosingAnimation(panel);
+        panel.classList.remove('site-header__dropdown-panel--replay');
         void panel.offsetWidth;
         panel.classList.add('site-header__dropdown-panel--replay');
       };
