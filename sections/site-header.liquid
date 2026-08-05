@@ -333,6 +333,17 @@
     visibility: visible;
   }
 
+  .site-header.site-header--scrolled:has(.site-header__dropdown[open]) .site-header__bar {
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+  }
+
+  .site-header.site-header--scrolled .site-header__dropdown[open] > .site-header__dropdown-panel {
+    overflow: hidden;
+    border-bottom-right-radius: 1rem;
+    border-bottom-left-radius: 1rem;
+  }
+
   .site-header:not(.site-header--scrolled) .site-header__dropdown-panel {
     top: 0;
     z-index: -1;
