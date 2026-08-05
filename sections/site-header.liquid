@@ -311,8 +311,8 @@
     transition: transform 180ms ease;
   }
 
-  .site-header__dropdown:hover > .site-header__dropdown-trigger > span:first-child::after,
-  .site-header__dropdown[open] > .site-header__dropdown-trigger > span:first-child::after {
+  .site-header__dropdown:not(.site-header__dropdown--closing):hover > .site-header__dropdown-trigger > span:first-child::after,
+  .site-header__dropdown[open]:not(.site-header__dropdown--closing) > .site-header__dropdown-trigger > span:first-child::after {
     transform: scaleX(1);
     transform-origin: left;
   }
@@ -843,6 +843,7 @@
         }
 
         panel.classList.remove('site-header__dropdown-panel--closing');
+        panel.closest('[data-site-header-dropdown]')?.classList.remove('site-header__dropdown--closing');
       };
       const cancelSwitchHeightAnimation = (panel) => {
         const animation = switchHeightAnimationHandlers.get(panel);
@@ -879,12 +880,14 @@
         const finishClosing = () => {
           closingAnimationHandlers.delete(panel);
           dropdown.removeAttribute('open');
+          dropdown.classList.remove('site-header__dropdown--closing');
           panel.classList.remove('site-header__dropdown-panel--closing');
           syncDropdownState();
         };
 
         closingAnimationHandlers.set(panel, finishClosing);
         panel.addEventListener('animationend', finishClosing, { once: true });
+        dropdown.classList.add('site-header__dropdown--closing');
         panel.classList.add('site-header__dropdown-panel--closing');
       };
       const closeDropdowns = (except = null) => {
