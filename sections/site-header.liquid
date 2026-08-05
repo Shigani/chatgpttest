@@ -481,14 +481,21 @@
 
   .site-header__mega-menu-links {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     align-content: start;
     gap: 2rem;
-    width: min(100%, 37.5rem);
+    min-width: 0;
+    width: 100%;
   }
 
   .site-header__dropdown-panel--with-promos .site-header__mega-menu-links {
-    flex: 0 0 min(37.5rem, 45%);
+    flex: 1 1 0;
+    width: auto;
+    max-width: none;
+  }
+
+  .site-header__dropdown-panel--with-promos .site-header__mega-menu-promos {
+    flex: 1 1 0;
   }
 
   .site-header__mega-menu-column {
