@@ -630,7 +630,11 @@
         });
       };
       const canHover = window.matchMedia('(hover: hover)').matches;
+      const dropdownCloseDelay = 600;
+      let dropdownCloseTimer;
+      const isInsideHeader = (target) => target && target.nodeType && header.contains(target);
       const openDropdown = (dropdown) => {
+        window.clearTimeout(dropdownCloseTimer);
         closeDropdowns(dropdown);
         dropdown.setAttribute('open', '');
 
@@ -663,12 +667,17 @@
         });
       });
 
-      header.addEventListener('pointerleave', () => {
-        if (!canHover || header.matches(':focus-within')) return;
+      header.addEventListener('pointerenter', () => {
+        window.clearTimeout(dropdownCloseTimer);
+      });
 
-        window.setTimeout(() => {
+      header.addEventListener('pointerleave', (event) => {
+        if (!canHover || isInsideHeader(event.relatedTarget) || header.matches(':focus-within')) return;
+
+        window.clearTimeout(dropdownCloseTimer);
+        dropdownCloseTimer = window.setTimeout(() => {
           if (!header.matches(':hover') && !header.matches(':focus-within')) closeDropdowns();
-        }, 180);
+        }, dropdownCloseDelay);
       });
 
       document.addEventListener('pointerdown', (event) => {
