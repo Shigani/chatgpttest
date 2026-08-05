@@ -651,14 +651,6 @@
           if (canHover) openDropdown(dropdown);
         });
 
-        dropdown.addEventListener('pointerleave', () => {
-          if (!canHover || dropdown.matches(':focus-within')) return;
-
-          window.setTimeout(() => {
-            if (!dropdown.matches(':hover') && !dropdown.matches(':focus-within')) dropdown.removeAttribute('open');
-          }, 180);
-        });
-
         dropdown.querySelector('summary')?.addEventListener('click', (event) => {
           if (canHover && event.detail > 0) {
             event.preventDefault();
@@ -669,6 +661,14 @@
         dropdown.querySelector('summary')?.addEventListener('pointerenter', () => {
           if (canHover) openDropdown(dropdown);
         });
+      });
+
+      header.addEventListener('pointerleave', () => {
+        if (!canHover || header.matches(':focus-within')) return;
+
+        window.setTimeout(() => {
+          if (!header.matches(':hover') && !header.matches(':focus-within')) closeDropdowns();
+        }, 180);
       });
 
       document.addEventListener('pointerdown', (event) => {
