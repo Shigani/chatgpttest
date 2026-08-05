@@ -318,11 +318,13 @@
   .site-header__dropdown-chevron {
     width: 1.1rem;
     height: 1.1rem;
-    transition: transform 180ms ease;
+    backface-visibility: hidden;
+    transform-style: preserve-3d;
+    transition: transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
   }
 
   .site-header__dropdown[open] > .site-header__dropdown-trigger .site-header__dropdown-chevron {
-    transform: rotate(180deg);
+    transform: rotateX(180deg);
   }
 
   .site-header__dropdown-panel {
