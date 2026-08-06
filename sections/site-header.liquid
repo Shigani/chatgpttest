@@ -971,6 +971,11 @@
       transition: none !important;
     }
 
+    .site-header__mobile-menu-view.is-instant {
+      transform: translate3d(0, 0, 0) !important;
+      transition: none !important;
+    }
+
     .site-header__mobile-menu-view.is-active {
       transform: translate3d(0, 0, 0);
       pointer-events: auto;
@@ -1346,7 +1351,7 @@
         mobileMenuViews.forEach((view) => {
           const isRoot = view.dataset.siteHeaderMobileView === 'root';
           view.classList.toggle('is-active', isRoot);
-          view.classList.remove('is-before', 'is-after', 'is-hidden');
+          view.classList.remove('is-before', 'is-after', 'is-hidden', 'is-instant');
           view.setAttribute('aria-hidden', isRoot ? 'false' : 'true');
           if (isRoot) {
             rootView = view;
@@ -1368,7 +1373,8 @@
           currentView.setAttribute('aria-hidden', 'true');
         }
 
-        targetView.classList.remove('is-before', 'is-after', 'is-hidden');
+        targetView.classList.remove('is-before', 'is-after', 'is-hidden', 'is-instant');
+        if (direction === 'back') targetView.classList.add('is-instant');
         targetView.classList.add('is-active');
         targetView.setAttribute('aria-hidden', 'false');
         targetView.scrollTop = 0;
@@ -1377,7 +1383,7 @@
         mobileMenuViewCleanupTimer = window.setTimeout(() => {
           mobileMenuViews.forEach((view) => {
             if (view === targetView) return;
-            view.classList.remove('is-before', 'is-after', 'is-active');
+            view.classList.remove('is-before', 'is-after', 'is-active', 'is-instant');
             view.classList.add('is-hidden');
             view.setAttribute('aria-hidden', 'true');
           });
