@@ -880,14 +880,6 @@
       pointer-events: none;
     }
 
-    .site-header__mobile-menu-header-slot.is-root.is-returning .site-header__mobile-menu-brand {
-      animation: site-header-mobile-menu-brand-return 500ms cubic-bezier(0.22, 1, 0.36, 1) both;
-    }
-
-    .site-header__mobile-menu-header-slot.is-root.is-returning .site-header__mobile-menu-header-back {
-      transform: translate3d(0, 0, 0);
-    }
-
     .site-header__mobile-menu-header-back:hover {
       color: #555b5e;
     }
@@ -903,16 +895,6 @@
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
-    }
-
-    @keyframes site-header-mobile-menu-brand-return {
-      from {
-        transform: translate3d(100%, 0, 0);
-      }
-
-      to {
-        transform: translate3d(0, 0, 0);
-      }
     }
 
     .site-header__mobile-menu-close {
@@ -1306,15 +1288,12 @@
       let mobileMenuOpen = false;
       let mobileMenuCloseTimer;
       let mobileMenuViewCleanupTimer;
-      let mobileMenuHeaderTransitionTimer;
       let mobileMenuScrollLock;
       const syncMobileMenuHeader = (activeView, direction = 'forward') => {
         const isRoot = !activeView || activeView.dataset.siteHeaderMobileView === 'root';
-        const isReturning = isRoot && direction === 'back';
-        window.clearTimeout(mobileMenuHeaderTransitionTimer);
         mobileMenuHeaderSlot?.classList.toggle('is-root', isRoot);
         mobileMenuHeaderSlot?.classList.toggle('is-child', !isRoot);
-        mobileMenuHeaderSlot?.classList.toggle('is-returning', isReturning);
+        mobileMenuHeaderSlot?.classList.remove('is-returning');
         mobileMenuHeaderBrand?.setAttribute('aria-hidden', isRoot ? 'false' : 'true');
         mobileMenuHeaderBack?.setAttribute('aria-hidden', isRoot ? 'true' : 'false');
         if (mobileMenuHeaderBrand) {
@@ -1327,14 +1306,6 @@
         }
 
         if (isRoot) {
-          if (isReturning && mobileMenuHeaderSlot) {
-            mobileMenuHeaderSlot.classList.remove('is-returning');
-            void mobileMenuHeaderSlot.offsetWidth;
-            mobileMenuHeaderSlot.classList.add('is-returning');
-            mobileMenuHeaderTransitionTimer = window.setTimeout(() => {
-              mobileMenuHeaderSlot.classList.remove('is-returning');
-            }, 520);
-          }
           return;
         }
         if (!mobileMenuHeaderBack) return;
