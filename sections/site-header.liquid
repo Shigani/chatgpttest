@@ -102,20 +102,23 @@
       <div class="site-header__mobile-menu-backdrop" data-site-header-mobile-close></div>
       <aside class="site-header__mobile-menu-panel" role="dialog" aria-modal="true" aria-label="{{ 'header.menu' | t }}">
         <div class="site-header__mobile-menu-header">
-          <a class="site-header__mobile-menu-brand" data-site-header-mobile-brand href="{{ routes.root_url }}">{{ shop.name | escape }}</a>
-          <button
-            class="site-header__mobile-menu-header-back"
-            type="button"
-            data-site-header-mobile-header-back
-            aria-controls="site-header-mobile-view-root"
-            aria-label="{{ 'header.back' | t }}"
-            hidden
-          >
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <path d="m15 6-6 6 6 6"></path>
-            </svg>
-            <span data-site-header-mobile-header-back-label></span>
-          </button>
+          <div class="site-header__mobile-menu-header-slot is-root" data-site-header-mobile-header-slot>
+            <a class="site-header__mobile-menu-brand" data-site-header-mobile-brand href="{{ routes.root_url }}">{{ shop.name | escape }}</a>
+            <button
+              class="site-header__mobile-menu-header-back"
+              type="button"
+              data-site-header-mobile-header-back
+              aria-controls="site-header-mobile-view-root"
+              aria-label="{{ 'header.back' | t }}"
+              aria-hidden="true"
+              tabindex="-1"
+            >
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="m15 6-6 6 6 6"></path>
+              </svg>
+              <span data-site-header-mobile-header-back-label></span>
+            </button>
+          </div>
           <button class="site-header__mobile-menu-close" type="button" data-site-header-mobile-close aria-label="{{ 'header.close' | t }}">
             <svg viewBox="0 0 24 24" aria-hidden="true">
               <path d="m6 6 12 12M18 6 6 18"></path>
@@ -812,23 +815,38 @@
       border-bottom: 1px solid #e1e1e1;
     }
 
-    .site-header__mobile-menu-brand {
+    .site-header__mobile-menu-header-slot {
+      position: relative;
+      display: flex;
       flex: 1;
+      align-self: stretch;
       min-width: 0;
+      align-items: center;
+      overflow: hidden;
+    }
+
+    .site-header__mobile-menu-brand {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      width: 100%;
+      align-items: center;
       font-size: 1.35rem;
       font-weight: 750;
       letter-spacing: -0.035em;
       line-height: 1;
       overflow-wrap: anywhere;
+      transform: translate3d(0, 0, 0);
+      transition: transform 500ms cubic-bezier(0.22, 1, 0.36, 1);
     }
 
     .site-header__mobile-menu-header-back {
+      position: absolute;
+      inset: 0;
       display: flex;
-      flex: 1;
-      min-width: 0;
+      width: 100%;
       align-items: center;
       gap: 0.65rem;
-      min-height: 2.75rem;
       padding: 0;
       border: 0;
       background: transparent;
@@ -840,11 +858,26 @@
       letter-spacing: -0.035em;
       line-height: 1;
       text-align: left;
+      transform: translate3d(100%, 0, 0);
+      transition: transform 500ms cubic-bezier(0.22, 1, 0.36, 1);
     }
 
-    .site-header__mobile-menu-brand[hidden],
-    .site-header__mobile-menu-header-back[hidden] {
-      display: none;
+    .site-header__mobile-menu-header-slot.is-child .site-header__mobile-menu-brand {
+      transform: translate3d(-100%, 0, 0);
+      pointer-events: none;
+    }
+
+    .site-header__mobile-menu-header-slot.is-child .site-header__mobile-menu-header-back {
+      transform: translate3d(0, 0, 0);
+      pointer-events: auto;
+    }
+
+    .site-header__mobile-menu-header-slot.is-root .site-header__mobile-menu-brand {
+      pointer-events: auto;
+    }
+
+    .site-header__mobile-menu-header-slot.is-root .site-header__mobile-menu-header-back {
+      pointer-events: none;
     }
 
     .site-header__mobile-menu-header-back:hover {
@@ -1062,10 +1095,13 @@
     .site-header__dropdown-chevron,
     .site-header__dropdown-trigger > span:first-child::after,
     .site-header__dropdown-panel,
-    .site-header__mobile-menu,
-    .site-header__mobile-menu-panel,
-    .site-header__mobile-menu-view,
-    .site-header__mobile-menu-chevron {
+      .site-header__mobile-menu,
+      .site-header__mobile-menu-panel,
+      .site-header__mobile-menu-view,
+      .site-header__mobile-menu-header-slot,
+      .site-header__mobile-menu-brand,
+      .site-header__mobile-menu-header-back,
+      .site-header__mobile-menu-chevron {
       transition: none;
     }
 
@@ -1232,6 +1268,7 @@
       const mobileMenu = header.querySelector('[data-site-header-mobile-menu]');
       const mobileMenuToggle = header.querySelector('[data-site-header-mobile-toggle]');
       const mobileMenuCloseButton = mobileMenu?.querySelector('[data-site-header-mobile-close][type="button"]');
+      const mobileMenuHeaderSlot = mobileMenu?.querySelector('[data-site-header-mobile-header-slot]');
       const mobileMenuHeaderBrand = mobileMenu?.querySelector('[data-site-header-mobile-brand]');
       const mobileMenuHeaderBack = mobileMenu?.querySelector('[data-site-header-mobile-header-back]');
       const mobileMenuHeaderBackLabel = mobileMenuHeaderBack?.querySelector('[data-site-header-mobile-header-back-label]');
@@ -1242,9 +1279,18 @@
       let mobileMenuScrollLock;
       const syncMobileMenuHeader = (activeView) => {
         const isRoot = !activeView || activeView.dataset.siteHeaderMobileView === 'root';
-        mobileMenuHeaderBrand?.toggleAttribute('hidden', !isRoot);
-        mobileMenuHeaderBack?.toggleAttribute('hidden', isRoot);
+        mobileMenuHeaderSlot?.classList.toggle('is-root', isRoot);
+        mobileMenuHeaderSlot?.classList.toggle('is-child', !isRoot);
+        mobileMenuHeaderBrand?.setAttribute('aria-hidden', isRoot ? 'false' : 'true');
         mobileMenuHeaderBack?.setAttribute('aria-hidden', isRoot ? 'true' : 'false');
+        if (mobileMenuHeaderBrand) {
+          if (isRoot) mobileMenuHeaderBrand.removeAttribute('tabindex');
+          else mobileMenuHeaderBrand.setAttribute('tabindex', '-1');
+        }
+        if (mobileMenuHeaderBack) {
+          if (isRoot) mobileMenuHeaderBack.setAttribute('tabindex', '-1');
+          else mobileMenuHeaderBack.removeAttribute('tabindex');
+        }
 
         if (isRoot || !mobileMenuHeaderBack) return;
 
