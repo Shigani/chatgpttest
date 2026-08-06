@@ -997,6 +997,16 @@
 
     .site-header__mobile-menu-view.is-after {
       transform: translate3d(100%, 0, 0);
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .site-header__mobile-menu-view.is-view-return-prep {
+      transform: translate3d(0, 0, 0);
+      visibility: visible;
+      pointer-events: none;
+      z-index: 1;
+      transition: none;
     }
 
     @keyframes site-header-mobile-menu-brand-return {
@@ -1374,7 +1384,7 @@
         mobileMenuViews.forEach((view) => {
           const isRoot = view.dataset.siteHeaderMobileView === 'root';
           view.classList.toggle('is-active', isRoot);
-          view.classList.remove('is-before', 'is-after', 'is-hidden', 'is-underlay');
+          view.classList.remove('is-before', 'is-after', 'is-hidden', 'is-underlay', 'is-view-return-prep');
           view.setAttribute('aria-hidden', isRoot ? 'false' : 'true');
           if (isRoot) {
             rootView = view;
@@ -1395,8 +1405,8 @@
             currentView.classList.remove('is-active', 'is-before', 'is-after', 'is-hidden');
             currentView.classList.add('is-underlay');
           } else {
-            currentView.classList.add('is-hidden');
-            currentView.classList.remove('is-active', 'is-before', 'is-after', 'is-underlay');
+            currentView.classList.remove('is-active', 'is-before', 'is-after', 'is-hidden', 'is-underlay');
+            currentView.classList.add('is-view-return-prep');
           }
           currentView.setAttribute('aria-hidden', 'true');
         }
@@ -1410,26 +1420,32 @@
           });
         }
 
-        targetView.classList.remove('is-before', 'is-after', 'is-hidden', 'is-underlay');
+        targetView.classList.remove('is-before', 'is-after', 'is-hidden', 'is-underlay', 'is-view-return-prep');
         if (direction === 'back') {
-          targetView.classList.add('is-active', 'is-before');
+          targetView.classList.add('is-underlay');
         } else {
           targetView.classList.add('is-active');
         }
-        targetView.setAttribute('aria-hidden', 'false');
+        targetView.setAttribute('aria-hidden', direction === 'back' ? 'true' : 'false');
         targetView.scrollTop = 0;
         syncMobileMenuHeader(targetView, direction, direction === 'back');
         if (direction === 'back') {
-          void targetView.offsetWidth;
+          if (currentView) void currentView.offsetWidth;
           if (mobileMenuHeaderSlot) void mobileMenuHeaderSlot.offsetWidth;
-          targetView.classList.remove('is-before');
+          currentView?.classList.remove('is-view-return-prep');
+          currentView?.classList.add('is-after');
           startMobileMenuHeaderReturn();
         }
 
         mobileMenuViewCleanupTimer = window.setTimeout(() => {
           mobileMenuViews.forEach((view) => {
-            if (view === targetView) return;
-            view.classList.remove('is-before', 'is-after', 'is-active', 'is-underlay');
+            if (view === targetView) {
+              view.classList.remove('is-before', 'is-after', 'is-hidden', 'is-underlay', 'is-view-return-prep');
+              view.classList.add('is-active');
+              view.setAttribute('aria-hidden', 'false');
+              return;
+            }
+            view.classList.remove('is-before', 'is-after', 'is-active', 'is-underlay', 'is-view-return-prep');
             view.classList.add('is-hidden');
             view.setAttribute('aria-hidden', 'true');
           });
