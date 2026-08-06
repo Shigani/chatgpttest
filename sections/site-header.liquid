@@ -110,34 +110,21 @@
           </button>
         </div>
 
-        <nav class="site-header__mobile-menu-navigation" aria-label="{{ 'header.primary_navigation' | t }}">
+        <nav class="site-header__mobile-menu-navigation" data-site-header-mobile-navigation aria-label="{{ 'header.primary_navigation' | t }}">
           {% if section.settings.menu != blank %}
-            {% for link in section.settings.menu.links %}
-              {% if link.links != blank %}
-                <details class="site-header__mobile-dropdown">
-                  <summary class="site-header__mobile-menu-item">
-                    <span>{{ link.title | escape }}</span>
-                    <svg class="site-header__mobile-menu-chevron" viewBox="0 0 24 24" aria-hidden="true">
-                      <path d="m9 6 6 6-6 6"></path>
-                    </svg>
-                  </summary>
-                  <div class="site-header__mobile-submenu">
-                    {% for child_link in link.links %}
-                      <a href="{{ child_link.url }}">{{ child_link.title | escape }}</a>
-                      {% for grandchild_link in child_link.links %}
-                        <a class="site-header__mobile-submenu-child" href="{{ grandchild_link.url }}">{{ grandchild_link.title | escape }}</a>
-                      {% endfor %}
-                    {% endfor %}
-                  </div>
-                </details>
-              {% else %}
-                <a class="site-header__mobile-menu-item" href="{{ link.url }}">{{ link.title | escape }}</a>
-              {% endif %}
-            {% endfor %}
+            {% render 'site-header-mobile-nav', links: section.settings.menu.links, view_id: 'root', level: 0, parent_view_id: '', parent_title: '' %}
           {% else %}
-            <a class="site-header__mobile-menu-item" href="{{ routes.root_url }}">{{ 'header.home' | t }}</a>
-            <a class="site-header__mobile-menu-item" href="{{ routes.all_products_collection_url }}">{{ 'header.catalog' | t }}</a>
-            <a class="site-header__mobile-menu-item" href="/pages/contact">{{ 'header.contact' | t }}</a>
+            <div class="site-header__mobile-menu-view is-active" id="site-header-mobile-view-root" data-site-header-mobile-view="root" data-mobile-menu-level="0" aria-hidden="false">
+              <div class="site-header__mobile-menu-row">
+                <a class="site-header__mobile-menu-item" href="{{ routes.root_url }}">{{ 'header.home' | t }}</a>
+              </div>
+              <div class="site-header__mobile-menu-row">
+                <a class="site-header__mobile-menu-item" href="{{ routes.all_products_collection_url }}">{{ 'header.catalog' | t }}</a>
+              </div>
+              <div class="site-header__mobile-menu-row">
+                <a class="site-header__mobile-menu-item" href="/pages/contact">{{ 'header.contact' | t }}</a>
+              </div>
+            </div>
           {% endif %}
         </nav>
 
@@ -843,21 +830,61 @@
     }
 
     .site-header__mobile-menu-navigation {
+      position: relative;
       flex: 1;
+      min-height: 0;
+      overflow: hidden;
+    }
+
+    .site-header__mobile-menu-view {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
       min-height: 0;
       padding: 0.25rem 1rem 1rem;
       overflow-y: auto;
+      color: inherit;
+      transform: translate3d(100%, 0, 0);
+      visibility: hidden;
+      pointer-events: none;
+      transition: transform 500ms cubic-bezier(0.22, 1, 0.36, 1), visibility 0s linear 500ms;
     }
 
-    .site-header__mobile-menu-item,
-    .site-header__mobile-dropdown > summary {
+    .site-header__mobile-menu-view.is-active,
+    .site-header__mobile-menu-view.is-before,
+    .site-header__mobile-menu-view.is-after {
+      visibility: visible;
+    }
+
+    .site-header__mobile-menu-view.is-active {
+      transform: translate3d(0, 0, 0);
+      pointer-events: auto;
+      transition: transform 500ms cubic-bezier(0.22, 1, 0.36, 1), visibility 0s;
+    }
+
+    .site-header__mobile-menu-view.is-before {
+      transform: translate3d(-100%, 0, 0);
+    }
+
+    .site-header__mobile-menu-view.is-after {
+      transform: translate3d(100%, 0, 0);
+    }
+
+    .site-header__mobile-menu-row {
       display: flex;
+      align-items: stretch;
+      min-height: 3.7rem;
+      border-bottom: 1px solid #e1e1e1;
+    }
+
+    .site-header__mobile-menu-item {
+      display: flex;
+      flex: 1;
+      min-width: 0;
       align-items: center;
-      justify-content: space-between;
-      gap: 1rem;
       min-height: 3.7rem;
       padding: 1rem 0;
-      border-bottom: 1px solid #e1e1e1;
       color: inherit;
       font-size: 1rem;
       font-weight: 500;
@@ -865,52 +892,53 @@
       text-decoration: none;
     }
 
-    .site-header__mobile-dropdown > summary {
+    .site-header__mobile-menu-next,
+    .site-header__mobile-menu-back {
+      display: grid;
+      flex-shrink: 0;
+      border: 0;
+      background: transparent;
+      color: inherit;
       cursor: pointer;
-      list-style: none;
+      place-items: center;
     }
 
-    .site-header__mobile-dropdown > summary::-webkit-details-marker {
-      display: none;
+    .site-header__mobile-menu-next {
+      width: 3rem;
+      margin-inline-end: -0.75rem;
     }
 
-    .site-header__mobile-dropdown > summary::marker {
-      content: '';
+    .site-header__mobile-menu-next:hover,
+    .site-header__mobile-menu-back:hover {
+      background: #f1f2f2;
     }
 
     .site-header__mobile-menu-chevron {
       width: 1.1rem;
       height: 1.1rem;
-      flex-shrink: 0;
-      transition: transform 220ms ease;
     }
 
-    .site-header__mobile-dropdown[open] .site-header__mobile-menu-chevron {
-      transform: rotate(90deg);
-    }
-
-    .site-header__mobile-submenu {
-      display: grid;
-      gap: 0.25rem;
-      padding: 0.35rem 0 0.85rem 1rem;
+    .site-header__mobile-menu-subheader {
+      display: flex;
+      min-height: 3.7rem;
       border-bottom: 1px solid #e1e1e1;
     }
 
-    .site-header__mobile-submenu a {
-      padding: 0.55rem 0;
-      color: #4b5053;
-      font-size: 0.92rem;
-      text-decoration: none;
+    .site-header__mobile-menu-back {
+      justify-content: flex-start;
+      width: 100%;
+      gap: 0.65rem;
+      padding: 1rem 0;
+      font: inherit;
+      font-size: 1rem;
+      font-weight: 600;
+      text-align: left;
     }
 
-    .site-header__mobile-submenu .site-header__mobile-submenu-child {
-      padding-left: 0.75rem;
-      color: #6b7073;
-      font-size: 0.86rem;
-    }
-
-    .site-header__mobile-menu a:hover {
-      opacity: 1;
+    .site-header__mobile-menu-back svg {
+      width: 1.1rem;
+      height: 1.1rem;
+      flex-shrink: 0;
     }
 
     .site-header__mobile-menu-footer {
@@ -1004,6 +1032,7 @@
     .site-header__dropdown-panel,
     .site-header__mobile-menu,
     .site-header__mobile-menu-panel,
+    .site-header__mobile-menu-view,
     .site-header__mobile-menu-chevron {
       transition: none;
     }
@@ -1171,9 +1200,47 @@
       const mobileMenu = header.querySelector('[data-site-header-mobile-menu]');
       const mobileMenuToggle = header.querySelector('[data-site-header-mobile-toggle]');
       const mobileMenuCloseButton = mobileMenu?.querySelector('[data-site-header-mobile-close][type="button"]');
+      const mobileMenuViews = Array.from(mobileMenu?.querySelectorAll('[data-site-header-mobile-view]') ?? []);
       let mobileMenuOpen = false;
       let mobileMenuCloseTimer;
+      let mobileMenuViewCleanupTimer;
       let mobileMenuScrollLock;
+      const resetMobileMenuView = () => {
+        window.clearTimeout(mobileMenuViewCleanupTimer);
+        mobileMenuViews.forEach((view) => {
+          const isRoot = view.dataset.mobileMenuView === 'root';
+          view.classList.toggle('is-active', isRoot);
+          view.classList.remove('is-before', 'is-after');
+          view.setAttribute('aria-hidden', isRoot ? 'false' : 'true');
+          if (isRoot) view.scrollTop = 0;
+        });
+      };
+      const setMobileMenuView = (targetId, direction = 'forward') => {
+        const targetView = mobileMenuViews.find((view) => view.dataset.mobileMenuView === targetId);
+        const currentView = mobileMenuViews.find((view) => view.classList.contains('is-active'));
+        if (!targetView || targetView === currentView) return;
+
+        window.clearTimeout(mobileMenuViewCleanupTimer);
+
+        if (currentView) {
+          currentView.classList.remove('is-active', 'is-before', 'is-after');
+          currentView.classList.add(direction === 'back' ? 'is-after' : 'is-before');
+          currentView.setAttribute('aria-hidden', 'true');
+        }
+
+        targetView.classList.remove('is-before', 'is-after');
+        targetView.classList.add('is-active');
+        targetView.setAttribute('aria-hidden', 'false');
+        targetView.scrollTop = 0;
+
+        mobileMenuViewCleanupTimer = window.setTimeout(() => {
+          mobileMenuViews.forEach((view) => {
+            if (view === targetView) return;
+            view.classList.remove('is-before', 'is-after', 'is-active');
+            view.setAttribute('aria-hidden', 'true');
+          });
+        }, 520);
+      };
       const updateMobileMenuScrollLock = (isActive) => {
         if (isActive) {
           if (mobileMenuScrollLock) return;
@@ -1207,6 +1274,7 @@
         window.clearTimeout(mobileMenuCloseTimer);
 
         if (isOpen) {
+          resetMobileMenuView();
           closeDropdowns();
           syncDropdownState();
           mobileMenuOpen = true;
@@ -1241,6 +1309,16 @@
       });
       mobileMenu?.querySelectorAll('[data-site-header-mobile-close]').forEach((closeButton) => {
         closeButton.addEventListener('click', () => setMobileMenuOpen(false));
+      });
+      mobileMenu?.querySelectorAll('[data-site-header-mobile-next]').forEach((nextButton) => {
+        nextButton.addEventListener('click', () => {
+          setMobileMenuView(nextButton.dataset.mobileMenuTarget, 'forward');
+        });
+      });
+      mobileMenu?.querySelectorAll('[data-site-header-mobile-back]').forEach((backButton) => {
+        backButton.addEventListener('click', () => {
+          setMobileMenuView(backButton.dataset.mobileMenuTarget, 'back');
+        });
       });
       window.addEventListener('resize', () => {
         if (!window.matchMedia('(max-width: 990px)').matches) setMobileMenuOpen(false);
