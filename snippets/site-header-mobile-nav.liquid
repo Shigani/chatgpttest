@@ -4,11 +4,11 @@
 %}
 
 <div
-  class="site-header__mobile-menu-view{% if menu_level == 0 %} is-active{% endif %}"
+  class="site-header__mobile-menu-view{% if menu_view_id == 'root' %} is-active{% endif %}"
   id="site-header-mobile-view-{{ menu_view_id }}"
   data-site-header-mobile-view="{{ menu_view_id }}"
   data-mobile-menu-level="{{ menu_level }}"
-  aria-hidden="{% if menu_level == 0 %}false{% else %}true{% endif %}"
+  aria-hidden="{% if menu_view_id == 'root' %}false{% else %}true{% endif %}"
 >
   {% if menu_level > 0 %}
     <div class="site-header__mobile-menu-subheader">
