@@ -880,6 +880,11 @@
       pointer-events: none;
     }
 
+    .site-header__mobile-menu-header-slot.is-return-instant .site-header__mobile-menu-brand,
+    .site-header__mobile-menu-header-slot.is-return-instant .site-header__mobile-menu-header-back {
+      transition: none !important;
+    }
+
     .site-header__mobile-menu-header-back:hover {
       color: #555b5e;
     }
@@ -1293,7 +1298,7 @@
         const isRoot = !activeView || activeView.dataset.siteHeaderMobileView === 'root';
         mobileMenuHeaderSlot?.classList.toggle('is-root', isRoot);
         mobileMenuHeaderSlot?.classList.toggle('is-child', !isRoot);
-        mobileMenuHeaderSlot?.classList.remove('is-returning');
+        mobileMenuHeaderSlot?.classList.toggle('is-return-instant', direction === 'back');
         mobileMenuHeaderBrand?.setAttribute('aria-hidden', isRoot ? 'false' : 'true');
         mobileMenuHeaderBack?.setAttribute('aria-hidden', isRoot ? 'true' : 'false');
         if (mobileMenuHeaderBrand) {
