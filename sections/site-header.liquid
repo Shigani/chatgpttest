@@ -954,6 +954,7 @@
       visibility: hidden;
       pointer-events: none;
       z-index: 0;
+      will-change: transform;
       transition: transform var(--site-header-mobile-menu-transition-duration) var(--site-header-mobile-menu-transition-easing), visibility 0s linear var(--site-header-mobile-menu-transition-duration);
     }
 
@@ -982,6 +983,10 @@
       pointer-events: none;
       z-index: 0;
       transition: none;
+    }
+
+    .site-header__mobile-menu-view.is-subpopup {
+      box-shadow: -0.75rem 0 1.5rem rgb(11 11 11 / 0.14);
     }
 
     .site-header__mobile-menu-view.is-before {

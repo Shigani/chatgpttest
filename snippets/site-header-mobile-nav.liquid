@@ -4,7 +4,7 @@
 %}
 
 <div
-  class="site-header__mobile-menu-view{% if menu_view_id == 'root' %} is-active{% endif %}"
+  class="site-header__mobile-menu-view{% if menu_view_id == 'root' %} is-active{% else %} is-subpopup{% endif %}"
   id="site-header-mobile-view-{{ menu_view_id }}"
   data-site-header-mobile-view="{{ menu_view_id }}"
   data-mobile-menu-level="{{ menu_level }}"
