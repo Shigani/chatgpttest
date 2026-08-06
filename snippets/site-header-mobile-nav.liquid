@@ -8,26 +8,10 @@
   id="site-header-mobile-view-{{ menu_view_id }}"
   data-site-header-mobile-view="{{ menu_view_id }}"
   data-mobile-menu-level="{{ menu_level }}"
+  data-mobile-menu-parent="{{ parent_view_id }}"
+  data-mobile-menu-parent-title="{{ parent_title | escape }}"
   aria-hidden="{% if menu_view_id == 'root' %}false{% else %}true{% endif %}"
 >
-  {% if menu_level > 0 %}
-    <div class="site-header__mobile-menu-subheader">
-      <button
-        class="site-header__mobile-menu-back"
-        type="button"
-        data-site-header-mobile-back
-        data-mobile-menu-target="{{ parent_view_id }}"
-        aria-controls="site-header-mobile-view-{{ parent_view_id }}"
-        aria-label="{{ 'header.back' | t }}"
-      >
-        <svg viewBox="0 0 24 24" aria-hidden="true">
-          <path d="m15 6-6 6 6 6"></path>
-        </svg>
-        <span>{{ parent_title | escape }}</span>
-      </button>
-    </div>
-  {% endif %}
-
   {% for link in links %}
     {% assign child_view_id = menu_view_id | append: '-' | append: forloop.index %}
     <div class="site-header__mobile-menu-row">
@@ -57,3 +41,4 @@
     {% render 'site-header-mobile-nav', links: link.links, view_id: child_view_id, level: child_level, parent_view_id: menu_view_id, parent_title: link.title %}
   {% endif %}
 {% endfor %}
+
