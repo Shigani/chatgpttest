@@ -1,0 +1,58 @@
+{% liquid
+  assign menu_view_id = view_id | default: 'root'
+  assign menu_level = level | default: 0
+%}
+
+<div
+  class="site-header__mobile-menu-view{% if menu_level == 0 %} is-active{% endif %}"
+  id="site-header-mobile-view-{{ menu_view_id }}"
+  data-site-header-mobile-view="{{ menu_view_id }}"
+  data-mobile-menu-level="{{ menu_level }}"
+  aria-hidden="{% if menu_level == 0 %}false{% else %}true{% endif %}"
+>
+  {% if menu_level > 0 %}
+    <div class="site-header__mobile-menu-subheader">
+      <button
+        class="site-header__mobile-menu-back"
+        type="button"
+        data-site-header-mobile-back
+        data-mobile-menu-target="{{ parent_view_id }}"
+        aria-controls="site-header-mobile-view-{{ parent_view_id }}"
+        aria-label="{{ 'header.back' | t }}"
+      >
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="m15 6-6 6 6 6"></path>
+        </svg>
+        <span>{{ parent_title | escape }}</span>
+      </button>
+    </div>
+  {% endif %}
+
+  {% for link in links %}
+    {% assign child_view_id = menu_view_id | append: '-' | append: forloop.index %}
+    <div class="site-header__mobile-menu-row">
+      <a class="site-header__mobile-menu-item" href="{{ link.url }}">{{ link.title | escape }}</a>
+      {% if link.links != blank %}
+        <button
+          class="site-header__mobile-menu-next"
+          type="button"
+          data-site-header-mobile-next
+          data-mobile-menu-target="{{ child_view_id }}"
+          aria-controls="site-header-mobile-view-{{ child_view_id }}"
+          aria-label="{{ 'header.open_submenu' | t }}"
+        >
+          <svg class="site-header__mobile-menu-chevron" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="m9 6 6 6-6 6"></path>
+          </svg>
+        </button>
+      {% endif %}
+    </div>
+  {% endfor %}
+</div>
+
+{% for link in links %}
+  {% if link.links != blank %}
+    {% assign child_view_id = menu_view_id | append: '-' | append: forloop.index %}
+    {% render 'site-header-mobile-nav', links: link.links, view_id: child_view_id, level: menu_level | plus: 1, parent_view_id: menu_view_id, parent_title: link.title %}
+  {% endif %}
+{% endfor %}
