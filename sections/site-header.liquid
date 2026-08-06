@@ -880,8 +880,12 @@
       pointer-events: none;
     }
 
-    .site-header__mobile-menu-header-slot.is-return-instant .site-header__mobile-menu-brand,
-    .site-header__mobile-menu-header-slot.is-return-instant .site-header__mobile-menu-header-back {
+    .site-header__mobile-menu-header-slot.is-root.is-returning .site-header__mobile-menu-brand {
+      animation: site-header-mobile-menu-brand-return 500ms cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+
+    .site-header__mobile-menu-header-slot.is-root.is-returning .site-header__mobile-menu-header-back {
+      transform: translate3d(100%, 0, 0);
       transition: none !important;
     }
 
@@ -958,11 +962,6 @@
       transition: none !important;
     }
 
-    .site-header__mobile-menu-view.is-instant {
-      transform: translate3d(0, 0, 0) !important;
-      transition: none !important;
-    }
-
     .site-header__mobile-menu-view.is-active {
       transform: translate3d(0, 0, 0);
       pointer-events: auto;
@@ -975,6 +974,16 @@
 
     .site-header__mobile-menu-view.is-after {
       transform: translate3d(100%, 0, 0);
+    }
+
+    @keyframes site-header-mobile-menu-brand-return {
+      from {
+        transform: translate3d(100%, 0, 0);
+      }
+
+      to {
+        transform: translate3d(0, 0, 0);
+      }
     }
 
     .site-header__mobile-menu-row {
@@ -1293,12 +1302,15 @@
       let mobileMenuOpen = false;
       let mobileMenuCloseTimer;
       let mobileMenuViewCleanupTimer;
+      let mobileMenuHeaderTransitionTimer;
       let mobileMenuScrollLock;
       const syncMobileMenuHeader = (activeView, direction = 'forward') => {
         const isRoot = !activeView || activeView.dataset.siteHeaderMobileView === 'root';
+        const isReturning = isRoot && direction === 'back';
+        window.clearTimeout(mobileMenuHeaderTransitionTimer);
         mobileMenuHeaderSlot?.classList.toggle('is-root', isRoot);
         mobileMenuHeaderSlot?.classList.toggle('is-child', !isRoot);
-        mobileMenuHeaderSlot?.classList.toggle('is-return-instant', direction === 'back');
+        mobileMenuHeaderSlot?.classList.toggle('is-returning', isReturning);
         mobileMenuHeaderBrand?.setAttribute('aria-hidden', isRoot ? 'false' : 'true');
         mobileMenuHeaderBack?.setAttribute('aria-hidden', isRoot ? 'true' : 'false');
         if (mobileMenuHeaderBrand) {
@@ -1311,6 +1323,14 @@
         }
 
         if (isRoot) {
+          if (isReturning && mobileMenuHeaderSlot) {
+            mobileMenuHeaderSlot.classList.remove('is-returning');
+            void mobileMenuHeaderSlot.offsetWidth;
+            mobileMenuHeaderSlot.classList.add('is-returning');
+            mobileMenuHeaderTransitionTimer = window.setTimeout(() => {
+              mobileMenuHeaderSlot.classList.remove('is-returning');
+            }, 520);
+          }
           return;
         }
         if (!mobileMenuHeaderBack) return;
@@ -1327,7 +1347,7 @@
         mobileMenuViews.forEach((view) => {
           const isRoot = view.dataset.siteHeaderMobileView === 'root';
           view.classList.toggle('is-active', isRoot);
-          view.classList.remove('is-before', 'is-after', 'is-hidden', 'is-instant');
+          view.classList.remove('is-before', 'is-after', 'is-hidden');
           view.setAttribute('aria-hidden', isRoot ? 'false' : 'true');
           if (isRoot) {
             rootView = view;
@@ -1344,22 +1364,29 @@
         window.clearTimeout(mobileMenuViewCleanupTimer);
 
         if (currentView) {
-          currentView.classList.remove('is-active', 'is-before', 'is-after');
           currentView.classList.add('is-hidden');
+          currentView.classList.remove('is-active', 'is-before', 'is-after');
           currentView.setAttribute('aria-hidden', 'true');
         }
 
-        targetView.classList.remove('is-before', 'is-after', 'is-hidden', 'is-instant');
-        if (direction === 'back') targetView.classList.add('is-instant');
-        targetView.classList.add('is-active');
+        targetView.classList.remove('is-before', 'is-after', 'is-hidden');
+        if (direction === 'back') {
+          targetView.classList.add('is-active', 'is-before');
+        } else {
+          targetView.classList.add('is-active');
+        }
         targetView.setAttribute('aria-hidden', 'false');
         targetView.scrollTop = 0;
         syncMobileMenuHeader(targetView, direction);
+        if (direction === 'back') {
+          void targetView.offsetWidth;
+          targetView.classList.remove('is-before');
+        }
 
         mobileMenuViewCleanupTimer = window.setTimeout(() => {
           mobileMenuViews.forEach((view) => {
             if (view === targetView) return;
-            view.classList.remove('is-before', 'is-after', 'is-active', 'is-instant');
+            view.classList.remove('is-before', 'is-after', 'is-active');
             view.classList.add('is-hidden');
             view.setAttribute('aria-hidden', 'true');
           });
