@@ -793,13 +793,13 @@
       background: #ffffff;
       color: #0b0b0b;
       box-shadow: 0 1rem 3rem rgb(0 0 0 / 0.18);
-      transform: translate3d(-100%, 0, 0);
-      will-change: transform;
-      transition: transform 320ms cubic-bezier(0.22, 1, 0.36, 1);
+      clip-path: inset(0 100% 0 0 round 1rem);
+      will-change: clip-path;
+      transition: clip-path 320ms cubic-bezier(0.22, 1, 0.36, 1);
     }
 
     .site-header__mobile-menu.is-open .site-header__mobile-menu-panel {
-      transform: translate3d(0, 0, 0);
+      clip-path: inset(0 0 0 0 round 1rem);
     }
 
     .site-header__mobile-menu-header {
