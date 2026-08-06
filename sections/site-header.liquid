@@ -1,6 +1,6 @@
 <header class="site-header" data-site-header>
   <div class="site-header__bar">
-    <button class="site-header__menu-toggle" type="button" aria-label="{{ 'header.menu' | t }}" aria-expanded="false">
+    <button class="site-header__menu-toggle" type="button" data-site-header-mobile-toggle aria-label="{{ 'header.menu' | t }}" aria-expanded="false">
       <svg viewBox="0 0 24 24" aria-hidden="true">
         <path d="M4 7h16M4 12h16M4 17h16"></path>
       </svg>
@@ -95,8 +95,61 @@
         <a href="{{ routes.root_url }}">{{ 'header.home' | t }}</a>
         <a href="{{ routes.all_products_collection_url }}">{{ 'header.catalog' | t }}</a>
         <a href="/pages/contact">{{ 'header.contact' | t }}</a>
-      {% endif %}
+    {% endif %}
     </nav>
+
+    <div class="site-header__mobile-menu" data-site-header-mobile-menu aria-hidden="true">
+      <div class="site-header__mobile-menu-backdrop" data-site-header-mobile-close></div>
+      <aside class="site-header__mobile-menu-panel" role="dialog" aria-modal="true" aria-label="{{ 'header.menu' | t }}">
+        <div class="site-header__mobile-menu-header">
+          <a class="site-header__mobile-menu-brand" href="{{ routes.root_url }}">{{ shop.name | escape }}</a>
+          <button class="site-header__mobile-menu-close" type="button" data-site-header-mobile-close aria-label="{{ 'header.close' | t }}">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="m6 6 12 12M18 6 6 18"></path>
+            </svg>
+          </button>
+        </div>
+
+        <nav class="site-header__mobile-menu-navigation" aria-label="{{ 'header.primary_navigation' | t }}">
+          {% if section.settings.menu != blank %}
+            {% for link in section.settings.menu.links %}
+              {% if link.links != blank %}
+                <details class="site-header__mobile-dropdown">
+                  <summary class="site-header__mobile-menu-item">
+                    <span>{{ link.title | escape }}</span>
+                    <svg class="site-header__mobile-menu-chevron" viewBox="0 0 24 24" aria-hidden="true">
+                      <path d="m9 6 6 6-6 6"></path>
+                    </svg>
+                  </summary>
+                  <div class="site-header__mobile-submenu">
+                    {% for child_link in link.links %}
+                      <a href="{{ child_link.url }}">{{ child_link.title | escape }}</a>
+                      {% for grandchild_link in child_link.links %}
+                        <a class="site-header__mobile-submenu-child" href="{{ grandchild_link.url }}">{{ grandchild_link.title | escape }}</a>
+                      {% endfor %}
+                    {% endfor %}
+                  </div>
+                </details>
+              {% else %}
+                <a class="site-header__mobile-menu-item" href="{{ link.url }}">{{ link.title | escape }}</a>
+              {% endif %}
+            {% endfor %}
+          {% else %}
+            <a class="site-header__mobile-menu-item" href="{{ routes.root_url }}">{{ 'header.home' | t }}</a>
+            <a class="site-header__mobile-menu-item" href="{{ routes.all_products_collection_url }}">{{ 'header.catalog' | t }}</a>
+            <a class="site-header__mobile-menu-item" href="/pages/contact">{{ 'header.contact' | t }}</a>
+          {% endif %}
+        </nav>
+
+        <div class="site-header__mobile-menu-footer">
+          <a class="site-header__mobile-menu-account" href="{{ routes.account_url }}">{{ 'header.account' | t }}</a>
+          <div class="site-header__mobile-menu-utilities">
+            <a href="{{ routes.search_url }}">{{ 'header.search' | t }}</a>
+            <a href="{{ routes.cart_url }}">{{ 'header.cart' | t }}</a>
+          </div>
+        </div>
+      </aside>
+    </div>
 
     <a class="site-header__brand" href="{{ routes.root_url }}">{{ shop.name | escape }}</a>
 
@@ -141,6 +194,11 @@
 
   html.site-header-dropdown-active,
   html.site-header-dropdown-active body {
+    overflow: hidden;
+  }
+
+  html.site-header-mobile-menu-open,
+  html.site-header-mobile-menu-open body {
     overflow: hidden;
   }
 
@@ -235,6 +293,10 @@
     background: transparent;
     color: inherit;
     cursor: pointer;
+  }
+
+  .site-header__mobile-menu {
+    display: none;
   }
 
   .site-header a {
@@ -684,6 +746,211 @@
       place-items: center;
     }
 
+    .site-header.site-header--menu-open {
+      transform: none;
+    }
+
+    .site-header__mobile-menu {
+      position: fixed;
+      inset: 0;
+      z-index: 40;
+      display: block;
+      padding: 0.5rem;
+      background: rgb(11 11 11 / 0.42);
+      backdrop-filter: blur(0.18rem);
+      opacity: 0;
+      pointer-events: none;
+      visibility: hidden;
+      transition: opacity 260ms ease, visibility 0s linear 320ms;
+    }
+
+    .site-header__mobile-menu.is-open,
+    .site-header__mobile-menu.is-closing {
+      visibility: visible;
+    }
+
+    .site-header__mobile-menu.is-open {
+      opacity: 1;
+      pointer-events: auto;
+      transition: opacity 260ms ease, visibility 0s;
+    }
+
+    .site-header__mobile-menu-backdrop {
+      position: absolute;
+      inset: 0;
+    }
+
+    .site-header__mobile-menu-panel {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      height: calc(100svh - 1rem);
+      max-height: calc(100dvh - 1rem);
+      overflow: hidden;
+      border-radius: 1rem;
+      background: #ffffff;
+      color: #0b0b0b;
+      box-shadow: 0 1rem 3rem rgb(0 0 0 / 0.18);
+      transform: translateY(-1rem);
+      transition: transform 320ms cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .site-header__mobile-menu.is-open .site-header__mobile-menu-panel {
+      transform: translateY(0);
+    }
+
+    .site-header__mobile-menu-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 4.25rem;
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid #e1e1e1;
+    }
+
+    .site-header__mobile-menu-brand {
+      max-width: calc(100% - 3.5rem);
+      font-size: 1.35rem;
+      font-weight: 750;
+      letter-spacing: -0.035em;
+      line-height: 1;
+      overflow-wrap: anywhere;
+    }
+
+    .site-header__mobile-menu-close {
+      display: grid;
+      width: 2.75rem;
+      height: 2.75rem;
+      padding: 0;
+      border: 0;
+      border-radius: 50%;
+      background: transparent;
+      color: inherit;
+      cursor: pointer;
+      place-items: center;
+    }
+
+    .site-header__mobile-menu-close:hover {
+      background: #f1f2f2;
+    }
+
+    .site-header__mobile-menu-close svg {
+      width: 1.35rem;
+      height: 1.35rem;
+    }
+
+    .site-header__mobile-menu-navigation {
+      flex: 1;
+      min-height: 0;
+      padding: 0.25rem 1rem 1rem;
+      overflow-y: auto;
+    }
+
+    .site-header__mobile-menu-item,
+    .site-header__mobile-dropdown > summary {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      min-height: 3.7rem;
+      padding: 1rem 0;
+      border-bottom: 1px solid #e1e1e1;
+      color: inherit;
+      font-size: 1rem;
+      font-weight: 500;
+      line-height: 1.2;
+      text-decoration: none;
+    }
+
+    .site-header__mobile-dropdown > summary {
+      cursor: pointer;
+      list-style: none;
+    }
+
+    .site-header__mobile-dropdown > summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .site-header__mobile-dropdown > summary::marker {
+      content: '';
+    }
+
+    .site-header__mobile-menu-chevron {
+      width: 1.1rem;
+      height: 1.1rem;
+      flex-shrink: 0;
+      transition: transform 220ms ease;
+    }
+
+    .site-header__mobile-dropdown[open] .site-header__mobile-menu-chevron {
+      transform: rotate(90deg);
+    }
+
+    .site-header__mobile-submenu {
+      display: grid;
+      gap: 0.25rem;
+      padding: 0.35rem 0 0.85rem 1rem;
+      border-bottom: 1px solid #e1e1e1;
+    }
+
+    .site-header__mobile-submenu a {
+      padding: 0.55rem 0;
+      color: #4b5053;
+      font-size: 0.92rem;
+      text-decoration: none;
+    }
+
+    .site-header__mobile-submenu .site-header__mobile-submenu-child {
+      padding-left: 0.75rem;
+      color: #6b7073;
+      font-size: 0.86rem;
+    }
+
+    .site-header__mobile-menu a:hover {
+      opacity: 1;
+    }
+
+    .site-header__mobile-menu-footer {
+      padding: 1rem;
+      border-top: 1px solid #e1e1e1;
+    }
+
+    .site-header__mobile-menu-account {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 2.75rem;
+      padding: 0.8rem 1rem;
+      border-radius: 999px;
+      background: #252a2d;
+      color: #ffffff !important;
+      font-size: 0.9rem;
+      font-weight: 650;
+    }
+
+    .site-header__mobile-menu-utilities {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      margin-top: 0.85rem;
+      border-top: 1px solid #e1e1e1;
+      border-bottom: 1px solid #e1e1e1;
+    }
+
+    .site-header__mobile-menu-utilities a {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 2.8rem;
+      color: #4b5053;
+      font-size: 0.85rem;
+    }
+
+    .site-header__mobile-menu-utilities a + a {
+      border-left: 1px solid #e1e1e1;
+    }
+
     .site-header__brand {
       justify-self: start;
       width: min(100%, 8.25rem);
@@ -733,7 +1000,10 @@
     .site-header__bar,
     .site-header__dropdown-chevron,
     .site-header__dropdown-trigger > span:first-child::after,
-    .site-header__dropdown-panel {
+    .site-header__dropdown-panel,
+    .site-header__mobile-menu,
+    .site-header__mobile-menu-panel,
+    .site-header__mobile-menu-chevron {
       transition: none;
     }
 
@@ -897,6 +1167,83 @@
           }
         });
       };
+      const mobileMenu = header.querySelector('[data-site-header-mobile-menu]');
+      const mobileMenuToggle = header.querySelector('[data-site-header-mobile-toggle]');
+      const mobileMenuCloseButton = mobileMenu?.querySelector('[data-site-header-mobile-close][type="button"]');
+      let mobileMenuOpen = false;
+      let mobileMenuCloseTimer;
+      let mobileMenuScrollLock;
+      const updateMobileMenuScrollLock = (isActive) => {
+        if (isActive) {
+          if (mobileMenuScrollLock) return;
+
+          const body = document.body;
+          const scrollY = window.scrollY;
+          const scrollbarWidth = Math.max(window.innerWidth - document.documentElement.clientWidth, 0);
+          const originalPaddingRight = body?.style.paddingRight ?? '';
+          const currentPaddingRight = body ? parseFloat(window.getComputedStyle(body).paddingRight) || 0 : 0;
+
+          mobileMenuScrollLock = { originalPaddingRight, scrollY };
+
+          if (body && scrollbarWidth > 0) {
+            body.style.paddingRight = `${currentPaddingRight + scrollbarWidth}px`;
+          }
+
+          window.scrollTo(0, scrollY);
+          return;
+        }
+
+        if (!mobileMenuScrollLock) return;
+
+        const { originalPaddingRight, scrollY } = mobileMenuScrollLock;
+        if (document.body) document.body.style.paddingRight = originalPaddingRight;
+        window.scrollTo(0, scrollY);
+        mobileMenuScrollLock = null;
+      };
+      const setMobileMenuOpen = (isOpen) => {
+        if (!mobileMenu || !mobileMenuToggle) return;
+
+        window.clearTimeout(mobileMenuCloseTimer);
+
+        if (isOpen) {
+          closeDropdowns();
+          syncDropdownState();
+          mobileMenuOpen = true;
+          header.classList.add('site-header--menu-open');
+          mobileMenu.classList.remove('is-closing');
+          mobileMenu.classList.add('is-open');
+          mobileMenu.setAttribute('aria-hidden', 'false');
+          mobileMenuToggle.setAttribute('aria-expanded', 'true');
+          updateMobileMenuScrollLock(true);
+          window.requestAnimationFrame(() => {
+            if (mobileMenuOpen) mobileMenuCloseButton?.focus();
+          });
+          return;
+        }
+
+        if (!mobileMenuOpen && !mobileMenu.classList.contains('is-closing')) return;
+
+        mobileMenuOpen = false;
+        mobileMenu.classList.remove('is-open');
+        mobileMenu.classList.add('is-closing');
+        mobileMenu.setAttribute('aria-hidden', 'true');
+        mobileMenuToggle.setAttribute('aria-expanded', 'false');
+        mobileMenuCloseTimer = window.setTimeout(() => {
+          mobileMenu.classList.remove('is-closing');
+          header.classList.remove('site-header--menu-open');
+          updateMobileMenuScrollLock(false);
+          mobileMenuToggle.focus();
+        }, 340);
+      };
+      mobileMenuToggle?.addEventListener('click', () => {
+        setMobileMenuOpen(!mobileMenuOpen);
+      });
+      mobileMenu?.querySelectorAll('[data-site-header-mobile-close]').forEach((closeButton) => {
+        closeButton.addEventListener('click', () => setMobileMenuOpen(false));
+      });
+      window.addEventListener('resize', () => {
+        if (!window.matchMedia('(max-width: 990px)').matches) setMobileMenuOpen(false);
+      });
       const canHover = window.matchMedia('(hover: hover)').matches;
       const dropdownCloseDelay = 600;
       let dropdownCloseTimer;
@@ -1042,6 +1389,12 @@
 
       document.addEventListener('keydown', (event) => {
         if (event.key !== 'Escape') return;
+
+        if (mobileMenuOpen) {
+          event.preventDefault();
+          setMobileMenuOpen(false);
+          return;
+        }
 
         const openDropdown = dropdowns.find((dropdown) => dropdown.open);
         if (!openDropdown) return;
