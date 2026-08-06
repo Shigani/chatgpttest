@@ -1014,6 +1014,15 @@
         });
       });
 
+      header.querySelectorAll('.site-header__navigation > :not([data-site-header-dropdown])').forEach((menuItem) => {
+        menuItem.addEventListener('pointerenter', () => {
+          if (!canHover) return;
+
+          window.clearTimeout(dropdownCloseTimer);
+          closeDropdowns();
+        });
+      });
+
       header.addEventListener('pointerenter', () => {
         window.clearTimeout(dropdownCloseTimer);
       });
