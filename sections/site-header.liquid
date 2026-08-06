@@ -1269,6 +1269,7 @@
           const isRoot = screen.dataset.siteHeaderMobileScreen === 'root';
           screen.classList.toggle('is-active', isRoot);
           screen.classList.remove('is-before', 'is-after', 'is-hidden', 'is-underlay', 'is-screen-return-prep');
+          screen.classList.toggle('is-hidden', !isRoot);
           setMobileMenuScreenVisibility(screen, isRoot);
           if (isRoot) screen.querySelector('[data-site-header-mobile-view]')?.scrollTo(0, 0);
         });
@@ -1390,6 +1391,7 @@
         mobileMenuCloseTimer = window.setTimeout(() => {
           mobileMenu.classList.remove('is-closing');
           header.classList.remove('site-header--menu-open');
+          resetMobileMenuView();
           updateMobileMenuScrollLock(false);
           mobileMenuToggle.focus();
         }, mobileMenuTransitionDuration + 20);
