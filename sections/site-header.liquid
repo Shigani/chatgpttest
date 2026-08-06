@@ -880,6 +880,14 @@
       pointer-events: none;
     }
 
+    .site-header__mobile-menu-header-slot.is-root.is-returning .site-header__mobile-menu-brand {
+      transform: translate3d(100%, 0, 0);
+    }
+
+    .site-header__mobile-menu-header-slot.is-root.is-returning .site-header__mobile-menu-header-back {
+      transform: translate3d(0, 0, 0);
+    }
+
     .site-header__mobile-menu-header-back:hover {
       color: #555b5e;
     }
@@ -1277,10 +1285,11 @@
       let mobileMenuCloseTimer;
       let mobileMenuViewCleanupTimer;
       let mobileMenuScrollLock;
-      const syncMobileMenuHeader = (activeView) => {
+      const syncMobileMenuHeader = (activeView, direction = 'forward') => {
         const isRoot = !activeView || activeView.dataset.siteHeaderMobileView === 'root';
         mobileMenuHeaderSlot?.classList.toggle('is-root', isRoot);
         mobileMenuHeaderSlot?.classList.toggle('is-child', !isRoot);
+        mobileMenuHeaderSlot?.classList.toggle('is-returning', isRoot && direction === 'back');
         mobileMenuHeaderBrand?.setAttribute('aria-hidden', isRoot ? 'false' : 'true');
         mobileMenuHeaderBack?.setAttribute('aria-hidden', isRoot ? 'true' : 'false');
         if (mobileMenuHeaderBrand) {
@@ -1292,12 +1301,20 @@
           else mobileMenuHeaderBack.removeAttribute('tabindex');
         }
 
-        if (isRoot || !mobileMenuHeaderBack) return;
+        if (isRoot) {
+          if (direction === 'back' && mobileMenuHeaderSlot) {
+            void mobileMenuHeaderSlot.offsetWidth;
+            window.requestAnimationFrame(() => mobileMenuHeaderSlot.classList.remove('is-returning'));
+          }
+          return;
+        }
+        if (!mobileMenuHeaderBack) return;
 
         const targetId = activeView.dataset.mobileMenuParent || 'root';
         mobileMenuHeaderBack.dataset.mobileMenuTarget = targetId;
         mobileMenuHeaderBack.setAttribute('aria-controls', `site-header-mobile-view-${targetId}`);
         if (mobileMenuHeaderBackLabel) mobileMenuHeaderBackLabel.textContent = activeView.dataset.mobileMenuParentTitle || '';
+
       };
       const resetMobileMenuView = () => {
         window.clearTimeout(mobileMenuViewCleanupTimer);
@@ -1331,7 +1348,7 @@
         targetView.classList.add('is-active');
         targetView.setAttribute('aria-hidden', 'false');
         targetView.scrollTop = 0;
-        syncMobileMenuHeader(targetView);
+        syncMobileMenuHeader(targetView, direction);
 
         mobileMenuViewCleanupTimer = window.setTimeout(() => {
           mobileMenuViews.forEach((view) => {
