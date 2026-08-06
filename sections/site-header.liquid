@@ -1349,17 +1349,10 @@
         if (isActive) {
           if (mobileMenuScrollLock) return;
 
-          const body = document.body;
           const scrollY = window.scrollY;
-          const scrollbarWidth = Math.max(window.innerWidth - document.documentElement.clientWidth, 0);
-          const originalPaddingRight = body?.style.paddingRight ?? '';
-          const currentPaddingRight = body ? parseFloat(window.getComputedStyle(body).paddingRight) || 0 : 0;
 
-          mobileMenuScrollLock = { originalPaddingRight, scrollY };
-
-          if (body && scrollbarWidth > 0) {
-            body.style.paddingRight = `${currentPaddingRight + scrollbarWidth}px`;
-          }
+          mobileMenuScrollLock = { scrollY };
+          document.documentElement.classList.add('site-header-mobile-menu-open');
 
           window.scrollTo(0, scrollY);
           return;
@@ -1367,8 +1360,8 @@
 
         if (!mobileMenuScrollLock) return;
 
-        const { originalPaddingRight, scrollY } = mobileMenuScrollLock;
-        if (document.body) document.body.style.paddingRight = originalPaddingRight;
+        const { scrollY } = mobileMenuScrollLock;
+        document.documentElement.classList.remove('site-header-mobile-menu-open');
         window.scrollTo(0, scrollY);
         mobileMenuScrollLock = null;
       };
