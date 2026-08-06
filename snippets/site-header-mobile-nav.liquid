@@ -12,6 +12,29 @@
   data-mobile-menu-parent-title="{{ parent_title | escape }}"
   aria-hidden="{% if menu_view_id == 'root' %}false{% else %}true{% endif %}"
 >
+  {% unless menu_view_id == 'root' %}
+    <div class="site-header__mobile-menu-header site-header__mobile-menu-subpopup-header">
+      <button
+        class="site-header__mobile-menu-header-back site-header__mobile-menu-subpopup-back"
+        type="button"
+        data-site-header-mobile-subpopup-back
+        data-mobile-menu-target="{{ parent_view_id }}"
+        aria-controls="site-header-mobile-view-{{ parent_view_id }}"
+        aria-label="{{ 'header.back' | t }}"
+      >
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="m15 6-6 6 6 6"></path>
+        </svg>
+        <span>{{ parent_title | escape }}</span>
+      </button>
+      <button class="site-header__mobile-menu-close" type="button" data-site-header-mobile-close aria-label="{{ 'header.close' | t }}">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="m6 6 12 12M18 6 6 18"></path>
+        </svg>
+      </button>
+    </div>
+  {% endunless %}
+
   {% for link in links %}
     {% assign child_view_id = menu_view_id | append: '-' | append: forloop.index %}
     <div class="site-header__mobile-menu-row">
