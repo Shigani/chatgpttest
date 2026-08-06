@@ -965,6 +965,12 @@
       visibility: visible;
     }
 
+    .site-header__mobile-menu-view.is-hidden {
+      visibility: hidden !important;
+      pointer-events: none !important;
+      transition: none !important;
+    }
+
     .site-header__mobile-menu-view.is-active {
       transform: translate3d(0, 0, 0);
       pointer-events: auto;
@@ -1340,7 +1346,7 @@
         mobileMenuViews.forEach((view) => {
           const isRoot = view.dataset.siteHeaderMobileView === 'root';
           view.classList.toggle('is-active', isRoot);
-          view.classList.remove('is-before', 'is-after');
+          view.classList.remove('is-before', 'is-after', 'is-hidden');
           view.setAttribute('aria-hidden', isRoot ? 'false' : 'true');
           if (isRoot) {
             rootView = view;
@@ -1358,11 +1364,11 @@
 
         if (currentView) {
           currentView.classList.remove('is-active', 'is-before', 'is-after');
-          currentView.classList.add(direction === 'back' ? 'is-after' : 'is-before');
+          currentView.classList.add('is-hidden');
           currentView.setAttribute('aria-hidden', 'true');
         }
 
-        targetView.classList.remove('is-before', 'is-after');
+        targetView.classList.remove('is-before', 'is-after', 'is-hidden');
         targetView.classList.add('is-active');
         targetView.setAttribute('aria-hidden', 'false');
         targetView.scrollTop = 0;
@@ -1372,6 +1378,7 @@
           mobileMenuViews.forEach((view) => {
             if (view === targetView) return;
             view.classList.remove('is-before', 'is-after', 'is-active');
+            view.classList.add('is-hidden');
             view.setAttribute('aria-hidden', 'true');
           });
         }, 520);
