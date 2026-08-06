@@ -1,25 +1,28 @@
 {% liquid
   assign menu_view_id = view_id | default: 'root'
   assign menu_level = level | default: 0
+  assign is_root_view = false
+  if menu_view_id == 'root'
+    assign is_root_view = true
+  endif
 %}
 
 <div
-  class="site-header__mobile-menu-view{% if menu_view_id == 'root' %} is-active{% else %} is-subpopup{% endif %}"
-  id="site-header-mobile-view-{{ menu_view_id }}"
-  data-site-header-mobile-view="{{ menu_view_id }}"
-  data-mobile-menu-level="{{ menu_level }}"
-  data-mobile-menu-parent="{{ parent_view_id }}"
-  data-mobile-menu-parent-title="{{ parent_title | escape }}"
-  aria-hidden="{% if menu_view_id == 'root' %}false{% else %}true{% endif %}"
+  class="site-header__mobile-menu-screen{% if is_root_view %} is-active{% else %} is-subpopup{% endif %}"
+  id="site-header-mobile-screen-{{ menu_view_id }}"
+  data-site-header-mobile-screen="{{ menu_view_id }}"
+  aria-hidden="{% if is_root_view %}false{% else %}true{% endif %}"
 >
-  {% unless menu_view_id == 'root' %}
-    <div class="site-header__mobile-menu-header site-header__mobile-menu-subpopup-header">
+  <div class="site-header__mobile-menu-header">
+    {% if is_root_view %}
+      <a class="site-header__mobile-menu-brand" href="{{ routes.root_url }}">{{ shop.name | escape }}</a>
+    {% else %}
       <button
-        class="site-header__mobile-menu-header-back site-header__mobile-menu-subpopup-back"
+        class="site-header__mobile-menu-header-back"
         type="button"
         data-site-header-mobile-subpopup-back
         data-mobile-menu-target="{{ parent_view_id }}"
-        aria-controls="site-header-mobile-view-{{ parent_view_id }}"
+        aria-controls="site-header-mobile-screen-{{ parent_view_id }}"
         aria-label="{{ 'header.back' | t }}"
       >
         <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -27,34 +30,58 @@
         </svg>
         <span>{{ parent_title | escape }}</span>
       </button>
-      <button class="site-header__mobile-menu-close" type="button" data-site-header-mobile-close aria-label="{{ 'header.close' | t }}">
-        <svg viewBox="0 0 24 24" aria-hidden="true">
-          <path d="m6 6 12 12M18 6 6 18"></path>
-        </svg>
-      </button>
-    </div>
-  {% endunless %}
+    {% endif %}
+    <button class="site-header__mobile-menu-close" type="button" data-site-header-mobile-close aria-label="{{ 'header.close' | t }}">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="m6 6 12 12M18 6 6 18"></path>
+      </svg>
+    </button>
+  </div>
 
-  {% for link in links %}
-    {% assign child_view_id = menu_view_id | append: '-' | append: forloop.index %}
-    <div class="site-header__mobile-menu-row">
-      <a class="site-header__mobile-menu-item" href="{{ link.url }}">{{ link.title | escape }}</a>
-      {% if link.links != blank %}
-        <button
-          class="site-header__mobile-menu-next"
-          type="button"
-          data-site-header-mobile-next
-          data-mobile-menu-target="{{ child_view_id }}"
-          aria-controls="site-header-mobile-view-{{ child_view_id }}"
-          aria-label="{{ 'header.open_submenu' | t }}"
-        >
-          <svg class="site-header__mobile-menu-chevron" viewBox="0 0 24 24" aria-hidden="true">
-            <path d="m9 6 6 6-6 6"></path>
-          </svg>
-        </button>
+  <nav class="site-header__mobile-menu-navigation" data-site-header-mobile-navigation aria-label="{{ 'header.primary_navigation' | t }}">
+    <div
+      class="site-header__mobile-menu-view"
+      id="site-header-mobile-view-{{ menu_view_id }}"
+      data-site-header-mobile-view="{{ menu_view_id }}"
+      data-mobile-menu-level="{{ menu_level }}"
+      data-mobile-menu-parent="{{ parent_view_id }}"
+      data-mobile-menu-parent-title="{{ parent_title | escape }}"
+      aria-hidden="{% if is_root_view %}false{% else %}true{% endif %}"
+    >
+      {% if links != blank %}
+        {% for link in links %}
+          {% assign child_view_id = menu_view_id | append: '-' | append: forloop.index %}
+          <div class="site-header__mobile-menu-row">
+            <a class="site-header__mobile-menu-item" href="{{ link.url }}">{{ link.title | escape }}</a>
+            {% if link.links != blank %}
+              <button
+                class="site-header__mobile-menu-next"
+                type="button"
+                data-site-header-mobile-next
+                data-mobile-menu-target="{{ child_view_id }}"
+                aria-controls="site-header-mobile-screen-{{ child_view_id }}"
+                aria-label="{{ 'header.open_submenu' | t }}"
+              >
+                <svg class="site-header__mobile-menu-chevron" viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="m9 6 6 6-6 6"></path>
+                </svg>
+              </button>
+            {% endif %}
+          </div>
+        {% endfor %}
+      {% else %}
+        <div class="site-header__mobile-menu-row">
+          <a class="site-header__mobile-menu-item" href="{{ routes.root_url }}">{{ 'header.home' | t }}</a>
+        </div>
+        <div class="site-header__mobile-menu-row">
+          <a class="site-header__mobile-menu-item" href="{{ routes.all_products_collection_url }}">{{ 'header.catalog' | t }}</a>
+        </div>
+        <div class="site-header__mobile-menu-row">
+          <a class="site-header__mobile-menu-item" href="/pages/contact">{{ 'header.contact' | t }}</a>
+        </div>
       {% endif %}
     </div>
-  {% endfor %}
+  </nav>
 </div>
 
 {% for link in links %}

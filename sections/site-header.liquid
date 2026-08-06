@@ -101,48 +101,13 @@
     <div class="site-header__mobile-menu" data-site-header-mobile-menu aria-hidden="true">
       <div class="site-header__mobile-menu-backdrop" data-site-header-mobile-close></div>
       <aside class="site-header__mobile-menu-panel" role="dialog" aria-modal="true" aria-label="{{ 'header.menu' | t }}">
-        <div class="site-header__mobile-menu-header">
-          <div class="site-header__mobile-menu-header-slot is-root" data-site-header-mobile-header-slot>
-            <a class="site-header__mobile-menu-brand" data-site-header-mobile-brand href="{{ routes.root_url }}">{{ shop.name | escape }}</a>
-            <button
-              class="site-header__mobile-menu-header-back"
-              type="button"
-              data-site-header-mobile-header-back
-              aria-controls="site-header-mobile-view-root"
-              aria-label="{{ 'header.back' | t }}"
-              aria-hidden="true"
-              tabindex="-1"
-            >
-              <svg viewBox="0 0 24 24" aria-hidden="true">
-                <path d="m15 6-6 6 6 6"></path>
-              </svg>
-              <span data-site-header-mobile-header-back-label></span>
-            </button>
-          </div>
-          <button class="site-header__mobile-menu-close" type="button" data-site-header-mobile-close aria-label="{{ 'header.close' | t }}">
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <path d="m6 6 12 12M18 6 6 18"></path>
-            </svg>
-          </button>
-        </div>
-
-        <nav class="site-header__mobile-menu-navigation" data-site-header-mobile-navigation aria-label="{{ 'header.primary_navigation' | t }}">
+        <div class="site-header__mobile-menu-screens" data-site-header-mobile-screens>
           {% if section.settings.menu != blank %}
             {% render 'site-header-mobile-nav', links: section.settings.menu.links, view_id: 'root', level: 0, parent_view_id: '', parent_title: '' %}
           {% else %}
-            <div class="site-header__mobile-menu-view is-active" id="site-header-mobile-view-root" data-site-header-mobile-view="root" data-mobile-menu-level="0" aria-hidden="false">
-              <div class="site-header__mobile-menu-row">
-                <a class="site-header__mobile-menu-item" href="{{ routes.root_url }}">{{ 'header.home' | t }}</a>
-              </div>
-              <div class="site-header__mobile-menu-row">
-                <a class="site-header__mobile-menu-item" href="{{ routes.all_products_collection_url }}">{{ 'header.catalog' | t }}</a>
-              </div>
-              <div class="site-header__mobile-menu-row">
-                <a class="site-header__mobile-menu-item" href="/pages/contact">{{ 'header.contact' | t }}</a>
-              </div>
-            </div>
+            {% render 'site-header-mobile-nav', links: blank, view_id: 'root', level: 0, parent_view_id: '', parent_title: '' %}
           {% endif %}
-        </nav>
+        </div>
 
         <div class="site-header__mobile-menu-footer">
           <a class="site-header__mobile-menu-account" href="{{ routes.account_url }}">{{ 'header.account' | t }}</a>
@@ -818,21 +783,10 @@
       border-bottom: 1px solid #e1e1e1;
     }
 
-    .site-header__mobile-menu-header-slot {
-      position: relative;
+    .site-header__mobile-menu-brand {
       display: flex;
       flex: 1;
-      align-self: stretch;
       min-width: 0;
-      align-items: center;
-      overflow: hidden;
-    }
-
-    .site-header__mobile-menu-brand {
-      position: absolute;
-      inset: 0;
-      display: flex;
-      width: 100%;
       align-items: center;
       font-size: 1.35rem;
       font-weight: 750;
@@ -844,10 +798,9 @@
     }
 
     .site-header__mobile-menu-header-back {
-      position: absolute;
-      inset: 0;
       display: flex;
-      width: 100%;
+      flex: 1;
+      min-width: 0;
       align-items: center;
       gap: 0.65rem;
       padding: 0;
@@ -861,38 +814,6 @@
       letter-spacing: -0.035em;
       line-height: 1;
       text-align: left;
-      transform: translate3d(100%, 0, 0);
-      transition: transform var(--site-header-mobile-menu-transition-duration) var(--site-header-mobile-menu-transition-easing);
-    }
-
-    .site-header__mobile-menu-header-slot.is-child .site-header__mobile-menu-brand {
-      transform: translate3d(-100%, 0, 0);
-      pointer-events: none;
-    }
-
-    .site-header__mobile-menu-header-slot.is-child .site-header__mobile-menu-header-back {
-      transform: translate3d(0, 0, 0);
-      pointer-events: auto;
-    }
-
-    .site-header__mobile-menu-header-slot.is-root .site-header__mobile-menu-brand {
-      pointer-events: auto;
-    }
-
-    .site-header__mobile-menu-header-slot.is-root .site-header__mobile-menu-header-back {
-      pointer-events: none;
-    }
-
-    .site-header__mobile-menu-header-slot.is-root.is-returning .site-header__mobile-menu-header-back {
-      transform: translate3d(100%, 0, 0);
-      transition: none !important;
-    }
-
-    .site-header__mobile-menu-header-slot.is-return-prep .site-header__mobile-menu-brand,
-    .site-header__mobile-menu-header-slot.is-return-prep .site-header__mobile-menu-header-back {
-      transform: translate3d(100%, 0, 0);
-      transition: none !important;
-      animation: none !important;
     }
 
     .site-header__mobile-menu-header-back:hover {
@@ -934,21 +855,19 @@
       height: 1.35rem;
     }
 
-    .site-header__mobile-menu-navigation {
+    .site-header__mobile-menu-screens {
       position: relative;
       flex: 1;
       min-height: 0;
       overflow: visible;
     }
 
-    .site-header__mobile-menu-view {
+    .site-header__mobile-menu-screen {
       position: absolute;
       inset: 0;
       display: flex;
       flex-direction: column;
       min-height: 0;
-      padding: 0.25rem 1rem 1rem;
-      overflow-y: auto;
       background: #ffffff;
       color: inherit;
       transform: translate3d(100%, 0, 0);
@@ -959,26 +878,21 @@
       transition: transform var(--site-header-mobile-menu-transition-duration) var(--site-header-mobile-menu-transition-easing), visibility 0s linear var(--site-header-mobile-menu-transition-duration);
     }
 
-    .site-header__mobile-menu-view.is-active,
-    .site-header__mobile-menu-view.is-before,
-    .site-header__mobile-menu-view.is-after {
-      visibility: visible;
-    }
-
-    .site-header__mobile-menu-view.is-hidden {
-      visibility: hidden !important;
-      pointer-events: none !important;
-      transition: none !important;
-    }
-
-    .site-header__mobile-menu-view.is-active {
+    .site-header__mobile-menu-screen.is-active {
       transform: translate3d(0, 0, 0);
+      visibility: visible;
       pointer-events: auto;
       z-index: 1;
       transition: transform var(--site-header-mobile-menu-transition-duration) var(--site-header-mobile-menu-transition-easing), visibility 0s;
     }
 
-    .site-header__mobile-menu-view.is-underlay {
+    .site-header__mobile-menu-screen.is-hidden {
+      visibility: hidden !important;
+      pointer-events: none !important;
+      transition: none !important;
+    }
+
+    .site-header__mobile-menu-screen.is-underlay {
       transform: translate3d(0, 0, 0);
       visibility: visible;
       pointer-events: none;
@@ -986,50 +900,44 @@
       transition: none;
     }
 
-    .site-header__mobile-menu-view.is-subpopup {
-      top: calc(-1 * var(--site-header-mobile-menu-header-height));
-      bottom: auto;
-      height: calc(100% + var(--site-header-mobile-menu-header-height));
-      padding: 0 1rem 1rem;
-      border-radius: 1rem;
-      box-shadow: -0.75rem 0 1.5rem rgb(11 11 11 / 0.14);
-    }
-
-    .site-header__mobile-menu-subpopup-header {
-      position: sticky;
-      top: 0;
-      z-index: 2;
-      flex-shrink: 0;
-      margin-inline: -1rem;
-      background: #ffffff;
-    }
-
-    .site-header__mobile-menu-subpopup-back {
-      position: static;
-      inset: auto;
-      width: auto;
-      min-width: 0;
-      flex: 1;
-      transform: none !important;
-      transition: none !important;
-    }
-
-    .site-header__mobile-menu-view.is-before {
-      transform: translate3d(-100%, 0, 0);
-    }
-
-    .site-header__mobile-menu-view.is-after {
+    .site-header__mobile-menu-screen.is-after {
       transform: translate3d(100%, 0, 0);
+      visibility: visible;
       pointer-events: none;
       z-index: 1;
     }
 
-    .site-header__mobile-menu-view.is-view-return-prep {
+    .site-header__mobile-menu-screen.is-screen-return-prep {
       transform: translate3d(0, 0, 0);
       visibility: visible;
       pointer-events: none;
       z-index: 1;
       transition: none;
+    }
+
+    .site-header__mobile-menu-screen.is-subpopup {
+      box-shadow: -0.75rem 0 1.5rem rgb(11 11 11 / 0.14);
+    }
+
+    .site-header__mobile-menu-navigation {
+      position: relative;
+      display: flex;
+      flex: 1;
+      flex-direction: column;
+      min-height: 0;
+      overflow: hidden;
+    }
+
+    .site-header__mobile-menu-view {
+      position: static;
+      display: flex;
+      flex: 1;
+      flex-direction: column;
+      min-height: 0;
+      padding: 0.25rem 1rem 1rem;
+      overflow-y: auto;
+      background: #ffffff;
+      color: inherit;
     }
 
     .site-header__mobile-menu-row {
@@ -1168,8 +1076,9 @@
     .site-header__dropdown-panel,
       .site-header__mobile-menu,
       .site-header__mobile-menu-panel,
+      .site-header__mobile-menu-screens,
+      .site-header__mobile-menu-screen,
       .site-header__mobile-menu-view,
-      .site-header__mobile-menu-header-slot,
       .site-header__mobile-menu-brand,
       .site-header__mobile-menu-header-back,
       .site-header__mobile-menu-chevron {
@@ -1340,127 +1249,85 @@
       const mobileMenu = header.querySelector('[data-site-header-mobile-menu]');
       const mobileMenuToggle = header.querySelector('[data-site-header-mobile-toggle]');
       const mobileMenuCloseButton = mobileMenu?.querySelector('[data-site-header-mobile-close][type="button"]');
-      const mobileMenuHeaderSlot = mobileMenu?.querySelector('[data-site-header-mobile-header-slot]');
-      const mobileMenuHeaderBrand = mobileMenu?.querySelector('[data-site-header-mobile-brand]');
-      const mobileMenuHeaderBack = mobileMenu?.querySelector('[data-site-header-mobile-header-back]');
-      const mobileMenuHeaderBackLabel = mobileMenuHeaderBack?.querySelector('[data-site-header-mobile-header-back-label]');
+      const mobileMenuScreens = Array.from(mobileMenu?.querySelectorAll('[data-site-header-mobile-screen]') ?? []);
       const mobileMenuViews = Array.from(mobileMenu?.querySelectorAll('[data-site-header-mobile-view]') ?? []);
       const mobileMenuTransitionDuration = 500;
       let mobileMenuOpen = false;
       let mobileMenuCloseTimer;
       let mobileMenuViewCleanupTimer;
-      let mobileMenuHeaderTransitionTimer;
       let mobileMenuScrollLock;
-      const syncMobileMenuHeader = (activeView, direction = 'forward', prepareReturn = false) => {
-        const isRoot = !activeView || activeView.dataset.siteHeaderMobileView === 'root';
-        const isReturning = isRoot && direction === 'back';
-        const isReturnPrep = isReturning && prepareReturn;
-        window.clearTimeout(mobileMenuHeaderTransitionTimer);
-        mobileMenuHeaderSlot?.classList.toggle('is-root', isRoot);
-        mobileMenuHeaderSlot?.classList.toggle('is-child', !isRoot);
-        mobileMenuHeaderSlot?.classList.toggle('is-return-prep', isReturnPrep);
-        mobileMenuHeaderSlot?.classList.toggle('is-returning', isReturning && !isReturnPrep);
-        mobileMenuHeaderBrand?.setAttribute('aria-hidden', isRoot ? 'false' : 'true');
-        mobileMenuHeaderBack?.setAttribute('aria-hidden', isRoot ? 'true' : 'false');
-        if (mobileMenuHeaderBrand) {
-          if (isRoot) mobileMenuHeaderBrand.removeAttribute('tabindex');
-          else mobileMenuHeaderBrand.setAttribute('tabindex', '-1');
-        }
-        if (mobileMenuHeaderBack) {
-          if (isRoot) mobileMenuHeaderBack.setAttribute('tabindex', '-1');
-          else mobileMenuHeaderBack.removeAttribute('tabindex');
-        }
+      const getMobileMenuScreen = (view) => view?.closest('[data-site-header-mobile-screen]');
+      const setMobileMenuScreenVisibility = (screen, isVisible) => {
+        if (!screen) return;
 
-        if (isRoot) {
-          return;
-        }
-        if (!mobileMenuHeaderBack) return;
-
-        const targetId = activeView.dataset.mobileMenuParent || 'root';
-        mobileMenuHeaderBack.dataset.mobileMenuTarget = targetId;
-        mobileMenuHeaderBack.setAttribute('aria-controls', `site-header-mobile-view-${targetId}`);
-        if (mobileMenuHeaderBackLabel) mobileMenuHeaderBackLabel.textContent = activeView.dataset.mobileMenuParentTitle || '';
-
-      };
-      const startMobileMenuHeaderReturn = () => {
-        if (!mobileMenuHeaderSlot) return;
-
-        mobileMenuHeaderSlot.classList.remove('is-return-prep');
-        mobileMenuHeaderSlot.classList.add('is-returning');
-        mobileMenuHeaderTransitionTimer = window.setTimeout(() => {
-          mobileMenuHeaderSlot.classList.remove('is-returning');
-        }, mobileMenuTransitionDuration + 20);
+        screen.setAttribute('aria-hidden', isVisible ? 'false' : 'true');
+        screen.querySelector('[data-site-header-mobile-view]')?.setAttribute('aria-hidden', isVisible ? 'false' : 'true');
       };
       const resetMobileMenuView = () => {
         window.clearTimeout(mobileMenuViewCleanupTimer);
-        let rootView;
-        mobileMenuViews.forEach((view) => {
-          const isRoot = view.dataset.siteHeaderMobileView === 'root';
-          view.classList.toggle('is-active', isRoot);
-          view.classList.remove('is-before', 'is-after', 'is-hidden', 'is-underlay', 'is-view-return-prep');
-          view.setAttribute('aria-hidden', isRoot ? 'false' : 'true');
-          if (isRoot) {
-            rootView = view;
-            view.scrollTop = 0;
-          }
+        mobileMenuScreens.forEach((screen) => {
+          const isRoot = screen.dataset.siteHeaderMobileScreen === 'root';
+          screen.classList.toggle('is-active', isRoot);
+          screen.classList.remove('is-before', 'is-after', 'is-hidden', 'is-underlay', 'is-screen-return-prep');
+          setMobileMenuScreenVisibility(screen, isRoot);
+          if (isRoot) screen.querySelector('[data-site-header-mobile-view]')?.scrollTo(0, 0);
         });
-        syncMobileMenuHeader(rootView);
       };
       const setMobileMenuView = (targetId, direction = 'forward') => {
         const targetView = mobileMenuViews.find((view) => view.dataset.siteHeaderMobileView === targetId);
-        const currentView = mobileMenuViews.find((view) => view.classList.contains('is-active'));
-        if (!targetView || targetView === currentView) return;
+        const targetScreen = getMobileMenuScreen(targetView);
+        const currentScreen = mobileMenuScreens.find((screen) => screen.classList.contains('is-active'));
+        if (!targetView || !targetScreen || targetScreen === currentScreen) return;
 
         window.clearTimeout(mobileMenuViewCleanupTimer);
 
-        if (currentView) {
+        if (currentScreen) {
           if (direction === 'forward') {
-            currentView.classList.remove('is-active', 'is-before', 'is-after', 'is-hidden');
-            currentView.classList.add('is-underlay');
+            currentScreen.classList.remove('is-active', 'is-before', 'is-after', 'is-hidden', 'is-screen-return-prep');
+            currentScreen.classList.add('is-underlay');
           } else {
-            currentView.classList.remove('is-active', 'is-before', 'is-after', 'is-hidden', 'is-underlay');
-            currentView.classList.add('is-view-return-prep');
+            currentScreen.classList.remove('is-active', 'is-before', 'is-after', 'is-hidden', 'is-underlay');
+            currentScreen.classList.add('is-screen-return-prep');
           }
-          currentView.setAttribute('aria-hidden', 'true');
+          setMobileMenuScreenVisibility(currentScreen, false);
         }
 
         if (direction === 'forward') {
-          mobileMenuViews.forEach((view) => {
-            if (view === currentView || view === targetView) return;
-            view.classList.remove('is-before', 'is-after', 'is-active', 'is-underlay');
-            view.classList.add('is-hidden');
-            view.setAttribute('aria-hidden', 'true');
+          mobileMenuScreens.forEach((screen) => {
+            if (screen === currentScreen || screen === targetScreen) return;
+            screen.classList.remove('is-before', 'is-after', 'is-active', 'is-underlay', 'is-screen-return-prep');
+            screen.classList.add('is-hidden');
+            setMobileMenuScreenVisibility(screen, false);
           });
         }
 
-        targetView.classList.remove('is-before', 'is-after', 'is-hidden', 'is-underlay', 'is-view-return-prep');
+        targetScreen.classList.remove('is-before', 'is-after', 'is-hidden', 'is-underlay', 'is-screen-return-prep');
         if (direction === 'back') {
-          targetView.classList.add('is-underlay');
+          targetScreen.classList.add('is-underlay');
         } else {
-          targetView.classList.add('is-active');
+          targetScreen.classList.add('is-active');
         }
-        targetView.setAttribute('aria-hidden', direction === 'back' ? 'true' : 'false');
         targetView.scrollTop = 0;
-        syncMobileMenuHeader(targetView, direction, direction === 'back');
+        setMobileMenuScreenVisibility(targetScreen, direction !== 'back');
         if (direction === 'back') {
-          if (currentView) void currentView.offsetWidth;
-          if (mobileMenuHeaderSlot) void mobileMenuHeaderSlot.offsetWidth;
-          currentView?.classList.remove('is-view-return-prep');
-          currentView?.classList.add('is-after');
-          startMobileMenuHeaderReturn();
+          if (currentScreen) {
+            void currentScreen.offsetWidth;
+            currentScreen.classList.remove('is-screen-return-prep');
+            currentScreen.classList.add('is-after');
+          }
         }
 
         mobileMenuViewCleanupTimer = window.setTimeout(() => {
-          mobileMenuViews.forEach((view) => {
-            if (view === targetView) {
-              view.classList.remove('is-before', 'is-after', 'is-hidden', 'is-underlay', 'is-view-return-prep');
-              view.classList.add('is-active');
-              view.setAttribute('aria-hidden', 'false');
+          mobileMenuScreens.forEach((screen) => {
+            if (screen === targetScreen) {
+              screen.classList.remove('is-before', 'is-after', 'is-hidden', 'is-underlay', 'is-screen-return-prep');
+              screen.classList.add('is-active');
+              setMobileMenuScreenVisibility(screen, true);
               return;
             }
-            view.classList.remove('is-before', 'is-after', 'is-active', 'is-underlay', 'is-view-return-prep');
-            view.classList.add('is-hidden');
-            view.setAttribute('aria-hidden', 'true');
+            screen.classList.remove('is-before', 'is-after', 'is-active', 'is-underlay', 'is-screen-return-prep');
+            screen.classList.add('is-hidden');
+            setMobileMenuScreenVisibility(screen, false);
           });
         }, mobileMenuTransitionDuration + 20);
       };
@@ -1529,9 +1396,6 @@
       };
       mobileMenuToggle?.addEventListener('click', () => {
         setMobileMenuOpen(!mobileMenuOpen);
-      });
-      mobileMenuHeaderBack?.addEventListener('click', () => {
-        setMobileMenuView(mobileMenuHeaderBack.dataset.mobileMenuTarget || 'root', 'back');
       });
       mobileMenu?.querySelectorAll('[data-site-header-mobile-subpopup-back]').forEach((backButton) => {
         backButton.addEventListener('click', () => {
