@@ -13,20 +13,6 @@
     "sections": {
       "site-header": {
         "type": "site-header",
-        "blocks": {
-          "mega_menu_promo_wLbdnW": {
-            "type": "mega_menu_promo",
-            "settings": {
-              "menu_item": "home",
-              "image": "shopify://shop_images/slide-1-v2.webp",
-              "title": "Test",
-              "link": "shopify://collections"
-            }
-          }
-        },
-        "block_order": [
-          "mega_menu_promo_wLbdnW"
-        ],
         "settings": {
           "menu": "home"
         }
