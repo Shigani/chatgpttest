@@ -495,6 +495,25 @@
     animation: site-header-dropdown-slide-up 300ms cubic-bezier(0.22, 1, 0.36, 1) both;
   }
 
+  /* Keep the previous mega panel out of the stacking context while another
+     menu is taking its place. The demo swaps panels cleanly instead of
+     allowing the closed panel to sit over the newly selected menu. */
+  .site-header:not(.site-header--scrolled) .site-header__dropdown:not(.site-header__dropdown--simple):not([open]) > .site-header__dropdown-panel:not(.site-header__dropdown-panel--closing):not(.site-header__dropdown-panel--switching) {
+    z-index: -1;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-100%);
+    visibility: hidden;
+  }
+
+  .site-header.site-header--scrolled .site-header__dropdown:not(.site-header__dropdown--simple):not([open]) > .site-header__dropdown-panel:not(.site-header__dropdown-panel--closing):not(.site-header__dropdown-panel--switching) {
+    z-index: -1;
+    opacity: 0;
+    pointer-events: none;
+    transform: scaleY(0);
+    visibility: hidden;
+  }
+
   .site-header__dropdown--simple {
     position: relative;
   }
