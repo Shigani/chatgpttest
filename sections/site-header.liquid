@@ -716,6 +716,11 @@
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
+  .site-header__mega-menu-links--men {
+    flex-basis: calc((100% - var(--site-header-mega-menu-gap)) / 2);
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
   .site-header__dropdown-panel--with-promos .site-header__mega-menu-promos {
     flex: 0 0 calc((100% - var(--site-header-mega-menu-gap)) / 2);
   }
@@ -841,6 +846,164 @@
   .site-header__mega-menu-promo:hover .site-header__mega-menu-promo-action span,
   .site-header__mega-menu-promo:focus-visible .site-header__mega-menu-promo-action span {
     transform: translate(0.15rem, -0.15rem);
+  }
+
+  .site-header__mega-menu-deals {
+    flex: 0 0 calc((100% - var(--site-header-mega-menu-gap)) / 2);
+    min-width: 0;
+  }
+
+  .site-header__mega-menu-deals-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 1.35rem;
+    margin-bottom: 1.5rem;
+    color: #0b0b0b;
+    font-size: 1rem;
+  }
+
+  .site-header__mega-menu-deals-heading strong {
+    font-weight: 650;
+  }
+
+  .site-header__mega-menu-deals-controls {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .site-header__mega-menu-deals-controls button {
+    display: grid;
+    width: 1.25rem;
+    height: 1.25rem;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+    place-items: center;
+  }
+
+  .site-header__mega-menu-deals-controls button:disabled {
+    opacity: 0.32;
+    cursor: default;
+  }
+
+  .site-header__mega-menu-deals-controls svg {
+    width: 1rem;
+    height: 1rem;
+    fill: none;
+    stroke: currentColor;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 1.5;
+  }
+
+  .site-header__mega-menu-deals-viewport {
+    overflow-x: auto;
+    scrollbar-width: none;
+    scroll-behavior: smooth;
+  }
+
+  .site-header__mega-menu-deals-viewport::-webkit-scrollbar {
+    display: none;
+  }
+
+  .site-header__mega-menu-deals-track {
+    display: flex;
+    gap: 0.75rem;
+    width: max-content;
+  }
+
+  .site-header__mega-menu-product-card {
+    display: block;
+    flex: 0 0 var(--site-header-deal-card-width, 12rem);
+    min-width: 0;
+    color: #0b0b0b;
+    text-decoration: none;
+  }
+
+  .site-header__mega-menu-product-card:hover,
+  .site-header__mega-menu-product-card:focus-visible {
+    opacity: 1;
+  }
+
+  .site-header__mega-menu-product-media {
+    position: relative;
+    display: grid;
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    border-radius: 0.8rem;
+    background: #f3f3f3;
+    place-items: center;
+  }
+
+  .site-header__mega-menu-product-media > img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .site-header__mega-menu-product-discount {
+    position: absolute;
+    top: 0.75rem;
+    left: 0.75rem;
+    z-index: 1;
+    padding: 0.22rem 0.5rem;
+    border-radius: 999px;
+    background: #f0060c;
+    color: #ffffff;
+    font-size: 0.68rem;
+    font-weight: 650;
+    line-height: 1;
+  }
+
+  .site-header__mega-menu-product-swatches {
+    display: flex;
+    gap: 0.45rem;
+    margin-top: 0.75rem;
+  }
+
+  .site-header__mega-menu-product-swatches > span {
+    display: block;
+    width: 2.65rem;
+    height: 2.5rem;
+    overflow: hidden;
+    border-radius: 0.35rem;
+    background: #f3f3f3;
+  }
+
+  .site-header__mega-menu-product-swatches img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .site-header__mega-menu-product-title {
+    display: block;
+    margin-top: 0.75rem;
+    font-size: 0.9rem;
+    line-height: 1.35;
+  }
+
+  .site-header__mega-menu-product-prices {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    margin-top: 0.35rem;
+    font-size: 0.78rem;
+  }
+
+  .site-header__mega-menu-product-prices > span {
+    color: #f0060c;
+  }
+
+  .site-header__mega-menu-product-prices s {
+    color: #606060;
+    font-size: 0.7rem;
   }
 
   .site-header__brand {
@@ -1764,6 +1927,34 @@
         dropdown.querySelector('summary')?.addEventListener('pointerenter', () => {
           if (canHover) openDropdown(dropdown);
         });
+      });
+
+      header.querySelectorAll('[data-site-header-deal-carousel]').forEach((carousel) => {
+        const viewport = carousel.querySelector('[data-site-header-deals-viewport]');
+        const track = carousel.querySelector('.site-header__mega-menu-deals-track');
+        const previousButton = carousel.querySelector('[data-site-header-deals-prev]');
+        const nextButton = carousel.querySelector('[data-site-header-deals-next]');
+        if (!viewport || !track || !previousButton || !nextButton) return;
+
+        const updateDealCarousel = () => {
+          const gap = Number.parseFloat(window.getComputedStyle(track).columnGap) || 0;
+          const cardWidth = Math.max((viewport.clientWidth - gap * 2) / 3, 0);
+          carousel.style.setProperty('--site-header-deal-card-width', `${cardWidth}px`);
+          const maxScroll = viewport.scrollWidth - viewport.clientWidth;
+          previousButton.disabled = viewport.scrollLeft <= 1;
+          nextButton.disabled = viewport.scrollLeft >= maxScroll - 1;
+        };
+        const scrollDeals = (direction) => {
+          viewport.scrollBy({ left: direction * viewport.clientWidth, behavior: 'smooth' });
+        };
+
+        previousButton.addEventListener('click', () => scrollDeals(-1));
+        nextButton.addEventListener('click', () => scrollDeals(1));
+        viewport.addEventListener('scroll', updateDealCarousel, { passive: true });
+        window.addEventListener('resize', updateDealCarousel);
+        carousel.closest('[data-site-header-dropdown]')?.addEventListener('toggle', updateDealCarousel);
+        if (window.ResizeObserver) new ResizeObserver(updateDealCarousel).observe(viewport);
+        window.requestAnimationFrame(updateDealCarousel);
       });
 
       header.querySelectorAll('.site-header__navigation > :not([data-site-header-dropdown])').forEach((menuItem) => {
