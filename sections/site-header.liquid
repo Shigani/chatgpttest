@@ -424,28 +424,37 @@
   }
 
   .site-header__dropdown-panel--switch-height {
-    transition: height 300ms cubic-bezier(0.22, 1, 0.36, 1) !important;
+    transition: height 300ms cubic-bezier(0.6, 0.14, 0, 1) !important;
+  }
+
+  .site-header__dropdown-panel--switching {
+    opacity: 1 !important;
+    pointer-events: auto;
+    visibility: visible !important;
+    transform: none !important;
+    overflow: hidden;
+    transition: height 300ms cubic-bezier(0.6, 0.14, 0, 1), opacity 200ms cubic-bezier(0.6, 0.14, 0, 1) !important;
   }
 
   .site-header__dropdown-panel--replay .site-header__mega-menu-column,
   .site-header__dropdown-panel--replay .site-header__mega-menu-promo,
   .site-header__dropdown-panel--content-replay .site-header__mega-menu-column,
   .site-header__dropdown-panel--content-replay .site-header__mega-menu-promo {
-    animation: site-header-dropdown-item-fade-up 300ms cubic-bezier(0.22, 1, 0.36, 1) 300ms both;
+    animation: site-header-dropdown-item-fade-up 400ms ease 200ms both;
   }
 
   .site-header__dropdown-panel--replay .site-header__mega-menu-column:nth-child(2),
   .site-header__dropdown-panel--replay .site-header__mega-menu-promo:nth-child(2),
   .site-header__dropdown-panel--content-replay .site-header__mega-menu-column:nth-child(2),
   .site-header__dropdown-panel--content-replay .site-header__mega-menu-promo:nth-child(2) {
-    animation-delay: 340ms;
+    animation-delay: 250ms;
   }
 
   .site-header__dropdown-panel--replay .site-header__mega-menu-column:nth-child(3),
   .site-header__dropdown-panel--replay .site-header__mega-menu-promo:nth-child(3),
   .site-header__dropdown-panel--content-replay .site-header__mega-menu-column:nth-child(3),
   .site-header__dropdown-panel--content-replay .site-header__mega-menu-promo:nth-child(3) {
-    animation-delay: 380ms;
+    animation-delay: 300ms;
   }
 
   .site-header.site-header--scrolled .site-header__dropdown-panel--closing {
@@ -1711,12 +1720,13 @@
         const animation = switchHeightAnimationHandlers.get(panel);
         if (animation) {
           if (animation.finish) panel.removeEventListener('transitionend', animation.finish);
-          if (animation.frameId) window.clearTimeout(animation.frameId);
+          if (animation.frameId) window.cancelAnimationFrame(animation.frameId);
           window.clearTimeout(animation.timer);
           switchHeightAnimationHandlers.delete(panel);
         }
 
         panel.classList.remove('site-header__dropdown-panel--switch-height');
+        panel.classList.remove('site-header__dropdown-panel--switching');
         panel.style.removeProperty('height');
       };
       const resetDropdownAnimation = (dropdown) => {
@@ -1933,11 +1943,10 @@
         const isFullMenuSwitch = !fromDropdown.classList.contains('site-header__dropdown--simple')
           && !toDropdown.classList.contains('site-header__dropdown--simple');
         const cachedFromHeight = dropdownPanelHeights.get(fromDropdown) ?? 0;
-        const fromHeight = Math.max(
-          getPanelNaturalHeight(fromPanel),
-          fromPanel?.getBoundingClientRect().height ?? 0,
-          cachedFromHeight
-        );
+        const renderedFromHeight = fromPanel?.getBoundingClientRect().height ?? 0;
+        const fromHeight = renderedFromHeight > 0
+          ? renderedFromHeight
+          : Math.max(getPanelNaturalHeight(fromPanel), cachedFromHeight);
 
         resetDropdownAnimation(fromDropdown);
         if (toPanel) resetDropdownAnimation(toDropdown);
@@ -1951,22 +1960,31 @@
         cancelClosingAnimation(toPanel);
         cancelSwitchHeightAnimation(toPanel);
         toPanel.classList.remove('site-header__dropdown-panel--content-replay');
-        toPanel.classList.add('site-header__dropdown-panel--instant');
-        fromDropdown.removeAttribute('open');
-        toDropdown.setAttribute('open', '');
-        syncDropdownState();
-
-        void toPanel.offsetWidth;
-        toPanel.classList.add('site-header__dropdown-panel--content-replay');
 
         if (!isFullMenuSwitch || window.matchMedia('(prefers-reduced-motion: reduce)').matches || fromHeight <= 0) {
+          toPanel.classList.add('site-header__dropdown-panel--instant');
+          fromDropdown.removeAttribute('open');
+          toDropdown.setAttribute('open', '');
+          syncDropdownState();
+
+          void toPanel.offsetWidth;
+          toPanel.classList.add('site-header__dropdown-panel--content-replay');
           window.setTimeout(() => {
             if (toPanel.isConnected) toPanel.classList.remove('site-header__dropdown-panel--instant');
           }, 0);
           return;
         }
 
+        toPanel.classList.add('site-header__dropdown-panel--switching');
         toPanel.style.height = `${fromHeight}px`;
+        fromDropdown.removeAttribute('open');
+        toDropdown.setAttribute('open', '');
+        syncDropdownState();
+
+        void toPanel.offsetHeight;
+        const toHeight = getPanelNaturalHeight(toPanel);
+        void toPanel.offsetWidth;
+        toPanel.classList.add('site-header__dropdown-panel--content-replay');
 
         const animation = { finish: null, timer: 0, frameId: 0, startedAt: 0, previousHeight: 0, stableFrames: 0, frameCount: 0 };
         switchHeightAnimationHandlers.set(toPanel, animation);
@@ -1977,43 +1995,22 @@
 
           toPanel.removeEventListener('transitionend', finish);
           window.clearTimeout(animation.timer);
-          if (animation.frameId) window.clearTimeout(animation.frameId);
+          if (animation.frameId) window.cancelAnimationFrame(animation.frameId);
           switchHeightAnimationHandlers.delete(toPanel);
-          toPanel.classList.remove('site-header__dropdown-panel--switch-height');
+          toPanel.classList.remove('site-header__dropdown-panel--switch-height', 'site-header__dropdown-panel--switching');
           toPanel.style.removeProperty('height');
         };
 
         animation.finish = finish;
-        const settleTargetHeight = () => {
-          if (switchHeightAnimationHandlers.get(toPanel) !== animation) return;
-
-          const toHeight = getPanelNaturalHeight(toPanel);
-          animation.frameCount += 1;
-          animation.stableFrames = Math.abs(toHeight - animation.previousHeight) < 0.5
-            ? animation.stableFrames + 1
-            : 0;
-          animation.previousHeight = toHeight;
-
-          if (animation.frameCount < 2 || (animation.stableFrames < 1 && animation.frameCount < 8)) {
-            animation.frameId = window.setTimeout(settleTargetHeight, 16);
-            return;
+        animation.startedAt = performance.now();
+        toPanel.addEventListener('transitionend', finish);
+        animation.timer = window.setTimeout(finish, 360);
+        animation.frameId = window.requestAnimationFrame(() => {
+          animation.frameId = 0;
+          if (switchHeightAnimationHandlers.get(toPanel) === animation) {
+            toPanel.style.height = `${toHeight}px`;
           }
-
-          toPanel.style.height = `${fromHeight}px`;
-          toPanel.classList.add('site-header__dropdown-panel--switch-height');
-          void toPanel.offsetWidth;
-          toPanel.classList.remove('site-header__dropdown-panel--instant');
-          animation.startedAt = performance.now();
-          toPanel.addEventListener('transitionend', finish);
-          animation.timer = window.setTimeout(finish, 360);
-          window.setTimeout(() => {
-            if (switchHeightAnimationHandlers.get(toPanel) === animation) {
-              toPanel.style.height = `${toHeight}px`;
-            }
-          }, 0);
-        };
-
-        animation.frameId = window.setTimeout(settleTargetHeight, 16);
+        });
       };
       const openDropdown = (dropdown) => {
         window.clearTimeout(dropdownCloseTimer);
