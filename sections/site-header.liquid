@@ -2009,11 +2009,11 @@
           animation.startedAt = performance.now();
           toPanel.addEventListener('transitionend', finish);
           animation.timer = window.setTimeout(finish, 360);
-          window.requestAnimationFrame(() => {
+          window.setTimeout(() => {
             if (switchHeightAnimationHandlers.get(toPanel) === animation) {
               toPanel.style.height = `${toHeight}px`;
             }
-          });
+          }, 0);
         };
 
         animation.frameId = window.setTimeout(settleTargetHeight, 16);
