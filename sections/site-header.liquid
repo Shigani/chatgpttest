@@ -2001,16 +2001,16 @@
 
           toPanel.style.height = `${fromHeight}px`;
           toPanel.classList.add('site-header__dropdown-panel--switch-height');
-          void toPanel.offsetWidth;
+          void toPanel.offsetHeight;
           toPanel.classList.remove('site-header__dropdown-panel--instant');
           animation.startedAt = performance.now();
           toPanel.addEventListener('transitionend', finish);
           animation.timer = window.setTimeout(finish, 360);
-          window.setTimeout(() => {
+          window.requestAnimationFrame(() => {
             if (switchHeightAnimationHandlers.get(toPanel) === animation) {
               toPanel.style.height = `${toHeight}px`;
             }
-          }, 0);
+          });
         };
 
         animation.frameId = window.setTimeout(settleTargetHeight, 16);
