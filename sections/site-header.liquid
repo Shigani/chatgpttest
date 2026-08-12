@@ -1666,6 +1666,16 @@
         dropdownScrollLock = null;
       };
       const dropdownPanelHeights = new WeakMap();
+      const getPanelNaturalHeight = (panel) => {
+        if (!panel) return 0;
+
+        const computedStyle = window.getComputedStyle(panel);
+        const borderHeight = (Number.parseFloat(computedStyle.borderTopWidth) || 0)
+          + (Number.parseFloat(computedStyle.borderBottomWidth) || 0);
+        const innerHeight = panel.querySelector('.site-header__mega-menu-inner')?.getBoundingClientRect().height ?? 0;
+
+        return Math.max(panel.scrollHeight + borderHeight, innerHeight + borderHeight);
+      };
       const syncDropdownState = () => {
         const isDropdownActive = dropdowns.some((dropdown) => dropdown.open);
 
@@ -1673,7 +1683,7 @@
           if (!dropdown.open) return;
 
           const panel = dropdown.querySelector('.site-header__dropdown-panel');
-          const panelHeight = Math.max(panel?.getBoundingClientRect().height ?? 0, panel?.scrollHeight ?? 0);
+          const panelHeight = getPanelNaturalHeight(panel);
           if (panelHeight > 0) dropdownPanelHeights.set(dropdown, panelHeight);
         });
 
@@ -1917,16 +1927,6 @@
       const dropdownCloseDelay = 600;
       let dropdownCloseTimer;
       const isInsideHeader = (target) => target && target.nodeType && header.contains(target);
-      const getPanelNaturalHeight = (panel) => {
-        if (!panel) return 0;
-
-        const computedStyle = window.getComputedStyle(panel);
-        const borderHeight = (Number.parseFloat(computedStyle.borderTopWidth) || 0)
-          + (Number.parseFloat(computedStyle.borderBottomWidth) || 0);
-        const innerHeight = panel.querySelector('.site-header__mega-menu-inner')?.getBoundingClientRect().height ?? 0;
-
-        return Math.max(panel.scrollHeight + borderHeight, innerHeight + borderHeight);
-      };
       const switchDropdown = (fromDropdown, toDropdown) => {
         const fromPanel = fromDropdown.querySelector('.site-header__dropdown-panel');
         const toPanel = toDropdown.querySelector('.site-header__dropdown-panel');
