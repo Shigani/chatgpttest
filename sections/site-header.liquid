@@ -1940,9 +1940,6 @@
           const gap = Number.parseFloat(window.getComputedStyle(track).columnGap) || 0;
           const cardWidth = Math.max((viewport.clientWidth - gap * 2) / 3, 0);
           carousel.style.setProperty('--site-header-deal-card-width', `${cardWidth}px`);
-          const maxScroll = viewport.scrollWidth - viewport.clientWidth;
-          previousButton.disabled = viewport.scrollLeft <= 1;
-          nextButton.disabled = viewport.scrollLeft >= maxScroll - 1;
         };
         const scrollDeals = (direction) => {
           viewport.scrollBy({ left: direction * viewport.clientWidth, behavior: 'smooth' });
