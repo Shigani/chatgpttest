@@ -428,17 +428,23 @@
   }
 
   .site-header__dropdown-panel--replay .site-header__mega-menu-column,
-  .site-header__dropdown-panel--replay .site-header__mega-menu-promo {
+  .site-header__dropdown-panel--replay .site-header__mega-menu-promo,
+  .site-header__dropdown-panel--content-replay .site-header__mega-menu-column,
+  .site-header__dropdown-panel--content-replay .site-header__mega-menu-promo {
     animation: site-header-dropdown-item-fade-up 300ms cubic-bezier(0.22, 1, 0.36, 1) 300ms both;
   }
 
   .site-header__dropdown-panel--replay .site-header__mega-menu-column:nth-child(2),
-  .site-header__dropdown-panel--replay .site-header__mega-menu-promo:nth-child(2) {
+  .site-header__dropdown-panel--replay .site-header__mega-menu-promo:nth-child(2),
+  .site-header__dropdown-panel--content-replay .site-header__mega-menu-column:nth-child(2),
+  .site-header__dropdown-panel--content-replay .site-header__mega-menu-promo:nth-child(2) {
     animation-delay: 340ms;
   }
 
   .site-header__dropdown-panel--replay .site-header__mega-menu-column:nth-child(3),
-  .site-header__dropdown-panel--replay .site-header__mega-menu-promo:nth-child(3) {
+  .site-header__dropdown-panel--replay .site-header__mega-menu-promo:nth-child(3),
+  .site-header__dropdown-panel--content-replay .site-header__mega-menu-column:nth-child(3),
+  .site-header__dropdown-panel--content-replay .site-header__mega-menu-promo:nth-child(3) {
     animation-delay: 380ms;
   }
 
@@ -559,7 +565,8 @@
     animation: none;
   }
 
-  .site-header__dropdown--simple > .site-header__dropdown-panel--simple.site-header__dropdown-panel--replay .site-header__mega-menu-list li {
+  .site-header__dropdown--simple > .site-header__dropdown-panel--simple.site-header__dropdown-panel--replay .site-header__mega-menu-list li,
+  .site-header__dropdown--simple > .site-header__dropdown-panel--simple.site-header__dropdown-panel--content-replay .site-header__mega-menu-list li {
     animation: site-header-dropdown-simple-item-fade-left 260ms cubic-bezier(0.22, 1, 0.36, 1) 300ms both;
   }
 
@@ -567,7 +574,15 @@
     animation-delay: 335ms;
   }
 
+  .site-header__dropdown--simple > .site-header__dropdown-panel--simple.site-header__dropdown-panel--content-replay .site-header__mega-menu-list li:nth-child(2) {
+    animation-delay: 335ms;
+  }
+
   .site-header__dropdown--simple > .site-header__dropdown-panel--simple.site-header__dropdown-panel--replay .site-header__mega-menu-list li:nth-child(3) {
+    animation-delay: 370ms;
+  }
+
+  .site-header__dropdown--simple > .site-header__dropdown-panel--simple.site-header__dropdown-panel--content-replay .site-header__mega-menu-list li:nth-child(3) {
     animation-delay: 370ms;
   }
 
@@ -575,11 +590,23 @@
     animation-delay: 405ms;
   }
 
+  .site-header__dropdown--simple > .site-header__dropdown-panel--simple.site-header__dropdown-panel--content-replay .site-header__mega-menu-list li:nth-child(4) {
+    animation-delay: 405ms;
+  }
+
   .site-header__dropdown--simple > .site-header__dropdown-panel--simple.site-header__dropdown-panel--replay .site-header__mega-menu-list li:nth-child(5) {
     animation-delay: 440ms;
   }
 
+  .site-header__dropdown--simple > .site-header__dropdown-panel--simple.site-header__dropdown-panel--content-replay .site-header__mega-menu-list li:nth-child(5) {
+    animation-delay: 440ms;
+  }
+
   .site-header__dropdown--simple > .site-header__dropdown-panel--simple.site-header__dropdown-panel--replay .site-header__mega-menu-list li:nth-child(6) {
+    animation-delay: 475ms;
+  }
+
+  .site-header__dropdown--simple > .site-header__dropdown-panel--simple.site-header__dropdown-panel--content-replay .site-header__mega-menu-list li:nth-child(6) {
     animation-delay: 475ms;
   }
 
@@ -1549,7 +1576,13 @@
     }
 
     .site-header__dropdown-panel--replay .site-header__mega-menu-column,
-    .site-header__dropdown-panel--replay .site-header__mega-menu-promo {
+    .site-header__dropdown-panel--replay .site-header__mega-menu-promo,
+    .site-header__dropdown-panel--content-replay .site-header__mega-menu-column,
+    .site-header__dropdown-panel--content-replay .site-header__mega-menu-promo {
+      animation: none;
+    }
+
+    .site-header__dropdown--simple[open] > .site-header__dropdown-panel--simple .site-header__mega-menu-list li {
       animation: none;
     }
 
@@ -1671,6 +1704,7 @@
         if (!panel) return;
 
         panel.classList.remove('site-header__dropdown-panel--replay');
+        panel.classList.remove('site-header__dropdown-panel--content-replay');
         panel.classList.remove('site-header__dropdown-panel--instant');
         cancelSwitchHeightAnimation(panel);
         cancelClosingAnimation(panel);
@@ -1874,66 +1908,29 @@
       let dropdownCloseTimer;
       const isInsideHeader = (target) => target && target.nodeType && header.contains(target);
       const switchDropdown = (fromDropdown, toDropdown) => {
-        const fromPanel = fromDropdown.querySelector('.site-header__dropdown-panel');
         const toPanel = toDropdown.querySelector('.site-header__dropdown-panel');
-        const fromHeight = fromPanel?.getBoundingClientRect().height ?? 0;
 
         resetDropdownAnimation(fromDropdown);
         if (toPanel) resetDropdownAnimation(toDropdown);
+        if (!toPanel) {
+          fromDropdown.removeAttribute('open');
+          toDropdown.setAttribute('open', '');
+          syncDropdownState();
+          return;
+        }
+
+        cancelClosingAnimation(toPanel);
+        cancelSwitchHeightAnimation(toPanel);
+        toPanel.classList.remove('site-header__dropdown-panel--content-replay');
+        toPanel.classList.add('site-header__dropdown-panel--instant');
         fromDropdown.removeAttribute('open');
         toDropdown.setAttribute('open', '');
         syncDropdownState();
 
-        if (!toPanel) return;
-
-        cancelClosingAnimation(toPanel);
-        toPanel.classList.remove('site-header__dropdown-panel--replay');
-        toPanel.classList.add('site-header__dropdown-panel--instant');
-
-        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches || fromHeight <= 0) {
-          void toPanel.offsetWidth;
-          window.requestAnimationFrame(() => {
-            if (toPanel.isConnected) toPanel.classList.remove('site-header__dropdown-panel--instant');
-          });
-          return;
-        }
-
-        toPanel.style.height = 'auto';
-        const toHeight = toPanel.getBoundingClientRect().height;
-        toPanel.style.height = `${fromHeight}px`;
-
-        if (Math.abs(toHeight - fromHeight) < 1) {
-          toPanel.style.removeProperty('height');
-          void toPanel.offsetWidth;
-          window.requestAnimationFrame(() => {
-            if (toPanel.isConnected) toPanel.classList.remove('site-header__dropdown-panel--instant');
-          });
-          return;
-        }
-
-        toPanel.classList.add('site-header__dropdown-panel--switch-height');
         void toPanel.offsetWidth;
-        const animation = { finish: null, timer: 0 };
-        const finish = (event) => {
-          if (event && (event.target !== toPanel || event.propertyName !== 'height')) return;
-          if (switchHeightAnimationHandlers.get(toPanel) !== animation) return;
-
-          toPanel.removeEventListener('transitionend', finish);
-          window.clearTimeout(animation.timer);
-          switchHeightAnimationHandlers.delete(toPanel);
-          toPanel.classList.remove('site-header__dropdown-panel--switch-height');
-          toPanel.classList.remove('site-header__dropdown-panel--instant');
-          toPanel.style.removeProperty('height');
-        };
-
-        animation.finish = finish;
-        switchHeightAnimationHandlers.set(toPanel, animation);
-        toPanel.addEventListener('transitionend', finish);
-        animation.timer = window.setTimeout(finish, 360);
+        toPanel.classList.add('site-header__dropdown-panel--content-replay');
         window.requestAnimationFrame(() => {
-          if (switchHeightAnimationHandlers.get(toPanel) === animation) {
-            toPanel.style.height = `${toHeight}px`;
-          }
+          if (toPanel.isConnected) toPanel.classList.remove('site-header__dropdown-panel--instant');
         });
       };
       const openDropdown = (dropdown) => {
