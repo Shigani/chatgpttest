@@ -7,6 +7,8 @@
     </button>
 
     <nav class="site-header__navigation" aria-label="{{ 'header.primary_navigation' | t }}">
+      {% render 'site-header-demo-desktop-nav' %}
+      {% comment %}
       {% if section.settings.menu != blank %}
         {% for link in section.settings.menu.links %}
           {% if link.links != blank %}
@@ -102,17 +104,14 @@
         <a href="{{ routes.all_products_collection_url }}">{{ 'header.catalog' | t }}</a>
         <a href="/pages/contact">{{ 'header.contact' | t }}</a>
     {% endif %}
+      {% endcomment %}
     </nav>
 
     <div class="site-header__mobile-menu" data-site-header-mobile-menu aria-hidden="true">
       <div class="site-header__mobile-menu-backdrop" data-site-header-mobile-close></div>
       <aside class="site-header__mobile-menu-panel" role="dialog" aria-modal="true" aria-label="{{ 'header.menu' | t }}">
         <div class="site-header__mobile-menu-screens" data-site-header-mobile-screens>
-          {% if section.settings.menu != blank %}
-            {% render 'site-header-mobile-nav', links: section.settings.menu.links, view_id: 'root', level: 0, parent_view_id: '', parent_title: '' %}
-          {% else %}
-            {% render 'site-header-mobile-nav', links: blank, view_id: 'root', level: 0, parent_view_id: '', parent_title: '' %}
-          {% endif %}
+          {% render 'site-header-mobile-nav' %}
         </div>
 
         <div class="site-header__mobile-menu-footer">
@@ -529,7 +528,7 @@
   }
 
   .site-header:not(.site-header--scrolled) .site-header__dropdown--simple > .site-header__dropdown-panel--simple {
-    top: calc(50% + 2.5rem);
+    top: 5rem;
     z-index: 1;
     padding: 0;
     opacity: 0;
@@ -556,7 +555,7 @@
   }
 
   .site-header.site-header--scrolled .site-header__dropdown--simple > .site-header__dropdown-panel--simple {
-    top: calc(50% + 2.5rem);
+    top: 5rem;
     z-index: 1;
     opacity: 1;
     transform: scaleY(0);
@@ -705,6 +704,11 @@
     flex: 0 0 calc((100% - var(--site-header-mega-menu-gap)) / 2);
     min-width: 0;
     width: auto;
+  }
+
+  .site-header__mega-menu-links--full {
+    flex-basis: 100%;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
   .site-header__dropdown-panel--with-promos .site-header__mega-menu-promos {

@@ -1,36 +1,11 @@
-{% liquid
-  assign menu_view_id = view_id | default: 'root'
-  assign menu_level = level | default: 0
-  assign is_root_view = false
-  if menu_view_id == 'root'
-    assign is_root_view = true
-  endif
-%}
-
 <div
-  class="site-header__mobile-menu-screen{% if is_root_view %} is-active{% else %} is-subpopup{% endif %}"
-  id="site-header-mobile-screen-{{ menu_view_id }}"
-  data-site-header-mobile-screen="{{ menu_view_id }}"
-  aria-hidden="{% if is_root_view %}false{% else %}true{% endif %}"
+  class="site-header__mobile-menu-screen is-active"
+  id="site-header-mobile-screen-root"
+  data-site-header-mobile-screen="root"
+  aria-hidden="false"
 >
   <div class="site-header__mobile-menu-header">
-    {% if is_root_view %}
-      <a class="site-header__mobile-menu-brand" href="{{ routes.root_url }}">{{ shop.name | escape }}</a>
-    {% else %}
-      <button
-        class="site-header__mobile-menu-header-back"
-        type="button"
-        data-site-header-mobile-subpopup-back
-        data-mobile-menu-target="{{ parent_view_id }}"
-        aria-controls="site-header-mobile-screen-{{ parent_view_id }}"
-        aria-label="{{ 'header.back' | t }}"
-      >
-        <svg viewBox="0 0 24 24" aria-hidden="true">
-          <path d="m15 6-6 6 6 6"></path>
-        </svg>
-        <span>{{ parent_title | escape }}</span>
-      </button>
-    {% endif %}
+    <a class="site-header__mobile-menu-brand" href="{{ routes.root_url }}">{{ shop.name | escape }}</a>
     <button class="site-header__mobile-menu-close" type="button" data-site-header-mobile-close aria-label="{{ 'header.close' | t }}">
       <svg viewBox="0 0 24 24" aria-hidden="true">
         <path d="m6 6 12 12M18 6 6 18"></path>
@@ -39,55 +14,202 @@
   </div>
 
   <nav class="site-header__mobile-menu-navigation" data-site-header-mobile-navigation aria-label="{{ 'header.primary_navigation' | t }}">
-    <div
-      class="site-header__mobile-menu-view"
-      id="site-header-mobile-view-{{ menu_view_id }}"
-      data-site-header-mobile-view="{{ menu_view_id }}"
-      data-mobile-menu-level="{{ menu_level }}"
-      data-mobile-menu-parent="{{ parent_view_id }}"
-      data-mobile-menu-parent-title="{{ parent_title | escape }}"
-      aria-hidden="{% if is_root_view %}false{% else %}true{% endif %}"
-    >
-      {% if links != blank %}
-        {% for link in links %}
-          {% assign child_view_id = menu_view_id | append: '-' | append: forloop.index %}
-          <div class="site-header__mobile-menu-row">
-            <a class="site-header__mobile-menu-item" href="{{ link.url }}">{{ link.title | escape }}</a>
-            {% if link.links != blank %}
-              <button
-                class="site-header__mobile-menu-next"
-                type="button"
-                data-site-header-mobile-next
-                data-mobile-menu-target="{{ child_view_id }}"
-                aria-controls="site-header-mobile-screen-{{ child_view_id }}"
-                aria-label="{{ 'header.open_submenu' | t }}"
-              >
-                <svg class="site-header__mobile-menu-chevron" viewBox="0 0 24 24" aria-hidden="true">
-                  <path d="m9 6 6 6-6 6"></path>
-                </svg>
-              </button>
-            {% endif %}
-          </div>
-        {% endfor %}
-      {% else %}
-        <div class="site-header__mobile-menu-row">
-          <a class="site-header__mobile-menu-item" href="{{ routes.root_url }}">{{ 'header.home' | t }}</a>
-        </div>
-        <div class="site-header__mobile-menu-row">
-          <a class="site-header__mobile-menu-item" href="{{ routes.all_products_collection_url }}">{{ 'header.catalog' | t }}</a>
-        </div>
-        <div class="site-header__mobile-menu-row">
-          <a class="site-header__mobile-menu-item" href="/pages/contact">{{ 'header.contact' | t }}</a>
-        </div>
-      {% endif %}
+    <div class="site-header__mobile-menu-view" id="site-header-mobile-view-root" data-site-header-mobile-view="root" data-mobile-menu-level="0" data-mobile-menu-parent="" data-mobile-menu-parent-title="" aria-hidden="false">
+      <div class="site-header__mobile-menu-row">
+        <a class="site-header__mobile-menu-item" href="/collections/all-womens">Women</a>
+        <button class="site-header__mobile-menu-next" type="button" data-site-header-mobile-next data-mobile-menu-target="root-1" aria-controls="site-header-mobile-screen-root-1" aria-label="{{ 'header.open_submenu' | t }}">
+          <svg class="site-header__mobile-menu-chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 6 6-6 6"></path></svg>
+        </button>
+      </div>
+      <div class="site-header__mobile-menu-row">
+        <a class="site-header__mobile-menu-item" href="/collections/all-mens">Men</a>
+        <button class="site-header__mobile-menu-next" type="button" data-site-header-mobile-next data-mobile-menu-target="root-2" aria-controls="site-header-mobile-screen-root-2" aria-label="{{ 'header.open_submenu' | t }}">
+          <svg class="site-header__mobile-menu-chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 6 6-6 6"></path></svg>
+        </button>
+      </div>
+      <div class="site-header__mobile-menu-row">
+        <a class="site-header__mobile-menu-item" href="/pages/about-us">Pages</a>
+        <button class="site-header__mobile-menu-next" type="button" data-site-header-mobile-next data-mobile-menu-target="root-3" aria-controls="site-header-mobile-screen-root-3" aria-label="{{ 'header.open_submenu' | t }}">
+          <svg class="site-header__mobile-menu-chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 6 6-6 6"></path></svg>
+        </button>
+      </div>
+      <div class="site-header__mobile-menu-row">
+        <a class="site-header__mobile-menu-item" href="/pages/find-your-shoes">Find your shoes</a>
+      </div>
     </div>
   </nav>
 </div>
 
-{% for link in links %}
-  {% if link.links != blank %}
-    {% assign child_view_id = menu_view_id | append: '-' | append: forloop.index %}
-    {% assign child_level = menu_level | plus: 1 %}
-    {% render 'site-header-mobile-nav', links: link.links, view_id: child_view_id, level: child_level, parent_view_id: menu_view_id, parent_title: link.title %}
-  {% endif %}
-{% endfor %}
+<div class="site-header__mobile-menu-screen is-subpopup" id="site-header-mobile-screen-root-1" data-site-header-mobile-screen="root-1" aria-hidden="true">
+  <div class="site-header__mobile-menu-header">
+    <button class="site-header__mobile-menu-header-back" type="button" data-site-header-mobile-subpopup-back data-mobile-menu-target="root" aria-controls="site-header-mobile-screen-root" aria-label="{{ 'header.back' | t }}">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 6-6 6 6 6"></path></svg>
+      <span>Women</span>
+    </button>
+    <button class="site-header__mobile-menu-close" type="button" data-site-header-mobile-close aria-label="{{ 'header.close' | t }}">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"></path></svg>
+    </button>
+  </div>
+  <nav class="site-header__mobile-menu-navigation" data-site-header-mobile-navigation aria-label="Women">
+    <div class="site-header__mobile-menu-view" id="site-header-mobile-view-root-1" data-site-header-mobile-view="root-1" data-mobile-menu-level="1" data-mobile-menu-parent="root" data-mobile-menu-parent-title="Women" aria-hidden="true">
+      <div class="site-header__mobile-menu-row"><a class="site-header__mobile-menu-item" href="/collections/womens-top-picks">Top picks</a></div>
+      <div class="site-header__mobile-menu-row"><a class="site-header__mobile-menu-item" href="/collections/womens-best-sellers">Best sellers</a></div>
+      <div class="site-header__mobile-menu-row"><a class="site-header__mobile-menu-item" href="/collections/womens-trending">Trending</a></div>
+      <div class="site-header__mobile-menu-row"><a class="site-header__mobile-menu-item" href="/collections/womens-new-arrivals">New arrivals</a></div>
+      <div class="site-header__mobile-menu-row"><a class="site-header__mobile-menu-item" href="/collections/womens-on-sale">On sale</a></div>
+      <div class="site-header__mobile-menu-row">
+        <a class="site-header__mobile-menu-item" href="/collections/all-womens">By activity</a>
+        <button class="site-header__mobile-menu-next" type="button" data-site-header-mobile-next data-mobile-menu-target="root-1-1" aria-controls="site-header-mobile-screen-root-1-1" aria-label="{{ 'header.open_submenu' | t }}">
+          <svg class="site-header__mobile-menu-chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 6 6-6 6"></path></svg>
+        </button>
+      </div>
+      <div class="site-header__mobile-menu-row">
+        <a class="site-header__mobile-menu-item" href="/collections/all-womens">By feature</a>
+        <button class="site-header__mobile-menu-next" type="button" data-site-header-mobile-next data-mobile-menu-target="root-1-2" aria-controls="site-header-mobile-screen-root-1-2" aria-label="{{ 'header.open_submenu' | t }}">
+          <svg class="site-header__mobile-menu-chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 6 6-6 6"></path></svg>
+        </button>
+      </div>
+    </div>
+  </nav>
+</div>
+
+<div class="site-header__mobile-menu-screen is-subpopup" id="site-header-mobile-screen-root-1-1" data-site-header-mobile-screen="root-1-1" aria-hidden="true">
+  <div class="site-header__mobile-menu-header">
+    <button class="site-header__mobile-menu-header-back" type="button" data-site-header-mobile-subpopup-back data-mobile-menu-target="root-1" aria-controls="site-header-mobile-screen-root-1" aria-label="{{ 'header.back' | t }}">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 6-6 6 6 6"></path></svg>
+      <span>By activity</span>
+    </button>
+    <button class="site-header__mobile-menu-close" type="button" data-site-header-mobile-close aria-label="{{ 'header.close' | t }}">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"></path></svg>
+    </button>
+  </div>
+  <nav class="site-header__mobile-menu-navigation" data-site-header-mobile-navigation aria-label="By activity">
+    <div class="site-header__mobile-menu-view" id="site-header-mobile-view-root-1-1" data-site-header-mobile-view="root-1-1" data-mobile-menu-level="2" data-mobile-menu-parent="root-1" data-mobile-menu-parent-title="By activity" aria-hidden="true">
+      <div class="site-header__mobile-menu-row"><a class="site-header__mobile-menu-item" href="/collections/womens-hiking">Hiking</a></div>
+      <div class="site-header__mobile-menu-row"><a class="site-header__mobile-menu-item" href="/collections/women-s-running">Running</a></div>
+      <div class="site-header__mobile-menu-row"><a class="site-header__mobile-menu-item" href="/collections/women-s-training">Training</a></div>
+      <div class="site-header__mobile-menu-row"><a class="site-header__mobile-menu-item" href="/collections/womens-tennis">Tennis</a></div>
+      <div class="site-header__mobile-menu-row"><a class="site-header__mobile-menu-item" href="/collections/womens-lifestyle">Lifestyle</a></div>
+      <div class="site-header__mobile-menu-row"><a class="site-header__mobile-menu-item" href="/collections/all-womens">Shop all</a></div>
+    </div>
+  </nav>
+</div>
+
+<div class="site-header__mobile-menu-screen is-subpopup" id="site-header-mobile-screen-root-1-2" data-site-header-mobile-screen="root-1-2" aria-hidden="true">
+  <div class="site-header__mobile-menu-header">
+    <button class="site-header__mobile-menu-header-back" type="button" data-site-header-mobile-subpopup-back data-mobile-menu-target="root-1" aria-controls="site-header-mobile-screen-root-1" aria-label="{{ 'header.back' | t }}">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 6-6 6 6 6"></path></svg>
+      <span>By feature</span>
+    </button>
+    <button class="site-header__mobile-menu-close" type="button" data-site-header-mobile-close aria-label="{{ 'header.close' | t }}">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"></path></svg>
+    </button>
+  </div>
+  <nav class="site-header__mobile-menu-navigation" data-site-header-mobile-navigation aria-label="By feature">
+    <div class="site-header__mobile-menu-view" id="site-header-mobile-view-root-1-2" data-site-header-mobile-view="root-1-2" data-mobile-menu-level="2" data-mobile-menu-parent="root-1" data-mobile-menu-parent-title="By feature" aria-hidden="true">
+      <div class="site-header__mobile-menu-row"><a class="site-header__mobile-menu-item" href="/collections/all-womens">Cushioned</a></div>
+      <div class="site-header__mobile-menu-row"><a class="site-header__mobile-menu-item" href="/collections/all-womens">Waterproof</a></div>
+      <div class="site-header__mobile-menu-row"><a class="site-header__mobile-menu-item" href="/collections/all-womens">Water-resistant</a></div>
+      <div class="site-header__mobile-menu-row"><a class="site-header__mobile-menu-item" href="/collections/all-womens">Breathable</a></div>
+      <div class="site-header__mobile-menu-row"><a class="site-header__mobile-menu-item" href="/collections/all-womens">Windproof</a></div>
+    </div>
+  </nav>
+</div>
+
+<div class="site-header__mobile-menu-screen is-subpopup" id="site-header-mobile-screen-root-2" data-site-header-mobile-screen="root-2" aria-hidden="true">
+  <div class="site-header__mobile-menu-header">
+    <button class="site-header__mobile-menu-header-back" type="button" data-site-header-mobile-subpopup-back data-mobile-menu-target="root" aria-controls="site-header-mobile-screen-root" aria-label="{{ 'header.back' | t }}">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 6-6 6 6 6"></path></svg>
+      <span>Men</span>
+    </button>
+    <button class="site-header__mobile-menu-close" type="button" data-site-header-mobile-close aria-label="{{ 'header.close' | t }}">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"></path></svg>
+    </button>
+  </div>
+  <nav class="site-header__mobile-menu-navigation" data-site-header-mobile-navigation aria-label="Men">
+    <div class="site-header__mobile-menu-view" id="site-header-mobile-view-root-2" data-site-header-mobile-view="root-2" data-mobile-menu-level="1" data-mobile-menu-parent="root" data-mobile-menu-parent-title="Men" aria-hidden="true">
+      <div class="site-header__mobile-menu-row"><a class="site-header__mobile-menu-item" href="/collections/mens-top-picks">Top picks</a></div>
+      <div class="site-header__mobile-menu-row"><a class="site-header__mobile-menu-item" href="/collections/mens-best-sellers">Best sellers</a></div>
+      <div class="site-header__mobile-menu-row"><a class="site-header__mobile-menu-item" href="/collections/mens-trending">Trending</a></div>
+      <div class="site-header__mobile-menu-row"><a class="site-header__mobile-menu-item" href="/collections/mens-new-arrivals">New arrivals</a></div>
+      <div class="site-header__mobile-menu-row"><a class="site-header__mobile-menu-item" href="/collections/mens-on-sale">On sale</a></div>
+      <div class="site-header__mobile-menu-row">
+        <a class="site-header__mobile-menu-item" href="/collections/all-mens">By activity</a>
+        <button class="site-header__mobile-menu-next" type="button" data-site-header-mobile-next data-mobile-menu-target="root-2-1" aria-controls="site-header-mobile-screen-root-2-1" aria-label="{{ 'header.open_submenu' | t }}">
+          <svg class="site-header__mobile-menu-chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 6 6-6 6"></path></svg>
+        </button>
+      </div>
+      <div class="site-header__mobile-menu-row">
+        <a class="site-header__mobile-menu-item" href="/collections/all-mens">By feature</a>
+        <button class="site-header__mobile-menu-next" type="button" data-site-header-mobile-next data-mobile-menu-target="root-2-2" aria-controls="site-header-mobile-screen-root-2-2" aria-label="{{ 'header.open_submenu' | t }}">
+          <svg class="site-header__mobile-menu-chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 6 6-6 6"></path></svg>
+        </button>
+      </div>
+    </div>
+  </nav>
+</div>
+
+<div class="site-header__mobile-menu-screen is-subpopup" id="site-header-mobile-screen-root-2-1" data-site-header-mobile-screen="root-2-1" aria-hidden="true">
+  <div class="site-header__mobile-menu-header">
+    <button class="site-header__mobile-menu-header-back" type="button" data-site-header-mobile-subpopup-back data-mobile-menu-target="root-2" aria-controls="site-header-mobile-screen-root-2" aria-label="{{ 'header.back' | t }}">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 6-6 6 6 6"></path></svg>
+      <span>By activity</span>
+    </button>
+    <button class="site-header__mobile-menu-close" type="button" data-site-header-mobile-close aria-label="{{ 'header.close' | t }}">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"></path></svg>
+    </button>
+  </div>
+  <nav class="site-header__mobile-menu-navigation" data-site-header-mobile-navigation aria-label="By activity">
+    <div class="site-header__mobile-menu-view" id="site-header-mobile-view-root-2-1" data-site-header-mobile-view="root-2-1" data-mobile-menu-level="2" data-mobile-menu-parent="root-2" data-mobile-menu-parent-title="By activity" aria-hidden="true">
+      <div class="site-header__mobile-menu-row"><a class="site-header__mobile-menu-item" href="/collections/mens-hiking">Hiking</a></div>
+      <div class="site-header__mobile-menu-row"><a class="site-header__mobile-menu-item" href="/collections/mens-running">Running</a></div>
+      <div class="site-header__mobile-menu-row"><a class="site-header__mobile-menu-item" href="/collections/mens-training">Training</a></div>
+      <div class="site-header__mobile-menu-row"><a class="site-header__mobile-menu-item" href="/collections/mens-tennis">Tennis</a></div>
+      <div class="site-header__mobile-menu-row"><a class="site-header__mobile-menu-item" href="/collections/mens-lifestyle">Lifestyle</a></div>
+      <div class="site-header__mobile-menu-row"><a class="site-header__mobile-menu-item" href="/collections/all-mens">Shop all</a></div>
+    </div>
+  </nav>
+</div>
+
+<div class="site-header__mobile-menu-screen is-subpopup" id="site-header-mobile-screen-root-2-2" data-site-header-mobile-screen="root-2-2" aria-hidden="true">
+  <div class="site-header__mobile-menu-header">
+    <button class="site-header__mobile-menu-header-back" type="button" data-site-header-mobile-subpopup-back data-mobile-menu-target="root-2" aria-controls="site-header-mobile-screen-root-2" aria-label="{{ 'header.back' | t }}">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 6-6 6 6 6"></path></svg>
+      <span>By feature</span>
+    </button>
+    <button class="site-header__mobile-menu-close" type="button" data-site-header-mobile-close aria-label="{{ 'header.close' | t }}">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"></path></svg>
+    </button>
+  </div>
+  <nav class="site-header__mobile-menu-navigation" data-site-header-mobile-navigation aria-label="By feature">
+    <div class="site-header__mobile-menu-view" id="site-header-mobile-view-root-2-2" data-site-header-mobile-view="root-2-2" data-mobile-menu-level="2" data-mobile-menu-parent="root-2" data-mobile-menu-parent-title="By feature" aria-hidden="true">
+      <div class="site-header__mobile-menu-row"><a class="site-header__mobile-menu-item" href="/collections/all-mens">Cushioned</a></div>
+      <div class="site-header__mobile-menu-row"><a class="site-header__mobile-menu-item" href="/collections/all-mens">Waterproof</a></div>
+      <div class="site-header__mobile-menu-row"><a class="site-header__mobile-menu-item" href="/collections/all-mens">Water-resistant</a></div>
+      <div class="site-header__mobile-menu-row"><a class="site-header__mobile-menu-item" href="/collections/all-mens">Breathable</a></div>
+      <div class="site-header__mobile-menu-row"><a class="site-header__mobile-menu-item" href="/collections/all-mens">Windproof</a></div>
+    </div>
+  </nav>
+</div>
+
+<div class="site-header__mobile-menu-screen is-subpopup" id="site-header-mobile-screen-root-3" data-site-header-mobile-screen="root-3" aria-hidden="true">
+  <div class="site-header__mobile-menu-header">
+    <button class="site-header__mobile-menu-header-back" type="button" data-site-header-mobile-subpopup-back data-mobile-menu-target="root" aria-controls="site-header-mobile-screen-root" aria-label="{{ 'header.back' | t }}">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 6-6 6 6 6"></path></svg>
+      <span>Pages</span>
+    </button>
+    <button class="site-header__mobile-menu-close" type="button" data-site-header-mobile-close aria-label="{{ 'header.close' | t }}">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"></path></svg>
+    </button>
+  </div>
+  <nav class="site-header__mobile-menu-navigation" data-site-header-mobile-navigation aria-label="Pages">
+    <div class="site-header__mobile-menu-view" id="site-header-mobile-view-root-3" data-site-header-mobile-view="root-3" data-mobile-menu-level="1" data-mobile-menu-parent="root" data-mobile-menu-parent-title="Pages" aria-hidden="true">
+      <div class="site-header__mobile-menu-row"><a class="site-header__mobile-menu-item" href="/pages/about-us">About us</a></div>
+      <div class="site-header__mobile-menu-row"><a class="site-header__mobile-menu-item" href="/pages/contact">Contact</a></div>
+      <div class="site-header__mobile-menu-row"><a class="site-header__mobile-menu-item" href="/pages/faqs">Faqs</a></div>
+      <div class="site-header__mobile-menu-row"><a class="site-header__mobile-menu-item" href="/pages/store-locations">Store locations</a></div>
+      <div class="site-header__mobile-menu-row"><a class="site-header__mobile-menu-item" href="/pages/recently-viewed">Recently viewed</a></div>
+      <div class="site-header__mobile-menu-row"><a class="site-header__mobile-menu-item" href="/blogs/news">Our journal</a></div>
+    </div>
+  </nav>
+</div>
