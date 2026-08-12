@@ -1692,7 +1692,7 @@
         const animation = switchHeightAnimationHandlers.get(panel);
         if (animation) {
           if (animation.finish) panel.removeEventListener('transitionend', animation.finish);
-          if (animation.frameId) window.cancelAnimationFrame(animation.frameId);
+          if (animation.frameId) window.clearTimeout(animation.frameId);
           window.clearTimeout(animation.timer);
           switchHeightAnimationHandlers.delete(panel);
         }
@@ -1946,9 +1946,9 @@
         toPanel.classList.add('site-header__dropdown-panel--content-replay');
 
         if (!isFullMenuSwitch || window.matchMedia('(prefers-reduced-motion: reduce)').matches || fromHeight <= 0) {
-          window.requestAnimationFrame(() => {
+          window.setTimeout(() => {
             if (toPanel.isConnected) toPanel.classList.remove('site-header__dropdown-panel--instant');
-          });
+          }, 0);
           return;
         }
 
@@ -1963,7 +1963,7 @@
 
           toPanel.removeEventListener('transitionend', finish);
           window.clearTimeout(animation.timer);
-          if (animation.frameId) window.cancelAnimationFrame(animation.frameId);
+          if (animation.frameId) window.clearTimeout(animation.frameId);
           switchHeightAnimationHandlers.delete(toPanel);
           toPanel.classList.remove('site-header__dropdown-panel--switch-height');
           toPanel.style.removeProperty('height');
@@ -1981,7 +1981,7 @@
           animation.previousHeight = toHeight;
 
           if (animation.frameCount < 2 || (animation.stableFrames < 1 && animation.frameCount < 8)) {
-            animation.frameId = window.requestAnimationFrame(settleTargetHeight);
+            animation.frameId = window.setTimeout(settleTargetHeight, 16);
             return;
           }
 
@@ -1992,14 +1992,14 @@
           animation.startedAt = performance.now();
           toPanel.addEventListener('transitionend', finish);
           animation.timer = window.setTimeout(finish, 360);
-          window.requestAnimationFrame(() => {
+          window.setTimeout(() => {
             if (switchHeightAnimationHandlers.get(toPanel) === animation) {
               toPanel.style.height = `${toHeight}px`;
             }
-          });
+          }, 0);
         };
 
-        animation.frameId = window.requestAnimationFrame(settleTargetHeight);
+        animation.frameId = window.setTimeout(settleTargetHeight, 16);
       };
       const openDropdown = (dropdown) => {
         window.clearTimeout(dropdownCloseTimer);
