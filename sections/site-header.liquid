@@ -521,6 +521,7 @@
   .site-header__dropdown-panel--simple .site-header__mega-menu-list a {
     min-height: 1.75rem;
     align-items: center;
+    font-weight: 400;
   }
 
   .site-header__dropdown-panel--simple .site-header__mega-menu-promos {
@@ -552,6 +553,10 @@
     opacity: 1;
     pointer-events: none;
     animation: site-header-dropdown-simple-slide-up 300ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  .site-header__dropdown--simple > .site-header__dropdown-panel--simple.site-header__dropdown-panel--replay .site-header__mega-menu-column {
+    animation: none;
   }
 
   .site-header__dropdown--simple > .site-header__dropdown-panel--simple.site-header__dropdown-panel--replay .site-header__mega-menu-list li {
