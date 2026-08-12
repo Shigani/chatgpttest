@@ -1948,10 +1948,11 @@
         void toPanel.offsetWidth;
         toPanel.classList.remove('site-header__dropdown-panel--instant');
 
-        const animation = { finish: null, timer: 0 };
+        const animation = { finish: null, timer: 0, startedAt: performance.now() };
         const finish = (event) => {
           if (event && (event.target !== toPanel || event.propertyName !== 'height')) return;
           if (switchHeightAnimationHandlers.get(toPanel) !== animation) return;
+          if (event && performance.now() - animation.startedAt < 260) return;
 
           toPanel.removeEventListener('transitionend', finish);
           window.clearTimeout(animation.timer);
@@ -1964,11 +1965,11 @@
         switchHeightAnimationHandlers.set(toPanel, animation);
         toPanel.addEventListener('transitionend', finish);
         animation.timer = window.setTimeout(finish, 360);
-        window.requestAnimationFrame(() => {
+        window.setTimeout(() => {
           if (switchHeightAnimationHandlers.get(toPanel) === animation) {
             toPanel.style.height = `${toHeight}px`;
           }
-        });
+        }, 0);
       };
       const openDropdown = (dropdown) => {
         window.clearTimeout(dropdownCloseTimer);
