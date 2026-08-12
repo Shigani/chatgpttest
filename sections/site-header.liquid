@@ -1692,6 +1692,7 @@
         const animation = switchHeightAnimationHandlers.get(panel);
         if (animation) {
           if (animation.finish) panel.removeEventListener('transitionend', animation.finish);
+          if (animation.frameId) window.cancelAnimationFrame(animation.frameId);
           window.clearTimeout(animation.timer);
           switchHeightAnimationHandlers.delete(panel);
         }
@@ -1907,12 +1908,22 @@
       const dropdownCloseDelay = 600;
       let dropdownCloseTimer;
       const isInsideHeader = (target) => target && target.nodeType && header.contains(target);
+      const getPanelNaturalHeight = (panel) => {
+        if (!panel) return 0;
+
+        const computedStyle = window.getComputedStyle(panel);
+        const borderHeight = (Number.parseFloat(computedStyle.borderTopWidth) || 0)
+          + (Number.parseFloat(computedStyle.borderBottomWidth) || 0);
+        const innerHeight = panel.querySelector('.site-header__mega-menu-inner')?.getBoundingClientRect().height ?? 0;
+
+        return Math.max(panel.scrollHeight + borderHeight, innerHeight + borderHeight);
+      };
       const switchDropdown = (fromDropdown, toDropdown) => {
         const fromPanel = fromDropdown.querySelector('.site-header__dropdown-panel');
         const toPanel = toDropdown.querySelector('.site-header__dropdown-panel');
         const isFullMenuSwitch = !fromDropdown.classList.contains('site-header__dropdown--simple')
           && !toDropdown.classList.contains('site-header__dropdown--simple');
-        const fromHeight = fromPanel?.getBoundingClientRect().height ?? 0;
+        const fromHeight = getPanelNaturalHeight(fromPanel);
 
         resetDropdownAnimation(fromDropdown);
         if (toPanel) resetDropdownAnimation(toDropdown);
@@ -1941,35 +1952,54 @@
           return;
         }
 
-        toPanel.style.height = 'auto';
-        const toHeight = toPanel.getBoundingClientRect().height;
         toPanel.style.height = `${fromHeight}px`;
-        toPanel.classList.add('site-header__dropdown-panel--switch-height');
-        void toPanel.offsetWidth;
-        toPanel.classList.remove('site-header__dropdown-panel--instant');
 
-        const animation = { finish: null, timer: 0, startedAt: performance.now() };
+        const animation = { finish: null, timer: 0, frameId: 0, startedAt: 0, previousHeight: 0, stableFrames: 0, frameCount: 0 };
+        switchHeightAnimationHandlers.set(toPanel, animation);
         const finish = (event) => {
           if (event && (event.target !== toPanel || event.propertyName !== 'height')) return;
           if (switchHeightAnimationHandlers.get(toPanel) !== animation) return;
-          if (event && performance.now() - animation.startedAt < 260) return;
+          if (event && animation.startedAt && performance.now() - animation.startedAt < 260) return;
 
           toPanel.removeEventListener('transitionend', finish);
           window.clearTimeout(animation.timer);
+          if (animation.frameId) window.cancelAnimationFrame(animation.frameId);
           switchHeightAnimationHandlers.delete(toPanel);
           toPanel.classList.remove('site-header__dropdown-panel--switch-height');
           toPanel.style.removeProperty('height');
         };
 
         animation.finish = finish;
-        switchHeightAnimationHandlers.set(toPanel, animation);
-        toPanel.addEventListener('transitionend', finish);
-        animation.timer = window.setTimeout(finish, 360);
-        window.setTimeout(() => {
-          if (switchHeightAnimationHandlers.get(toPanel) === animation) {
-            toPanel.style.height = `${toHeight}px`;
+        const settleTargetHeight = () => {
+          if (switchHeightAnimationHandlers.get(toPanel) !== animation) return;
+
+          const toHeight = getPanelNaturalHeight(toPanel);
+          animation.frameCount += 1;
+          animation.stableFrames = Math.abs(toHeight - animation.previousHeight) < 0.5
+            ? animation.stableFrames + 1
+            : 0;
+          animation.previousHeight = toHeight;
+
+          if (animation.frameCount < 2 || (animation.stableFrames < 1 && animation.frameCount < 8)) {
+            animation.frameId = window.requestAnimationFrame(settleTargetHeight);
+            return;
           }
-        }, 0);
+
+          toPanel.style.height = `${fromHeight}px`;
+          toPanel.classList.add('site-header__dropdown-panel--switch-height');
+          void toPanel.offsetWidth;
+          toPanel.classList.remove('site-header__dropdown-panel--instant');
+          animation.startedAt = performance.now();
+          toPanel.addEventListener('transitionend', finish);
+          animation.timer = window.setTimeout(finish, 360);
+          window.requestAnimationFrame(() => {
+            if (switchHeightAnimationHandlers.get(toPanel) === animation) {
+              toPanel.style.height = `${toHeight}px`;
+            }
+          });
+        };
+
+        animation.frameId = window.requestAnimationFrame(settleTargetHeight);
       };
       const openDropdown = (dropdown) => {
         window.clearTimeout(dropdownCloseTimer);
