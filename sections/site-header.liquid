@@ -1665,8 +1665,17 @@
         window.scrollTo(0, scrollY);
         dropdownScrollLock = null;
       };
+      const dropdownPanelHeights = new WeakMap();
       const syncDropdownState = () => {
         const isDropdownActive = dropdowns.some((dropdown) => dropdown.open);
+
+        dropdowns.forEach((dropdown) => {
+          if (!dropdown.open) return;
+
+          const panel = dropdown.querySelector('.site-header__dropdown-panel');
+          const panelHeight = Math.max(panel?.getBoundingClientRect().height ?? 0, panel?.scrollHeight ?? 0);
+          if (panelHeight > 0) dropdownPanelHeights.set(dropdown, panelHeight);
+        });
 
         updateDropdownScrollLock(isDropdownActive);
         document.documentElement.classList.toggle('site-header-dropdown-active', isDropdownActive);
@@ -1923,7 +1932,12 @@
         const toPanel = toDropdown.querySelector('.site-header__dropdown-panel');
         const isFullMenuSwitch = !fromDropdown.classList.contains('site-header__dropdown--simple')
           && !toDropdown.classList.contains('site-header__dropdown--simple');
-        const fromHeight = getPanelNaturalHeight(fromPanel);
+        const cachedFromHeight = dropdownPanelHeights.get(fromDropdown) ?? 0;
+        const fromHeight = Math.max(
+          getPanelNaturalHeight(fromPanel),
+          fromPanel?.getBoundingClientRect().height ?? 0,
+          cachedFromHeight
+        );
 
         resetDropdownAnimation(fromDropdown);
         if (toPanel) resetDropdownAnimation(toDropdown);
