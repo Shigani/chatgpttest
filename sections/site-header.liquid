@@ -1683,6 +1683,7 @@
           if (!dropdown.open) return;
 
           const panel = dropdown.querySelector('.site-header__dropdown-panel');
+          if (panel?.style.height) return;
           const panelHeight = getPanelNaturalHeight(panel);
           if (panelHeight > 0) dropdownPanelHeights.set(dropdown, panelHeight);
         });
@@ -1933,11 +1934,11 @@
         const isFullMenuSwitch = !fromDropdown.classList.contains('site-header__dropdown--simple')
           && !toDropdown.classList.contains('site-header__dropdown--simple');
         const cachedFromHeight = dropdownPanelHeights.get(fromDropdown) ?? 0;
-        const fromHeight = Math.max(
+        const measuredFromHeight = Math.max(
           getPanelNaturalHeight(fromPanel),
-          fromPanel?.getBoundingClientRect().height ?? 0,
-          cachedFromHeight
+          fromPanel?.getBoundingClientRect().height ?? 0
         );
+        const fromHeight = measuredFromHeight > 0 ? measuredFromHeight : cachedFromHeight;
 
         resetDropdownAnimation(fromDropdown);
         if (toPanel) resetDropdownAnimation(toDropdown);
