@@ -1938,6 +1938,7 @@
           fromPanel?.getBoundingClientRect().height ?? 0,
           cachedFromHeight
         );
+        toPanel?.setAttribute('data-debug-switch-from-height', `${fromHeight}`);
 
         resetDropdownAnimation(fromDropdown);
         if (toPanel) resetDropdownAnimation(toDropdown);
@@ -1988,6 +1989,7 @@
           if (switchHeightAnimationHandlers.get(toPanel) !== animation) return;
 
           const toHeight = getPanelNaturalHeight(toPanel);
+          toPanel.setAttribute('data-debug-switch-to-height', `${toHeight}`);
           animation.frameCount += 1;
           animation.stableFrames = Math.abs(toHeight - animation.previousHeight) < 0.5
             ? animation.stableFrames + 1
