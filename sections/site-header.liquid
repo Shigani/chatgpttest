@@ -2087,18 +2087,13 @@
           resetDropdownAnimation(toDropdown);
           cancelClosingAnimation(toPanel);
           cancelSwitchHeightAnimation(toPanel);
-          toPanel.classList.remove('site-header__dropdown-panel--content-replay');
-          toPanel.classList.add('site-header__dropdown-panel--instant');
           header.classList.add('site-header--dropdown-handoff');
           closeDropdown(fromDropdown);
           toDropdown.setAttribute('open', '');
           syncDropdownState();
 
           void toPanel.offsetWidth;
-          toPanel.classList.add('site-header__dropdown-panel--content-replay');
-          window.setTimeout(() => {
-            if (toPanel.isConnected) toPanel.classList.remove('site-header__dropdown-panel--instant');
-          }, 0);
+          toPanel.classList.add('site-header__dropdown-panel--replay');
           return;
         }
 
