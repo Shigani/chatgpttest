@@ -412,6 +412,11 @@
     transform-origin: left;
   }
 
+  .site-header__dropdown[open].site-header__dropdown--underline-closing > .site-header__dropdown-trigger > span:first-child::after {
+    transform: scaleX(0);
+    transform-origin: left;
+  }
+
   .site-header__dropdown-chevron {
     width: 1.1rem;
     height: 1.1rem;
@@ -1876,6 +1881,7 @@
 
         if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
           dropdown.removeAttribute('open');
+          dropdown.classList.remove('site-header__dropdown--underline-closing');
           header.classList.remove('site-header--dropdown-handoff');
           syncDropdownState();
           return;
@@ -1887,6 +1893,7 @@
           closingAnimationHandlers.delete(panel);
           dropdown.removeAttribute('open');
           dropdown.classList.remove('site-header__dropdown--closing');
+          dropdown.classList.remove('site-header__dropdown--underline-closing');
           panel.classList.remove('site-header__dropdown-panel--closing');
           if (!header.querySelector('.site-header__dropdown--closing')) {
             header.classList.remove('site-header--dropdown-handoff');
@@ -2070,8 +2077,14 @@
       });
       const canHover = window.matchMedia('(hover: hover)').matches;
       const dropdownCloseDelay = 500;
+      const dropdownUnderlineDuration = 180;
       let dropdownCloseTimer;
       const isInsideHeader = (target) => target && target.nodeType && header.contains(target);
+      const markDropdownTriggersClosing = () => {
+        dropdowns.forEach((dropdown) => {
+          if (dropdown.open) dropdown.classList.add('site-header__dropdown--underline-closing');
+        });
+      };
       const switchDropdown = (fromDropdown, toDropdown) => {
         const fromPanel = fromDropdown.querySelector('.site-header__dropdown-panel');
         const toPanel = toDropdown.querySelector('.site-header__dropdown-panel');
@@ -2200,6 +2213,7 @@
       };
       const openDropdown = (dropdown) => {
         window.clearTimeout(dropdownCloseTimer);
+        dropdown.classList.remove('site-header__dropdown--underline-closing');
         const panel = dropdown.querySelector('.site-header__dropdown-panel');
         const activeDropdown = dropdowns.find((item) => item !== dropdown && item.open);
 
@@ -2231,9 +2245,17 @@
       };
       const scheduleDropdownClose = () => {
         window.clearTimeout(dropdownCloseTimer);
+        markDropdownTriggersClosing();
         dropdownCloseTimer = window.setTimeout(() => {
           closeDropdowns();
         }, dropdownCloseDelay);
+      };
+      const scheduleDropdownCloseAfterUnderline = () => {
+        window.clearTimeout(dropdownCloseTimer);
+        markDropdownTriggersClosing();
+        dropdownCloseTimer = window.setTimeout(() => {
+          closeDropdowns();
+        }, dropdownUnderlineDuration);
       };
 
       dropdowns.forEach((dropdown) => {
@@ -2287,8 +2309,7 @@
         menuItem.addEventListener('pointerenter', () => {
           if (!canHover) return;
 
-          window.clearTimeout(dropdownCloseTimer);
-          closeDropdowns();
+          scheduleDropdownCloseAfterUnderline();
         });
       });
 
