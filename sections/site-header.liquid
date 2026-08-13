@@ -2079,6 +2079,8 @@
           && !toDropdown.classList.contains('site-header__dropdown--simple');
         const isFullToSimpleSwitch = !fromDropdown.classList.contains('site-header__dropdown--simple')
           && toDropdown.classList.contains('site-header__dropdown--simple');
+        const isSimpleToFullSwitch = fromDropdown.classList.contains('site-header__dropdown--simple')
+          && !toDropdown.classList.contains('site-header__dropdown--simple');
         const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
         if (isFullToSimpleSwitch && fromPanel && toPanel && !prefersReducedMotion) {
@@ -2097,6 +2099,21 @@
           window.setTimeout(() => {
             if (toPanel.isConnected) toPanel.classList.remove('site-header__dropdown-panel--instant');
           }, 0);
+          return;
+        }
+
+        if (isSimpleToFullSwitch && fromPanel && toPanel && !prefersReducedMotion) {
+          resetDropdownAnimation(toDropdown);
+          cancelClosingAnimation(toPanel);
+          cancelSwitchHeightAnimation(toPanel);
+          toPanel.classList.remove('site-header__dropdown-panel--replay');
+          header.classList.add('site-header--dropdown-handoff');
+          closeDropdown(fromDropdown);
+          toDropdown.setAttribute('open', '');
+          syncDropdownState();
+
+          void toPanel.offsetWidth;
+          toPanel.classList.add('site-header__dropdown-panel--replay');
           return;
         }
 
