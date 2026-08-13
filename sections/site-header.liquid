@@ -119,9 +119,10 @@
           <div class="site-header__mobile-menu-localization" aria-label="Language and currency">
             <button class="site-header__mobile-menu-locale" type="button" aria-label="Currency: CAD $">
               <svg class="site-header__mobile-menu-flag" viewBox="0 0 24 24" aria-hidden="true">
-                <rect x="2" y="6" width="20" height="12" rx="1" fill="#ef233c"></rect>
-                <rect x="8" y="6" width="8" height="12" fill="#ffffff"></rect>
-                <path d="m12 7.1.75 2.15 2.2-.4-1.35 1.65 1.55 1.25-2.2-.18.1 2.25-1.05-1.5-1.05 1.5.1-2.25-2.2.18 1.55-1.25-1.35-1.65 2.2.4z" fill="#ef233c"></path>
+                <rect x="2" y="2" width="20" height="20" fill="#ffffff"></rect>
+                <rect x="2" y="2" width="6.5" height="20" fill="#d71920"></rect>
+                <rect x="15.5" y="2" width="6.5" height="20" fill="#d71920"></rect>
+                <path d="m12 5.6.65 3.2 2.35-.75-1.35 2.15 2.2 1.35-2.55.25.15 2.65-1.45-1.75-1.45 1.75.15-2.65-2.55-.25 2.2-1.35-1.35-2.15 2.35.75z" fill="#d71920"></path>
               </svg>
               <span>CAD&nbsp;$</span>
               <svg class="site-header__mobile-menu-locale-chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg>
@@ -2049,15 +2050,15 @@
 
   @media (max-width: 990px) {
     .site-header__mobile-menu {
-      padding: 0;
+      padding: 0.5rem;
     }
 
     .site-header__mobile-menu-panel {
       width: 100%;
-      height: 100svh;
-      max-height: 100dvh;
+      height: calc(100svh - 1rem);
+      max-height: calc(100dvh - 1rem);
       border-radius: 0 1rem 1rem 0;
-      box-shadow: none;
+      box-shadow: 0 1rem 3rem rgb(0 0 0 / 0.18);
       clip-path: inset(0 100% 0 0 round 0 1rem 1rem 0);
     }
 
@@ -2158,6 +2159,25 @@
       width: 16px;
       height: 16px;
       border-radius: 50%;
+      clip-path: circle(50%);
+      fill: none !important;
+      overflow: hidden;
+      stroke: none !important;
+    }
+
+    .site-header__mobile-menu-flag rect,
+    .site-header__mobile-menu-flag path {
+      stroke: none !important;
+    }
+
+    .site-header__mobile-menu-flag rect:nth-of-type(1) {
+      fill: #ffffff !important;
+    }
+
+    .site-header__mobile-menu-flag rect:nth-of-type(2),
+    .site-header__mobile-menu-flag rect:nth-of-type(3),
+    .site-header__mobile-menu-flag path {
+      fill: #d71920 !important;
     }
 
     .site-header__mobile-menu-locale-chevron {
