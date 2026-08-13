@@ -153,7 +153,9 @@
           </div>
 
           <div class="site-header__localization-list" role="listbox" aria-label="Countries and currencies">
+            {% comment %}
             {% assign site_header_countries = 'Australia|AUD|$|au,Belgium|EUR|€|be,Canada|CAD|$|ca,France|EUR|€|fr,Germany|EUR|€|de,Italy|EUR|€|it,Japan|JPY|¥|jp,Spain|EUR|€|es,United States|USD|$|us,Vietnam|VND|₫|vn' | split: ',' %}
+            {% endcomment %}
             {% assign site_header_countries = 'Australia|AUD|$|au,Belgium|EUR|&euro;|be,Canada|CAD|$|ca,France|EUR|&euro;|fr,Germany|EUR|&euro;|de,Italy|EUR|&euro;|it,Japan|JPY|&yen;|jp,Spain|EUR|&euro;|es,United States|USD|$|us,Vietnam|VND|&#8363;|vn' | split: ',' %}
             {% for country in site_header_countries %}
               {% assign country_parts = country | split: '|' %}
