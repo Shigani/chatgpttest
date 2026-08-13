@@ -2069,7 +2069,7 @@
         if (!window.matchMedia('(max-width: 990px)').matches) setMobileMenuOpen(false);
       });
       const canHover = window.matchMedia('(hover: hover)').matches;
-      const dropdownCloseDelay = 600;
+      const dropdownCloseDelay = 500;
       let dropdownCloseTimer;
       const isInsideHeader = (target) => target && target.nodeType && header.contains(target);
       const switchDropdown = (fromDropdown, toDropdown) => {
