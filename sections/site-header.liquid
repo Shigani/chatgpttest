@@ -2229,6 +2229,12 @@
         void panel.offsetWidth;
         panel.classList.add('site-header__dropdown-panel--replay');
       };
+      const scheduleDropdownClose = () => {
+        window.clearTimeout(dropdownCloseTimer);
+        dropdownCloseTimer = window.setTimeout(() => {
+          closeDropdowns();
+        }, dropdownCloseDelay);
+      };
 
       dropdowns.forEach((dropdown) => {
         dropdown.addEventListener('toggle', () => {
@@ -2245,6 +2251,10 @@
 
         dropdown.querySelector('summary')?.addEventListener('pointerenter', () => {
           if (canHover) openDropdown(dropdown);
+        });
+
+        dropdown.querySelector('summary')?.addEventListener('pointerleave', () => {
+          if (canHover && dropdown.open) scheduleDropdownClose();
         });
       });
 
