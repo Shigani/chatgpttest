@@ -2260,6 +2260,13 @@
           syncDropdownState();
         });
 
+        dropdown.addEventListener('pointerenter', () => {
+          if (!canHover) return;
+
+          window.clearTimeout(dropdownCloseTimer);
+          dropdown.classList.remove('site-header__dropdown--underline-closing');
+        });
+
         dropdown.querySelector('summary')?.addEventListener('click', (event) => {
           if (canHover && event.detail > 0) {
             event.preventDefault();
@@ -2271,8 +2278,8 @@
           if (canHover) openDropdown(dropdown);
         });
 
-        dropdown.querySelector('summary')?.addEventListener('pointerleave', (event) => {
-          if (canHover && dropdown.open && !dropdown.contains(event.relatedTarget)) scheduleDropdownClose();
+        dropdown.addEventListener('pointerleave', () => {
+          if (canHover && dropdown.open) scheduleDropdownClose();
         });
       });
 
