@@ -5,7 +5,9 @@
   aria-hidden="false"
 >
   <div class="site-header__mobile-menu-header">
-    <a class="site-header__mobile-menu-brand" href="{{ routes.root_url }}">{{ shop.name | escape }}</a>
+    <a class="site-header__mobile-menu-brand" href="{{ routes.root_url }}" aria-label="Helix">
+      <img class="site-header__mobile-menu-logo" src="https://helix-shoes-theme.myshopify.com/cdn/shop/files/logo.svg?v=1776243138&amp;width=90" alt="Helix" width="90" height="16" loading="eager">
+    </a>
     <button class="site-header__mobile-menu-close" type="button" data-site-header-mobile-close aria-label="{{ 'header.close' | t }}">
       <svg viewBox="0 0 24 24" aria-hidden="true">
         <path d="m6 6 12 12M18 6 6 18"></path>

@@ -115,10 +115,35 @@
         </div>
 
         <div class="site-header__mobile-menu-footer">
-          <a class="site-header__mobile-menu-account" href="{{ routes.account_url }}">{{ 'header.account' | t }}</a>
-          <div class="site-header__mobile-menu-utilities">
-            <a href="{{ routes.search_url }}">{{ 'header.search' | t }}</a>
-            <a href="{{ routes.cart_url }}">{{ 'header.cart' | t }}</a>
+          <a class="site-header__mobile-menu-account" href="{{ routes.account_url }}">Login</a>
+          <div class="site-header__mobile-menu-localization" aria-label="Language and currency">
+            <button class="site-header__mobile-menu-locale" type="button" aria-label="Currency: CAD $">
+              <svg class="site-header__mobile-menu-flag" viewBox="0 0 24 24" aria-hidden="true">
+                <rect x="2" y="6" width="20" height="12" rx="1" fill="#ef233c"></rect>
+                <rect x="8" y="6" width="8" height="12" fill="#ffffff"></rect>
+                <path d="m12 7.1.75 2.15 2.2-.4-1.35 1.65 1.55 1.25-2.2-.18.1 2.25-1.05-1.5-1.05 1.5.1-2.25-2.2.18 1.55-1.25-1.35-1.65 2.2.4z" fill="#ef233c"></path>
+              </svg>
+              <span>CAD&nbsp;$</span>
+              <svg class="site-header__mobile-menu-locale-chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg>
+            </button>
+            <button class="site-header__mobile-menu-locale" type="button" aria-label="Language: English">
+              <span>English</span>
+              <svg class="site-header__mobile-menu-locale-chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg>
+            </button>
+          </div>
+          <div class="site-header__mobile-menu-socials" aria-label="Social media">
+            <a href="#" aria-label="Facebook">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13.5 20v-7h2.35l.35-2.75H13.5V8.5c0-.8.22-1.35 1.4-1.35h1.5V4.7c-.26-.04-1.15-.1-2.2-.1-2.18 0-3.68 1.33-3.68 3.78v1.87H8.05V13h2.47v7z"></path></svg>
+            </a>
+            <a href="#" aria-label="Instagram">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4.5" y="4.5" width="15" height="15" rx="4"></rect><circle cx="12" cy="12" r="3.25"></circle><circle cx="17.2" cy="6.9" r="0.9" fill="currentColor" stroke="none"></circle></svg>
+            </a>
+            <a href="#" aria-label="YouTube">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.4 8.2a2.7 2.7 0 0 0-1.9-1.9C16.8 5.8 12 5.8 12 5.8s-4.8 0-6.5.5a2.7 2.7 0 0 0-1.9 1.9C3.1 9.9 3.1 12 3.1 12s0 2.1.5 3.8a2.7 2.7 0 0 0 1.9 1.9c1.7.5 6.5.5 6.5.5s4.8 0 6.5-.5a2.7 2.7 0 0 0 1.9-1.9c.5-1.7.5-3.8.5-3.8s0-2.1-.5-3.8Z"></path><path d="m10.2 15.2 4.7-3.2-4.7-3.2z" fill="#f3f4f5" stroke="none"></path></svg>
+            </a>
+            <a href="#" aria-label="TikTok">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14.2 4h2.6c.2 1.3 1 2.3 2.2 2.8v2.6a7 7 0 0 1-2.2-.7v5.1a5.1 5.1 0 1 1-4.4-5.05v2.7a2.4 2.4 0 1 0 1.8 2.35z"></path></svg>
+            </a>
           </div>
         </div>
       </aside>
@@ -2020,6 +2045,172 @@
   .site-header__mega-menu-links--men {
     grid-template-columns: repeat(3, 200px);
     column-gap: 0;
+  }
+
+  @media (max-width: 990px) {
+    .site-header__mobile-menu {
+      padding: 0;
+    }
+
+    .site-header__mobile-menu-panel {
+      width: 100%;
+      height: 100svh;
+      max-height: 100dvh;
+      border-radius: 0 1rem 1rem 0;
+      box-shadow: none;
+      clip-path: inset(0 100% 0 0 round 0 1rem 1rem 0);
+    }
+
+    .site-header__mobile-menu.is-open .site-header__mobile-menu-panel {
+      border-radius: 1rem;
+    }
+
+    .site-header__mobile-menu-header {
+      min-height: 3.5625rem;
+      padding: 0 0.75rem;
+    }
+
+    .site-header__mobile-menu-brand {
+      padding: 0;
+    }
+
+    .site-header__mobile-menu-logo {
+      display: block;
+      width: 90px;
+      height: 16px;
+      object-fit: contain;
+    }
+
+    .site-header__mobile-menu-close {
+      width: 32px;
+      height: 32px;
+      border-radius: 0;
+    }
+
+    .site-header__mobile-menu-close svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    #site-header-mobile-view-root {
+      padding: 1rem 0.75rem 0;
+    }
+
+    #site-header-mobile-view-root > .site-header__mobile-menu-row,
+    #site-header-mobile-view-root > .site-header__mobile-menu-row > .site-header__mobile-menu-item {
+      min-height: 3.2rem;
+    }
+
+    #site-header-mobile-view-root > .site-header__mobile-menu-row > .site-header__mobile-menu-item {
+      padding: 0;
+      font-size: 14px !important;
+      font-weight: 400 !important;
+    }
+
+    #site-header-mobile-view-root .site-header__mobile-menu-next {
+      width: 32px;
+      margin-inline-end: 0;
+      justify-items: end;
+    }
+
+    .site-header__mobile-menu-footer {
+      flex: 0 0 auto;
+      padding: 0.75rem 0.75rem 0;
+      border-top: 1px solid #e1e1e1;
+    }
+
+    .site-header__mobile-menu-account {
+      min-height: 38px;
+      height: 38px;
+      padding: 0 1rem;
+      border-radius: 999px;
+      font-size: 12px !important;
+      font-weight: 700 !important;
+    }
+
+    .site-header__mobile-menu-localization {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 24px;
+      min-height: 46px;
+      margin: 0.75rem -0.75rem 0;
+      padding: 0 0.75rem;
+      border-top: 1px solid #e1e1e1;
+      border-bottom: 1px solid #e1e1e1;
+    }
+
+    .site-header__mobile-menu-locale {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 0;
+      border: 0;
+      background: transparent;
+      color: inherit;
+      cursor: pointer;
+      font: inherit;
+      font-size: 14px !important;
+      font-weight: 400 !important;
+    }
+
+    .site-header__mobile-menu-flag {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+    }
+
+    .site-header__mobile-menu-locale-chevron {
+      width: 16px !important;
+      height: 16px !important;
+      fill: none;
+      stroke: currentColor;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-width: 1.5;
+    }
+
+    .site-header__mobile-menu-socials {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      height: 55px;
+    }
+
+    .site-header__mobile-menu-socials a {
+      display: grid;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: #eef0f1;
+      color: #252a2d;
+      place-items: center;
+    }
+
+    .site-header__mobile-menu-socials svg {
+      display: block;
+      width: 16px;
+      height: 16px;
+      fill: currentColor;
+      stroke: none;
+    }
+
+    .site-header__mobile-menu-socials a:nth-child(2) svg rect,
+    .site-header__mobile-menu-socials a:nth-child(2) svg circle:first-of-type {
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 1.5;
+    }
+
+    .site-header__mobile-menu-socials a:nth-child(2) svg circle:last-of-type {
+      fill: currentColor;
+      stroke: none;
+    }
+
+    .site-header__mobile-menu-utilities {
+      display: none;
+    }
   }
 {% endstylesheet %}
 
