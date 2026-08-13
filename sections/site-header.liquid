@@ -1003,10 +1003,6 @@
     margin-bottom: 1rem;
   }
 
-  .site-header__mega-menu a:hover {
-    opacity: 0.62;
-  }
-
   .site-header__mega-menu-promos {
     display: grid;
     flex: 1 1 0;
@@ -1249,11 +1245,6 @@
     min-width: 2.75rem;
     min-height: 2.75rem;
     place-items: center;
-  }
-
-  .site-header a:hover,
-  .site-header__menu-toggle:hover {
-    opacity: 0.62;
   }
 
   .site-header a:focus-visible {
@@ -1742,6 +1733,10 @@
   const initializeSiteHeaders = (root = document) => {
     root.querySelectorAll('[data-site-header]').forEach((header) => {
       if (header.dataset.siteHeaderInitialized === 'true') return;
+
+      header.querySelectorAll('a[href]').forEach((link) => {
+        link.removeAttribute('href');
+      });
 
       let lastScrollY = window.scrollY;
       const positionSimpleDropdowns = () => {
