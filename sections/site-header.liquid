@@ -127,6 +127,19 @@
     <a class="site-header__brand" href="{{ routes.root_url }}">{{ shop.name | escape }}</a>
 
     <div class="site-header__actions">
+      <span class="site-header__localization" aria-label="Currency: CAD $">
+        <svg class="site-header__localization-flag" viewBox="0 0 24 24" aria-hidden="true">
+          <rect x="2" y="6" width="20" height="12" rx="1" fill="#ef233c"></rect>
+          <rect x="8" y="6" width="8" height="12" fill="#ffffff"></rect>
+          <path d="m12 7.1.75 2.15 2.2-.4-1.35 1.65 1.55 1.25-2.2-.18.1 2.25-1.05-1.5-1.05 1.5.1-2.25-2.2.18 1.55-1.25-1.35-1.65 2.2.4z" fill="#ef233c"></path>
+        </svg>
+        <span>CAD&nbsp;$</span>
+        <svg class="site-header__localization-chevron" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="m6 9 6 6 6-6"></path>
+        </svg>
+      </span>
+      <span class="site-header__actions-divider" aria-hidden="true"></span>
+
       <a class="site-header__search" href="{{ routes.search_url }}">
         <span>{{ 'header.search_prompt' | t }}</span>
         <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -144,10 +157,9 @@
       </a>
 
       <a class="site-header__icon" href="{{ routes.cart_url }}" aria-label="{{ 'header.cart' | t }}">
-        <svg viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M3 4h2l2.2 10h10.9l2-7H7"></path>
-          <circle cx="9" cy="19" r="1"></circle>
-          <circle cx="18" cy="19" r="1"></circle>
+        <svg class="site-header__bag" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M5.5 8.5h13l-1 11h-11z"></path>
+          <path d="M9 8.5V7a3 3 0 0 1 6 0v1.5"></path>
         </svg>
       </a>
     </div>
@@ -317,7 +329,7 @@
 
   .site-header__actions {
     justify-self: end;
-    gap: 1.2rem;
+    gap: 0.65rem;
   }
 
   .site-header__menu-toggle {
@@ -1224,10 +1236,50 @@
   .site-header__search {
     display: flex;
     align-items: center;
-    gap: clamp(1.2rem, 3.6vw, 3rem);
+    gap: 0;
     color: inherit;
     font-size: 0.95rem;
     white-space: nowrap;
+  }
+
+  .site-header__search > span:not(.visually-hidden) {
+    display: none;
+  }
+
+  .site-header__localization {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    color: inherit;
+    font-size: 0.84rem;
+    font-weight: 400;
+    line-height: 1;
+    white-space: nowrap;
+  }
+
+  .site-header__localization-flag {
+    flex: 0 0 1rem;
+    width: 1rem !important;
+    height: 1rem !important;
+    overflow: hidden;
+    border-radius: 50%;
+    fill: none !important;
+    stroke: none !important;
+  }
+
+  .site-header__localization-chevron {
+    width: 0.8rem !important;
+    height: 0.8rem !important;
+    stroke-width: 1.6 !important;
+  }
+
+  .site-header__actions-divider {
+    flex: 0 0 1px;
+    width: 1px;
+    height: 1.35rem;
+    margin: 0 0.25rem;
+    background: currentColor;
+    opacity: 0.35;
   }
 
   .site-header svg {
@@ -1242,6 +1294,8 @@
 
   .site-header__icon {
     display: grid;
+    width: 2.75rem;
+    height: 2.75rem;
     min-width: 2.75rem;
     min-height: 2.75rem;
     place-items: center;
@@ -1640,6 +1694,11 @@
     }
 
     .site-header__search span:not(.visually-hidden) {
+      display: none;
+    }
+
+    .site-header__localization,
+    .site-header__actions-divider {
       display: none;
     }
 
