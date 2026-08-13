@@ -2271,8 +2271,8 @@
           if (canHover) openDropdown(dropdown);
         });
 
-        dropdown.querySelector('summary')?.addEventListener('pointerleave', () => {
-          if (canHover && dropdown.open) scheduleDropdownClose();
+        dropdown.querySelector('summary')?.addEventListener('pointerleave', (event) => {
+          if (canHover && dropdown.open && !dropdown.contains(event.relatedTarget)) scheduleDropdownClose();
         });
       });
 
