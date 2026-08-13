@@ -2231,6 +2231,98 @@
     .site-header__mobile-menu-utilities {
       display: none;
     }
+
+    .site-header__mobile-menu-panel:has(.site-header__mobile-menu-screen.is-active:not([data-site-header-mobile-screen="root"])) .site-header__mobile-menu-footer {
+      display: none;
+    }
+
+    #site-header-mobile-view-root-1 {
+      padding: 1rem 0.5rem 1rem;
+    }
+
+    #site-header-mobile-view-root-1 > .site-header__mobile-menu-row {
+      min-height: 2.125rem;
+      border-bottom: 0;
+    }
+
+    #site-header-mobile-view-root-1 > .site-header__mobile-menu-row > .site-header__mobile-menu-item {
+      min-height: 2.125rem;
+      padding: 0;
+      font-size: 16px !important;
+      font-weight: 700 !important;
+      line-height: 1.25;
+    }
+
+    #site-header-mobile-view-root-1 > .site-header__mobile-menu-row:nth-child(6) {
+      margin-top: 1rem;
+      min-height: 3.5rem;
+      border-bottom: 1px solid #e1e1e1;
+    }
+
+    #site-header-mobile-view-root-1 > .site-header__mobile-menu-row:nth-child(7) {
+      min-height: 3.5rem;
+      border-bottom: 1px solid #e1e1e1;
+    }
+
+    #site-header-mobile-view-root-1 > .site-header__mobile-menu-row:nth-child(n + 6) > .site-header__mobile-menu-item {
+      min-height: 3.5rem;
+      font-size: 14px !important;
+      font-weight: 400 !important;
+    }
+
+    #site-header-mobile-view-root-1 > .site-header__mobile-menu-row:nth-child(n + 6) > .site-header__mobile-menu-next {
+      width: 32px;
+      margin-inline-end: 0;
+      justify-items: end;
+    }
+
+    .site-header__mobile-menu-collection-cards {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      margin-top: 2.25rem;
+    }
+
+    .site-header__mobile-menu-collection-card {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      min-width: 0;
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .site-header__mobile-menu-collection-card img {
+      display: block;
+      width: 100%;
+      aspect-ratio: 1.49;
+      border-radius: 0.8rem;
+      object-fit: cover;
+    }
+
+    .site-header__mobile-menu-collection-caption {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.75rem;
+    }
+
+    .site-header__mobile-menu-collection-title {
+      font-size: 16px !important;
+      font-weight: 700 !important;
+      line-height: 1.25;
+    }
+
+    .site-header__mobile-menu-collection-action {
+      font-size: 14px !important;
+      font-weight: 400 !important;
+      line-height: 1.25;
+    }
+
+    .site-header__mobile-menu-collection-action > span {
+      display: inline-block;
+      margin-inline-start: 0.45rem;
+    }
   }
 {% endstylesheet %}
 
