@@ -2010,6 +2010,12 @@
     border-bottom-left-radius: 1rem;
   }
 
+  @media (min-width: 991px) {
+    .site-header.site-header--scrolled .site-header__bar {
+      transition: padding-left 420ms cubic-bezier(0.22, 1, 0.36, 1), padding-right 420ms cubic-bezier(0.22, 1, 0.36, 1), background-color 350ms ease, border-color 350ms ease, box-shadow 350ms ease, color 350ms ease, border-bottom-left-radius 300ms cubic-bezier(0.22, 1, 0.36, 1), border-bottom-right-radius 300ms cubic-bezier(0.22, 1, 0.36, 1);
+    }
+  }
+
   .site-header__mega-menu-links--women,
   .site-header__mega-menu-links--men {
     grid-template-columns: repeat(3, 200px);
