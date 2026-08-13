@@ -127,17 +127,45 @@
     <a class="site-header__brand" href="{{ routes.root_url }}">{{ shop.name | escape }}</a>
 
     <div class="site-header__actions">
-      <span class="site-header__localization" aria-label="Currency: CAD $">
-        <svg class="site-header__localization-flag" viewBox="0 0 24 24" aria-hidden="true">
-          <rect x="2" y="6" width="20" height="12" rx="1" fill="#ef233c"></rect>
-          <rect x="8" y="6" width="8" height="12" fill="#ffffff"></rect>
-          <path d="m12 7.1.75 2.15 2.2-.4-1.35 1.65 1.55 1.25-2.2-.18.1 2.25-1.05-1.5-1.05 1.5.1-2.25-2.2.18 1.55-1.25-1.35-1.65 2.2.4z" fill="#ef233c"></path>
-        </svg>
-        <span>CAD&nbsp;$</span>
-        <svg class="site-header__localization-chevron" viewBox="0 0 24 24" aria-hidden="true">
-          <path d="m6 9 6 6 6-6"></path>
-        </svg>
-      </span>
+      <details class="site-header__dropdown site-header__dropdown--simple site-header__localization-dropdown" data-site-header-dropdown data-action="hover">
+        <summary class="site-header__localization site-header__dropdown-trigger" aria-controls="site-header-localization-{{ section.id }}" aria-haspopup="listbox" aria-label="Currency: CAD $">
+          <span class="site-header__localization-value">
+            <svg class="site-header__localization-flag" viewBox="0 0 24 24" aria-hidden="true">
+              <rect x="2" y="6" width="20" height="12" rx="1" fill="#ef233c"></rect>
+              <rect x="8" y="6" width="8" height="12" fill="#ffffff"></rect>
+              <path d="m12 7.1.75 2.15 2.2-.4-1.35 1.65 1.55 1.25-2.2-.18.1 2.25-1.05-1.5-1.05 1.5.1-2.25-2.2.18 1.55-1.25-1.35-1.65 2.2.4z" fill="#ef233c"></path>
+            </svg>
+            <span>CAD&nbsp;$</span>
+          </span>
+          <svg class="site-header__dropdown-chevron site-header__localization-chevron" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="m6 9 6 6 6-6"></path>
+          </svg>
+        </summary>
+
+        <div class="site-header__dropdown-panel site-header__dropdown-panel--simple site-header__localization-panel" id="site-header-localization-{{ section.id }}">
+          <div class="site-header__localization-search">
+            <label class="visually-hidden" for="site-header-localization-search-{{ section.id }}">Search country</label>
+            <input id="site-header-localization-search-{{ section.id }}" type="search" placeholder="Search" autocomplete="off" data-site-header-localization-search>
+            <svg class="site-header__localization-search-icon" viewBox="0 0 24 24" aria-hidden="true">
+              <circle cx="11" cy="11" r="6.5"></circle>
+              <path d="m16 16 4 4"></path>
+            </svg>
+          </div>
+
+          <div class="site-header__localization-list" role="listbox" aria-label="Countries and currencies">
+            {% assign site_header_countries = 'Australia|AUD|$|au,Belgium|EUR|€|be,Canada|CAD|$|ca,France|EUR|€|fr,Germany|EUR|€|de,Italy|EUR|€|it,Japan|JPY|¥|jp,Spain|EUR|€|es,United States|USD|$|us,Vietnam|VND|₫|vn' | split: ',' %}
+            {% assign site_header_countries = 'Australia|AUD|$|au,Belgium|EUR|&euro;|be,Canada|CAD|$|ca,France|EUR|&euro;|fr,Germany|EUR|&euro;|de,Italy|EUR|&euro;|it,Japan|JPY|&yen;|jp,Spain|EUR|&euro;|es,United States|USD|$|us,Vietnam|VND|&#8363;|vn' | split: ',' %}
+            {% for country in site_header_countries %}
+              {% assign country_parts = country | split: '|' %}
+              <button class="site-header__localization-option" type="button" role="option"{% if country_parts[0] == 'Canada' %} aria-current="true"{% endif %} data-site-header-localization-option data-country-search="{{ country | downcase | escape }}">
+                <span class="site-header__country-flag" style="--country-flag: url('https://cdn.shopify.com/static/images/flags/{{ country_parts[3] }}.svg?width=20');" aria-hidden="true"></span>
+                <span class="site-header__country-name">{{ country_parts[0] }}</span>
+                <span class="site-header__country-currency">{{ country_parts[1] }}&nbsp;{{ country_parts[2] }}</span>
+              </button>
+            {% endfor %}
+          </div>
+        </div>
+      </details>
       <span class="site-header__actions-divider" aria-hidden="true"></span>
 
       <a class="site-header__search" href="{{ routes.search_url }}">
@@ -1257,6 +1285,21 @@
     white-space: nowrap;
   }
 
+  .site-header__localization-dropdown {
+    position: relative;
+  }
+
+  .site-header__localization-dropdown > .site-header__dropdown-trigger > .site-header__localization-value {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+  }
+
+  .site-header__localization-dropdown > .site-header__dropdown-trigger > .site-header__localization-value::after {
+    display: none;
+  }
+
   .site-header__localization-flag {
     flex: 0 0 1rem;
     width: 1rem !important;
@@ -1271,6 +1314,157 @@
     width: 0.8rem !important;
     height: 0.8rem !important;
     stroke-width: 1.6 !important;
+  }
+
+  .site-header__localization-panel {
+    right: 0 !important;
+    left: auto !important;
+    z-index: 30;
+    display: flex;
+    flex-direction: column;
+    width: min(20.625rem, calc(100vw - 1rem)) !important;
+    height: min(27.6875rem, calc(100vh - 1rem));
+    padding: 0 !important;
+    overflow: hidden;
+    border: 1px solid rgb(11 11 11 / 0.06);
+    border-radius: 1rem;
+    background: #ffffff;
+    box-shadow: 0 0.75rem 2rem rgb(0 0 0 / 0.1);
+  }
+
+  .site-header__localization-search {
+    position: relative;
+    flex: 0 0 5.0625rem;
+    padding: 1rem 0.625rem;
+    border-bottom: 1px solid rgb(11 11 11 / 0.08);
+  }
+
+  .site-header__localization-search input {
+    width: 100%;
+    height: 3rem;
+    padding: 0 3.25rem 0 1rem;
+    border: 1px solid transparent;
+    border-radius: 999px;
+    outline: 0;
+    background: rgb(11 11 11 / 0.06);
+    color: #3a3a3a;
+    font: inherit;
+    font-size: 0.875rem;
+  }
+
+  .site-header__localization-search input:focus {
+    border-color: rgb(11 11 11 / 0.32);
+  }
+
+  .site-header__localization-search-icon {
+    position: absolute;
+    top: 1.85rem;
+    right: 1.45rem;
+    width: 1.35rem !important;
+    height: 1.35rem !important;
+    pointer-events: none;
+    stroke-width: 1.7 !important;
+  }
+
+  .site-header__localization-list {
+    display: flex;
+    flex: 1 1 auto;
+    min-height: 0;
+    flex-direction: column;
+    gap: 0;
+    margin: 0;
+    padding: 0.625rem;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-color: rgb(11 11 11 / 0.28) transparent;
+    scrollbar-width: thin;
+  }
+
+  .site-header__localization-list::-webkit-scrollbar {
+    width: 0.3rem;
+  }
+
+  .site-header__localization-list::-webkit-scrollbar-thumb {
+    border-radius: 999px;
+    background: rgb(11 11 11 / 0.28);
+  }
+
+  .site-header__localization-option {
+    display: grid;
+    grid-template-columns: 1rem minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 0.65rem;
+    width: 100%;
+    min-height: 2.65rem;
+    padding: 0.625rem 1rem;
+    border: 0;
+    border-radius: 999px;
+    background: transparent;
+    color: #3a3a3a;
+    cursor: pointer;
+    font: inherit;
+    font-size: 0.875rem;
+    font-weight: 400;
+    text-align: left;
+  }
+
+  .site-header__localization-option:hover,
+  .site-header__localization-option:focus-visible,
+  .site-header__localization-option[aria-current='true'] {
+    background: rgb(11 11 11 / 0.06);
+    outline: 0;
+  }
+
+  .site-header__country-flag {
+    width: 1rem;
+    height: 1rem;
+    border-radius: 50%;
+    background-image: var(--country-flag);
+    background-position: center;
+    background-size: cover;
+    box-shadow: inset 0 0 0 1px rgb(11 11 11 / 0.08);
+  }
+
+  .site-header__country-name,
+  .site-header__country-currency {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .site-header__country-currency {
+    justify-self: end;
+  }
+
+  .site-header__localization-panel.site-header__dropdown-panel--replay .site-header__localization-option,
+  .site-header__localization-panel.site-header__dropdown-panel--content-replay .site-header__localization-option {
+    animation: site-header-dropdown-simple-item-fade-left 260ms cubic-bezier(0.22, 1, 0.36, 1) 300ms both;
+  }
+
+  .site-header__localization-panel.site-header__dropdown-panel--replay .site-header__localization-option:nth-child(2),
+  .site-header__localization-panel.site-header__dropdown-panel--content-replay .site-header__localization-option:nth-child(2) {
+    animation-delay: 335ms;
+  }
+
+  .site-header__localization-panel.site-header__dropdown-panel--replay .site-header__localization-option:nth-child(3),
+  .site-header__localization-panel.site-header__dropdown-panel--content-replay .site-header__localization-option:nth-child(3) {
+    animation-delay: 370ms;
+  }
+
+  .site-header__localization-panel.site-header__dropdown-panel--replay .site-header__localization-option:nth-child(4),
+  .site-header__localization-panel.site-header__dropdown-panel--content-replay .site-header__localization-option:nth-child(4) {
+    animation-delay: 405ms;
+  }
+
+  .site-header__localization-panel.site-header__dropdown-panel--replay .site-header__localization-option:nth-child(5),
+  .site-header__localization-panel.site-header__dropdown-panel--content-replay .site-header__localization-option:nth-child(5) {
+    animation-delay: 440ms;
+  }
+
+  .site-header__localization-panel.site-header__dropdown-panel--replay .site-header__localization-option:nth-child(6),
+  .site-header__localization-panel.site-header__dropdown-panel--content-replay .site-header__localization-option:nth-child(6) {
+    animation-delay: 475ms;
   }
 
   .site-header__actions-divider {
@@ -2340,6 +2534,25 @@
         dropdown.addEventListener('pointerleave', () => {
           if (canHover && dropdown.open) scheduleDropdownClose();
         });
+      });
+
+      const localizationDropdown = header.querySelector('.site-header__localization-dropdown');
+      const localizationSearch = localizationDropdown?.querySelector('[data-site-header-localization-search]');
+      const localizationOptions = [...(localizationDropdown?.querySelectorAll('[data-site-header-localization-option]') ?? [])];
+      const resetLocalizationSearch = () => {
+        if (localizationSearch) localizationSearch.value = '';
+        localizationOptions.forEach((option) => {
+          option.hidden = false;
+        });
+      };
+      localizationSearch?.addEventListener('input', () => {
+        const query = localizationSearch.value.trim().toLowerCase();
+        localizationOptions.forEach((option) => {
+          option.hidden = query !== '' && !option.dataset.countrySearch.includes(query);
+        });
+      });
+      localizationDropdown?.addEventListener('toggle', () => {
+        if (localizationDropdown.open) resetLocalizationSearch();
       });
 
       header.querySelectorAll('[data-site-header-deal-carousel]').forEach((carousel) => {
