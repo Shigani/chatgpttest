@@ -3919,8 +3919,6 @@
         window.clearTimeout(mobileCurrencyCloseTimer);
 
         if (isOpen) {
-          if (!window.matchMedia('(max-width: 990px)').matches) return;
-
           closeDropdowns();
           mobileCurrencyOpen = true;
           mobileCurrencyDrawer.classList.remove('is-closing');
