@@ -3264,12 +3264,11 @@
       let searchDrawerOpen = false;
       let searchDrawerCloseTimer;
       let searchScrollLock;
-      const searchPointerCanFollow = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
       const isDesktopSearchDrawer = () => window.matchMedia('(min-width: 991px)').matches;
       const setSearchPointerCloseVisible = (isVisible) => {
         if (!searchDrawer) return;
 
-        searchDrawer.classList.toggle('is-pointer-close-visible', Boolean(isVisible && searchDrawerOpen && searchPointerCanFollow && isDesktopSearchDrawer()));
+        searchDrawer.classList.toggle('is-pointer-close-visible', Boolean(isVisible && searchDrawerOpen && isDesktopSearchDrawer()));
       };
       const resetSearchPointerClose = () => {
         setSearchPointerCloseVisible(false);
@@ -3277,7 +3276,7 @@
         searchPointerClose?.style.removeProperty('--site-header-search-cursor-y');
       };
       const updateSearchPointerClosePosition = (event) => {
-        if (!searchPointerClose || !searchDrawerOpen || !searchPointerCanFollow || !isDesktopSearchDrawer()) return;
+        if (!searchPointerClose || !searchDrawerOpen || !isDesktopSearchDrawer()) return;
 
         searchPointerClose.style.setProperty('--site-header-search-cursor-x', `${event.clientX}px`);
         searchPointerClose.style.setProperty('--site-header-search-cursor-y', `${event.clientY}px`);
@@ -3354,15 +3353,13 @@
       searchDrawer?.querySelectorAll('[data-site-header-search-close]').forEach((closeButton) => {
         closeButton.addEventListener('click', () => setSearchDrawerOpen(false));
       });
-      if (searchPointerCanFollow) {
-        searchDrawerBackdrop?.addEventListener('pointerenter', updateSearchPointerClosePosition);
-        searchDrawerBackdrop?.addEventListener('pointermove', updateSearchPointerClosePosition);
-        searchDrawerBackdrop?.addEventListener('pointerleave', () => setSearchPointerCloseVisible(false));
-        searchDrawerPanel?.addEventListener('pointerenter', () => setSearchPointerCloseVisible(false));
-        window.addEventListener('resize', () => {
-          if (!isDesktopSearchDrawer()) resetSearchPointerClose();
-        });
-      }
+      searchDrawerBackdrop?.addEventListener('pointerenter', updateSearchPointerClosePosition);
+      searchDrawerBackdrop?.addEventListener('pointermove', updateSearchPointerClosePosition);
+      searchDrawerBackdrop?.addEventListener('pointerleave', () => setSearchPointerCloseVisible(false));
+      searchDrawerPanel?.addEventListener('pointerenter', () => setSearchPointerCloseVisible(false));
+      window.addEventListener('resize', () => {
+        if (!isDesktopSearchDrawer()) resetSearchPointerClose();
+      });
       const canHover = window.matchMedia('(hover: hover)').matches;
       const dropdownCloseDelay = 500;
       const dropdownUnderlineDuration = 180;
