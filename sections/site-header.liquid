@@ -231,6 +231,42 @@
   </aside>
 </div>
 
+<div class="site-header__mobile-currency-drawer" id="site-header-mobile-currency-drawer" data-site-header-mobile-currency-drawer aria-hidden="true">
+  <div class="site-header__mobile-currency-backdrop" data-site-header-mobile-currency-close></div>
+  <aside class="site-header__mobile-currency-panel" role="dialog" aria-modal="true" aria-labelledby="site-header-mobile-currency-heading">
+    <div class="site-header__mobile-currency-grabber" aria-hidden="true"></div>
+    <div class="site-header__mobile-currency-header">
+      <h2 id="site-header-mobile-currency-heading">{{ 'header.country' | t }}</h2>
+      <button class="site-header__mobile-currency-close" type="button" data-site-header-mobile-currency-close aria-label="{{ 'header.close' | t }}">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M4 4 20 20M20 4 4 20"></path>
+        </svg>
+      </button>
+    </div>
+
+    <div class="site-header__mobile-currency-search">
+      <label class="visually-hidden" for="site-header-mobile-currency-search-{{ section.id }}">{{ 'header.search' | t }}</label>
+      <input id="site-header-mobile-currency-search-{{ section.id }}" type="search" placeholder="{{ 'header.search' | t }}" autocomplete="off" data-site-header-mobile-currency-search>
+      <svg class="site-header__mobile-currency-search-icon" viewBox="0 0 24 24" aria-hidden="true">
+        <circle cx="11" cy="11" r="6.5"></circle>
+        <path d="m16 16 4 4"></path>
+      </svg>
+    </div>
+
+    <div class="site-header__mobile-currency-list" role="listbox" aria-label="Countries and currencies">
+      {% assign site_header_mobile_countries = 'Australia|AUD|$|au,Belgium|EUR|&euro;|be,Canada|CAD|$|ca,France|EUR|&euro;|fr,Germany|EUR|&euro;|de,Italy|EUR|&euro;|it,Japan|JPY|&yen;|jp,Spain|EUR|&euro;|es,United States|USD|$|us,Vietnam|VND|&#8363;|vn' | split: ',' %}
+      {% for country in site_header_mobile_countries %}
+        {% assign country_parts = country | split: '|' %}
+        <button class="site-header__mobile-currency-option" type="button" role="option"{% if country_parts[0] == 'Canada' %} aria-current="true"{% endif %} data-site-header-mobile-currency-option data-country-search="{{ country | downcase | escape }}">
+          <span class="site-header__mobile-currency-flag" style="--country-flag: url('https://cdn.shopify.com/static/images/flags/{{ country_parts[3] }}.svg?width=20');" aria-hidden="true"></span>
+          <span class="site-header__mobile-currency-name">{{ country_parts[0] }}</span>
+          <span class="site-header__mobile-currency-value">{{ country_parts[1] }}&nbsp;{{ country_parts[2] }}</span>
+        </button>
+      {% endfor %}
+    </div>
+  </aside>
+</div>
+
 {% stylesheet %}
   html {
     scrollbar-gutter: stable;
@@ -261,6 +297,11 @@
     overflow: hidden;
   }
 
+  html.site-header-mobile-currency-open,
+  html.site-header-mobile-currency-open body {
+    overflow: hidden;
+  }
+
   #MainContent {
     transition: filter 220ms ease;
   }
@@ -271,6 +312,11 @@
   }
 
   body.site-header-search-open #MainContent {
+    filter: blur(0.35rem);
+    pointer-events: none;
+  }
+
+  body.site-header-mobile-currency-open #MainContent {
     filter: blur(0.35rem);
     pointer-events: none;
   }
@@ -421,6 +467,10 @@
   }
 
   .site-header__mobile-menu {
+    display: none;
+  }
+
+  .site-header__mobile-currency-drawer {
     display: none;
   }
 
@@ -2297,6 +2347,10 @@
     .site-header__search-drawer-panel,
     .site-header__search-drawer-close,
     .site-header__search-drawer-pointer-close,
+    .site-header__mobile-currency-drawer,
+    .site-header__mobile-currency-backdrop,
+    .site-header__mobile-currency-panel,
+    .site-header__mobile-currency-close,
     .site-header__mega-menu-list a::after {
       transition: none;
       animation: none;
@@ -2403,6 +2457,229 @@
 
     .site-header__search-drawer-inner {
       padding: 1.875rem 1rem 3rem;
+    }
+
+    .site-header__mobile-currency-drawer {
+      --site-header-mobile-currency-transition-duration: 500ms;
+      --site-header-mobile-currency-transition-easing: cubic-bezier(0.7, 0, 0.2, 1);
+      position: fixed;
+      inset: 0;
+      z-index: 50;
+      display: block;
+      padding: 0;
+      overflow: hidden;
+      background: transparent;
+      pointer-events: none;
+      visibility: hidden;
+      transition: visibility 0s linear var(--site-header-mobile-currency-transition-duration);
+    }
+
+    .site-header__mobile-currency-drawer.is-open,
+    .site-header__mobile-currency-drawer.is-closing {
+      visibility: visible;
+    }
+
+    .site-header__mobile-currency-drawer.is-open {
+      pointer-events: auto;
+      transition: visibility 0s;
+    }
+
+    .site-header__mobile-currency-backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgb(11 11 11 / 0.3);
+      backdrop-filter: blur(0.18rem);
+      opacity: 0;
+      transition: opacity var(--site-header-mobile-currency-transition-duration) var(--site-header-mobile-currency-transition-easing);
+    }
+
+    .site-header__mobile-currency-drawer.is-open .site-header__mobile-currency-backdrop {
+      opacity: 1;
+    }
+
+    .site-header__mobile-currency-panel {
+      position: absolute;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      height: min(40rem, calc(100svh - 8.5rem));
+      max-height: 95dvh;
+      overflow: hidden;
+      border-radius: 1rem 1rem 0 0;
+      background: #ffffff;
+      color: #0b0b0b;
+      box-shadow: 0 -1rem 3rem rgb(0 0 0 / 0.14);
+      transform: translate3d(0, 100%, 0);
+      will-change: transform;
+      transition: transform var(--site-header-mobile-currency-transition-duration) var(--site-header-mobile-currency-transition-easing);
+    }
+
+    .site-header__mobile-currency-drawer.is-open .site-header__mobile-currency-panel {
+      transform: translate3d(0, 0, 0);
+    }
+
+    .site-header__mobile-currency-grabber {
+      flex: 0 0 auto;
+      width: 2.25rem;
+      height: 0.25rem;
+      margin: 0.75rem auto 0.25rem;
+      border-radius: 999px;
+      background: #cfcfcf;
+    }
+
+    .site-header__mobile-currency-header {
+      display: flex;
+      flex: 0 0 auto;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      min-height: 3.25rem;
+      padding: 0.25rem 1rem 0.5rem;
+    }
+
+    .site-header__mobile-currency-header h2 {
+      margin: 0;
+      color: inherit;
+      font-size: 1rem;
+      font-weight: 700;
+      line-height: 1.25;
+    }
+
+    .site-header__mobile-currency-close {
+      display: grid;
+      flex: 0 0 2.5rem;
+      width: 2.5rem;
+      height: 2.5rem;
+      padding: 0;
+      border: 0;
+      border-radius: 50%;
+      background: transparent;
+      color: inherit;
+      cursor: pointer;
+      place-items: center;
+    }
+
+    .site-header__mobile-currency-close:hover {
+      background: #f1f2f2;
+    }
+
+    .site-header__mobile-currency-close svg {
+      width: 1.25rem;
+      height: 1.25rem;
+      fill: none;
+      stroke: currentColor;
+      stroke-linecap: round;
+      stroke-width: 1.5;
+    }
+
+    .site-header__mobile-currency-search {
+      position: relative;
+      flex: 0 0 auto;
+      padding: 1rem 0.5rem;
+      border-bottom: 1px solid #e1e1e1;
+    }
+
+    .site-header__mobile-currency-search input {
+      display: block;
+      width: 100%;
+      height: 2.75rem;
+      padding: 0 3rem 0 1rem;
+      border: 0;
+      border-radius: 999px;
+      outline: 0;
+      background: #f1f1f1;
+      color: #0b0b0b;
+      font: inherit;
+      font-size: 0.875rem;
+    }
+
+    .site-header__mobile-currency-search input:focus {
+      box-shadow: inset 0 0 0 1px rgb(11 11 11 / 0.24);
+    }
+
+    .site-header__mobile-currency-search-icon {
+      position: absolute;
+      top: 50%;
+      right: 1.25rem;
+      width: 1.25rem;
+      height: 1.25rem;
+      fill: none;
+      pointer-events: none;
+      stroke: currentColor;
+      stroke-linecap: round;
+      stroke-width: 1.5;
+      transform: translateY(-50%);
+    }
+
+    .site-header__mobile-currency-list {
+      flex: 1 1 auto;
+      min-height: 0;
+      padding: 0.5rem 0.5rem 1rem;
+      overflow-y: auto;
+      overscroll-behavior: contain;
+      scrollbar-color: #c3c5c6 transparent;
+      scrollbar-width: thin;
+    }
+
+    .site-header__mobile-currency-option {
+      display: grid;
+      grid-template-columns: 1rem minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 0.625rem;
+      width: 100%;
+      min-height: 2.5rem;
+      padding: 0.5rem 1rem;
+      border: 0;
+      border-radius: 0.75rem;
+      background: transparent;
+      color: #383838;
+      cursor: pointer;
+      font: inherit;
+      font-size: 0.875rem;
+      font-weight: 400;
+      line-height: 1.25;
+      text-align: left;
+    }
+
+    .site-header__mobile-currency-option:hover,
+    .site-header__mobile-currency-option:focus-visible,
+    .site-header__mobile-currency-option[aria-current='true'] {
+      outline: 0;
+      background: #f1f1f1;
+    }
+
+    .site-header__mobile-currency-flag {
+      display: block;
+      width: 1rem;
+      height: 1rem;
+      border-radius: 50%;
+      background: var(--country-flag) center / cover no-repeat;
+    }
+
+    .site-header__mobile-currency-name,
+    .site-header__mobile-currency-value {
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .site-header__mobile-currency-value {
+      color: #555555;
+      text-align: right;
+    }
+
+    .site-header__mobile-currency-list::-webkit-scrollbar {
+      width: 0.3rem;
+    }
+
+    .site-header__mobile-currency-list::-webkit-scrollbar-thumb {
+      border-radius: 999px;
+      background: #c3c5c6;
     }
 
     .site-header__mobile-menu {
@@ -3596,6 +3873,99 @@
         if (localizationDropdown.open) resetLocalizationSearch();
       });
 
+      const mobileCurrencyToggle = header.querySelector('[data-site-header-mobile-currency-toggle]');
+      const mobileCurrencyDrawer = document.querySelector('[data-site-header-mobile-currency-drawer]');
+      const mobileCurrencyPanel = mobileCurrencyDrawer?.querySelector('.site-header__mobile-currency-panel');
+      const mobileCurrencySearch = mobileCurrencyDrawer?.querySelector('[data-site-header-mobile-currency-search]');
+      const mobileCurrencyOptions = [...(mobileCurrencyDrawer?.querySelectorAll('[data-site-header-mobile-currency-option]') ?? [])];
+      const mobileCurrencyTransitionDuration = 500;
+      let mobileCurrencyOpen = false;
+      let mobileCurrencyCloseTimer;
+      let mobileCurrencyScrollLock;
+      const resetMobileCurrencySearch = () => {
+        if (mobileCurrencySearch) mobileCurrencySearch.value = '';
+        mobileCurrencyOptions.forEach((option) => {
+          option.hidden = false;
+        });
+      };
+      const updateMobileCurrencyScrollLock = (isActive) => {
+        if (isActive) {
+          if (mobileCurrencyScrollLock) return;
+
+          const scrollY = window.scrollY;
+
+          mobileCurrencyScrollLock = { scrollY };
+          document.documentElement.classList.add('site-header-mobile-currency-open');
+          document.body?.classList.add('site-header-mobile-currency-open');
+          window.scrollTo(0, scrollY);
+          return;
+        }
+
+        if (!mobileCurrencyScrollLock) {
+          document.documentElement.classList.remove('site-header-mobile-currency-open');
+          document.body?.classList.remove('site-header-mobile-currency-open');
+          return;
+        }
+
+        const { scrollY } = mobileCurrencyScrollLock;
+        document.documentElement.classList.remove('site-header-mobile-currency-open');
+        document.body?.classList.remove('site-header-mobile-currency-open');
+        window.scrollTo(0, scrollY);
+        mobileCurrencyScrollLock = null;
+      };
+      const setMobileCurrencyOpen = (isOpen) => {
+        if (!mobileCurrencyDrawer || !mobileCurrencyPanel || !mobileCurrencyToggle) return;
+
+        window.clearTimeout(mobileCurrencyCloseTimer);
+
+        if (isOpen) {
+          if (!window.matchMedia('(max-width: 990px)').matches) return;
+
+          closeDropdowns();
+          mobileCurrencyOpen = true;
+          mobileCurrencyDrawer.classList.remove('is-closing');
+          mobileCurrencyDrawer.classList.add('is-open');
+          mobileCurrencyDrawer.setAttribute('aria-hidden', 'false');
+          mobileCurrencyToggle.setAttribute('aria-expanded', 'true');
+          updateMobileCurrencyScrollLock(true);
+          resetMobileCurrencySearch();
+          window.requestAnimationFrame(() => {
+            if (mobileCurrencyOpen) mobileCurrencySearch?.focus();
+          });
+          return;
+        }
+
+        if (!mobileCurrencyOpen && !mobileCurrencyDrawer.classList.contains('is-closing')) return;
+
+        mobileCurrencyOpen = false;
+        mobileCurrencyDrawer.classList.remove('is-open');
+        mobileCurrencyDrawer.classList.add('is-closing');
+        mobileCurrencyDrawer.setAttribute('aria-hidden', 'true');
+        mobileCurrencyToggle.setAttribute('aria-expanded', 'false');
+        mobileCurrencyCloseTimer = window.setTimeout(() => {
+          mobileCurrencyDrawer.classList.remove('is-closing');
+          updateMobileCurrencyScrollLock(false);
+          mobileCurrencyToggle.focus();
+        }, window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : mobileCurrencyTransitionDuration + 20);
+      };
+      mobileCurrencyToggle?.addEventListener('click', (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        setMobileCurrencyOpen(!mobileCurrencyOpen);
+      });
+      mobileCurrencyDrawer?.querySelectorAll('[data-site-header-mobile-currency-close]').forEach((closeButton) => {
+        closeButton.addEventListener('click', () => setMobileCurrencyOpen(false));
+      });
+      mobileCurrencySearch?.addEventListener('input', () => {
+        const query = mobileCurrencySearch.value.trim().toLowerCase();
+        mobileCurrencyOptions.forEach((option) => {
+          option.hidden = query !== '' && !option.dataset.countrySearch.includes(query);
+        });
+      });
+      window.addEventListener('resize', () => {
+        if (!window.matchMedia('(max-width: 990px)').matches) setMobileCurrencyOpen(false);
+      });
+
       header.querySelectorAll('[data-site-header-deal-carousel]').forEach((carousel) => {
         const viewport = carousel.querySelector('[data-site-header-deals-viewport]');
         const track = carousel.querySelector('.site-header__mega-menu-deals-track');
@@ -3648,6 +4018,12 @@
 
       document.addEventListener('keydown', (event) => {
         if (event.key !== 'Escape') return;
+
+        if (mobileCurrencyOpen) {
+          event.preventDefault();
+          setMobileCurrencyOpen(false);
+          return;
+        }
 
         if (searchDrawerOpen) {
           event.preventDefault();
