@@ -162,7 +162,7 @@
       </details>
       <span class="site-header__actions-divider" aria-hidden="true"></span>
 
-      <a class="site-header__search" href="{{ routes.search_url }}">
+      <a class="site-header__search" href="{{ routes.search_url }}" data-site-header-search-toggle aria-controls="site-header-search-drawer" aria-expanded="false">
         <span>{{ 'header.search_prompt' | t }}</span>
         <svg viewBox="0 0 24 24" aria-hidden="true">
           <circle cx="11" cy="11" r="6.5"></circle>
@@ -188,6 +188,44 @@
   </div>
 </header>
 
+<div class="site-header__search-drawer" id="site-header-search-drawer" data-site-header-search-drawer aria-hidden="true">
+  <div class="site-header__search-drawer-backdrop" data-site-header-search-close></div>
+  <aside class="site-header__search-drawer-panel" role="dialog" aria-modal="true" aria-labelledby="site-header-search-heading">
+    <div class="site-header__search-drawer-header">
+      <h2 id="site-header-search-heading">{{ 'header.search' | t }}</h2>
+      <button class="site-header__search-drawer-close" type="button" data-site-header-search-close aria-label="{{ 'header.close' | t }}">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M4 4 20 20M20 4 4 20"></path>
+        </svg>
+      </button>
+    </div>
+
+    <div class="site-header__search-drawer-inner">
+      <form class="site-header__search-form" action="{{ routes.search_url }}" method="get" role="search">
+        <label class="visually-hidden" for="site-header-search-input">{{ 'header.search' | t }}</label>
+        <div class="site-header__search-input-wrap">
+          <input id="site-header-search-input" name="q" type="search" placeholder="{{ 'header.search' | t }}" autocomplete="off">
+          <button type="submit" aria-label="{{ 'header.search' | t }}">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <circle cx="11" cy="11" r="6.5"></circle>
+              <path d="m16 16 4 4"></path>
+            </svg>
+          </button>
+        </div>
+      </form>
+
+      <section class="site-header__popular-searches" aria-labelledby="site-header-popular-searches-heading">
+        <h3 id="site-header-popular-searches-heading">{{ 'header.popular_searches' | t }}</h3>
+        <div class="site-header__popular-search-list">
+          <a href="{{ routes.search_url }}?q={{ 'header.running_shoes' | t | url_encode }}">{{ 'header.running_shoes' | t }}</a>
+          <a href="{{ routes.search_url }}?q={{ 'header.trail_running_shoes' | t | url_encode }}">{{ 'header.trail_running_shoes' | t }}</a>
+          <a href="{{ routes.search_url }}?q={{ 'header.hiking_shoes' | t | url_encode }}">{{ 'header.hiking_shoes' | t }}</a>
+        </div>
+      </section>
+    </div>
+  </aside>
+</div>
+
 {% stylesheet %}
   .site-header {
     --site-header-top: clamp(0.75rem, 2.5vh, 1.5rem);
@@ -209,11 +247,21 @@
     overflow: hidden;
   }
 
+  html.site-header-search-open,
+  html.site-header-search-open body {
+    overflow: hidden;
+  }
+
   #MainContent {
     transition: filter 220ms ease;
   }
 
   body.site-header-dropdown-active #MainContent {
+    filter: blur(0.35rem);
+    pointer-events: none;
+  }
+
+  body.site-header-search-open #MainContent {
     filter: blur(0.35rem);
     pointer-events: none;
   }
@@ -365,6 +413,222 @@
 
   .site-header__mobile-menu {
     display: none;
+  }
+
+  .site-header__search-drawer {
+    --site-header-search-transition-duration: 650ms;
+    --site-header-search-transition-easing: cubic-bezier(0.22, 1, 0.36, 1);
+    position: fixed;
+    inset: 0;
+    z-index: 40;
+    display: block;
+    padding: 1rem;
+    overflow: hidden;
+    background: transparent;
+    pointer-events: none;
+    visibility: hidden;
+    transition: visibility 0s linear var(--site-header-search-transition-duration);
+  }
+
+  .site-header__search-drawer.is-open,
+  .site-header__search-drawer.is-closing {
+    visibility: visible;
+  }
+
+  .site-header__search-drawer.is-open {
+    pointer-events: auto;
+    transition: visibility 0s;
+  }
+
+  .site-header__search-drawer-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgb(50 50 50 / 50%);
+    backdrop-filter: blur(0.18rem);
+    opacity: 0;
+    transition: opacity 220ms ease;
+  }
+
+  .site-header__search-drawer.is-open .site-header__search-drawer-backdrop {
+    opacity: 1;
+  }
+
+  .site-header__search-drawer.is-closing .site-header__search-drawer-backdrop {
+    backdrop-filter: none;
+    opacity: 0;
+  }
+
+  .site-header__search-drawer-panel {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    width: min(34.375rem, 100%);
+    height: 100%;
+    margin-left: auto;
+    overflow: hidden;
+    border-radius: 1rem;
+    background: #ffffff;
+    color: #0b0b0b;
+    box-shadow: 0 1rem 3rem rgb(0 0 0 / 18%);
+    clip-path: inset(0 0 0 100% round 1rem 0 0 1rem);
+    will-change: clip-path;
+    transition: clip-path var(--site-header-search-transition-duration) var(--site-header-search-transition-easing), border-radius var(--site-header-search-transition-duration) var(--site-header-search-transition-easing);
+  }
+
+  .site-header__search-drawer.is-open .site-header__search-drawer-panel {
+    clip-path: inset(0 round 1rem);
+  }
+
+  .site-header__search-drawer-header {
+    display: flex;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1rem 1.875rem;
+    border-bottom: 1px solid #e1e1e1;
+  }
+
+  .site-header__search-drawer-header h2 {
+    margin: 0;
+    color: inherit;
+    font-size: 1.125rem;
+    font-weight: 700;
+    line-height: 1.25;
+  }
+
+  .site-header__search-drawer-close {
+    display: grid;
+    flex: 0 0 2.5rem;
+    width: 2.5rem;
+    height: 2.5rem;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+    place-items: center;
+  }
+
+  .site-header__search-drawer-close:hover {
+    background: #f1f2f2;
+  }
+
+  .site-header__search-drawer-close svg {
+    width: 1.25rem;
+    height: 1.25rem;
+    fill: none;
+    stroke: currentColor;
+    stroke-linecap: round;
+    stroke-width: 1.5;
+  }
+
+  .site-header__search-drawer-inner {
+    flex: 1 1 auto;
+    min-height: 0;
+    padding: 1.875rem;
+    overflow-y: auto;
+  }
+
+  .site-header__search-form,
+  .site-header__search-input-wrap {
+    width: 100%;
+  }
+
+  .site-header__search-input-wrap {
+    position: relative;
+  }
+
+  .site-header__search-input-wrap input {
+    display: block;
+    width: 100%;
+    height: 3rem;
+    padding: 0 3.25rem 0 1rem;
+    border: 1px solid #0b0b0b;
+    border-radius: 999px;
+    outline: none;
+    background: #f4f4f4;
+    color: #0b0b0b;
+    font: inherit;
+    font-size: 0.875rem;
+    line-height: 1;
+  }
+
+  .site-header__search-input-wrap input::placeholder {
+    color: #6d7072;
+    opacity: 1;
+  }
+
+  .site-header__search-input-wrap input:focus-visible {
+    box-shadow: 0 0 0 2px rgb(11 11 11 / 18%);
+  }
+
+  .site-header__search-input-wrap button {
+    position: absolute;
+    top: 50%;
+    right: 0.5rem;
+    display: grid;
+    width: 2.25rem;
+    height: 2.25rem;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+    place-items: center;
+    transform: translateY(-50%);
+  }
+
+  .site-header__search-input-wrap button:hover {
+    background: #e7e7e7;
+  }
+
+  .site-header__search-input-wrap button svg {
+    width: 1.375rem;
+    height: 1.375rem;
+    fill: none;
+    stroke: currentColor;
+    stroke-linecap: round;
+    stroke-width: 1.5;
+  }
+
+  .site-header__popular-searches {
+    margin-top: 2rem;
+  }
+
+  .site-header__popular-searches h3 {
+    margin: 0 0 1.25rem;
+    color: inherit;
+    font-size: 1.125rem;
+    font-weight: 700;
+    line-height: 1.25;
+  }
+
+  .site-header__popular-search-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.625rem;
+  }
+
+  .site-header__popular-search-list a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.125rem;
+    padding: 0.55rem 0.8rem;
+    border-radius: 999px;
+    background: #f2f2f2;
+    color: #172b4d;
+    font-size: 0.875rem;
+    line-height: 1;
+    text-decoration: none;
+  }
+
+  .site-header__popular-search-list a:hover,
+  .site-header__popular-search-list a:focus-visible {
+    background: #e7e7e7;
   }
 
   .site-header a {
@@ -1972,9 +2236,13 @@
       .site-header__mobile-menu-screen,
       .site-header__mobile-menu-view,
       .site-header__mobile-menu-brand,
-      .site-header__mobile-menu-header-back,
-      .site-header__mobile-menu-chevron,
-      .site-header__mega-menu-list a::after {
+    .site-header__mobile-menu-header-back,
+    .site-header__mobile-menu-chevron,
+    .site-header__search-drawer,
+    .site-header__search-drawer-backdrop,
+    .site-header__search-drawer-panel,
+    .site-header__search-drawer-close,
+    .site-header__mega-menu-list a::after {
       transition: none;
       animation: none;
     }
@@ -2055,6 +2323,29 @@
   }
 
   @media (max-width: 990px) {
+    .site-header__search-drawer {
+      padding: 0.5rem;
+    }
+
+    .site-header__search-drawer-panel {
+      width: 100%;
+      height: 100%;
+      border-radius: 1rem;
+      clip-path: inset(0 0 0 100% round 1rem 0 0 1rem);
+    }
+
+    .site-header__search-drawer.is-open .site-header__search-drawer-panel {
+      border-radius: 1rem;
+    }
+
+    .site-header__search-drawer-header {
+      padding-inline: 1rem;
+    }
+
+    .site-header__search-drawer-inner {
+      padding: 1.875rem 1rem 3rem;
+    }
+
     .site-header__mobile-menu {
       padding: 0.5rem;
     }
@@ -2917,6 +3208,93 @@
       window.addEventListener('resize', () => {
         if (!window.matchMedia('(max-width: 990px)').matches) setMobileMenuOpen(false);
       });
+
+      const searchDrawer = document.querySelector('[data-site-header-search-drawer]');
+      const searchDrawerPanel = searchDrawer?.querySelector('.site-header__search-drawer-panel');
+      const searchInput = searchDrawer?.querySelector('#site-header-search-input');
+      const searchToggles = [...header.querySelectorAll('[data-site-header-search-toggle]')];
+      const searchTransitionDuration = 650;
+      let searchDrawerOpen = false;
+      let searchDrawerCloseTimer;
+      let searchScrollLock;
+      const updateSearchScrollLock = (isActive) => {
+        if (isActive) {
+          if (searchScrollLock) return;
+
+          const body = document.body;
+          const scrollY = window.scrollY;
+          const scrollbarWidth = Math.max(window.innerWidth - document.documentElement.clientWidth, 0);
+          const originalPaddingRight = body?.style.paddingRight ?? '';
+          const currentPaddingRight = body ? parseFloat(window.getComputedStyle(body).paddingRight) || 0 : 0;
+
+          searchScrollLock = { originalPaddingRight, scrollY };
+
+          if (body && scrollbarWidth > 0) {
+            body.style.paddingRight = `${currentPaddingRight + scrollbarWidth}px`;
+          }
+
+          document.documentElement.classList.add('site-header-search-open');
+          document.body?.classList.add('site-header-search-open');
+          window.scrollTo(0, scrollY);
+          return;
+        }
+
+        if (!searchScrollLock) {
+          document.documentElement.classList.remove('site-header-search-open');
+          document.body?.classList.remove('site-header-search-open');
+          return;
+        }
+
+        const { originalPaddingRight, scrollY } = searchScrollLock;
+        if (document.body) document.body.style.paddingRight = originalPaddingRight;
+        document.documentElement.classList.remove('site-header-search-open');
+        document.body?.classList.remove('site-header-search-open');
+        window.scrollTo(0, scrollY);
+        searchScrollLock = null;
+      };
+      const setSearchDrawerOpen = (isOpen) => {
+        if (!searchDrawer || !searchDrawerPanel) return;
+
+        window.clearTimeout(searchDrawerCloseTimer);
+
+        if (isOpen) {
+          closeDropdowns();
+          if (mobileMenuOpen) setMobileMenuOpen(false);
+
+          searchDrawerOpen = true;
+          searchDrawer.classList.remove('is-closing');
+          searchDrawer.classList.add('is-open');
+          searchDrawer.setAttribute('aria-hidden', 'false');
+          searchToggles.forEach((toggle) => toggle.setAttribute('aria-expanded', 'true'));
+          updateSearchScrollLock(true);
+          window.requestAnimationFrame(() => {
+            if (searchDrawerOpen) searchInput?.focus();
+          });
+          return;
+        }
+
+        if (!searchDrawerOpen && !searchDrawer.classList.contains('is-closing')) return;
+
+        searchDrawerOpen = false;
+        searchDrawer.classList.remove('is-open');
+        searchDrawer.classList.add('is-closing');
+        searchDrawer.setAttribute('aria-hidden', 'true');
+        searchToggles.forEach((toggle) => toggle.setAttribute('aria-expanded', 'false'));
+        searchDrawerCloseTimer = window.setTimeout(() => {
+          searchDrawer.classList.remove('is-closing');
+          updateSearchScrollLock(false);
+          searchToggles[0]?.focus();
+        }, window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : searchTransitionDuration + 20);
+      };
+      searchToggles.forEach((toggle) => {
+        toggle.addEventListener('click', (event) => {
+          event.preventDefault();
+          setSearchDrawerOpen(!searchDrawerOpen);
+        });
+      });
+      searchDrawer?.querySelectorAll('[data-site-header-search-close]').forEach((closeButton) => {
+        closeButton.addEventListener('click', () => setSearchDrawerOpen(false));
+      });
       const canHover = window.matchMedia('(hover: hover)').matches;
       const dropdownCloseDelay = 500;
       const dropdownUnderlineDuration = 180;
@@ -3200,6 +3578,12 @@
 
       document.addEventListener('keydown', (event) => {
         if (event.key !== 'Escape') return;
+
+        if (searchDrawerOpen) {
+          event.preventDefault();
+          setSearchDrawerOpen(false);
+          return;
+        }
 
         if (mobileMenuOpen) {
           event.preventDefault();
