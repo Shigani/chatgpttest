@@ -2432,6 +2432,26 @@
   }
 
   @media (max-width: 990px) {
+    @keyframes site-header-mobile-currency-slide-up {
+      from {
+        transform: translate3d(0, 100%, 0);
+      }
+
+      to {
+        transform: translate3d(0, 0, 0);
+      }
+    }
+
+    @keyframes site-header-mobile-currency-slide-down {
+      from {
+        transform: translate3d(0, 0, 0);
+      }
+
+      to {
+        transform: translate3d(0, 100%, 0);
+      }
+    }
+
     .site-header__search-drawer-pointer-close {
       display: none;
     }
@@ -2515,11 +2535,16 @@
       box-shadow: 0 -1rem 3rem rgb(0 0 0 / 0.14);
       transform: translate3d(0, 100%, 0);
       will-change: transform;
-      transition: transform var(--site-header-mobile-currency-transition-duration) var(--site-header-mobile-currency-transition-easing);
+      transition: none;
     }
 
     .site-header__mobile-currency-drawer.is-open .site-header__mobile-currency-panel {
       transform: translate3d(0, 0, 0);
+      animation: site-header-mobile-currency-slide-up var(--site-header-mobile-currency-transition-duration) var(--site-header-mobile-currency-transition-easing) both;
+    }
+
+    .site-header__mobile-currency-drawer.is-closing .site-header__mobile-currency-panel {
+      animation: site-header-mobile-currency-slide-down var(--site-header-mobile-currency-transition-duration) var(--site-header-mobile-currency-transition-easing) both;
     }
 
     .site-header__mobile-currency-grabber {
@@ -3921,14 +3946,17 @@
         if (isOpen) {
           closeDropdowns();
           mobileCurrencyOpen = true;
-          mobileCurrencyDrawer.classList.remove('is-closing');
-          mobileCurrencyDrawer.classList.add('is-open');
+          mobileCurrencyDrawer.classList.remove('is-open', 'is-closing');
+          void mobileCurrencyPanel.offsetWidth;
           mobileCurrencyDrawer.setAttribute('aria-hidden', 'false');
           mobileCurrencyToggle.setAttribute('aria-expanded', 'true');
           updateMobileCurrencyScrollLock(true);
           resetMobileCurrencySearch();
           window.requestAnimationFrame(() => {
-            if (mobileCurrencyOpen) mobileCurrencySearch?.focus();
+            if (!mobileCurrencyOpen) return;
+
+            mobileCurrencyDrawer.classList.add('is-open');
+            mobileCurrencySearch?.focus();
           });
           return;
         }
