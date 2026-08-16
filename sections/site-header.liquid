@@ -2920,17 +2920,9 @@
         if (isActive) {
           if (dropdownScrollLock) return;
 
-          const body = document.body;
           const scrollY = window.scrollY;
-          const scrollbarWidth = Math.max(window.innerWidth - document.documentElement.clientWidth, 0);
-          const originalPaddingRight = body?.style.paddingRight ?? '';
-          const currentPaddingRight = body ? parseFloat(window.getComputedStyle(body).paddingRight) || 0 : 0;
 
-          dropdownScrollLock = { originalPaddingRight, scrollY };
-
-          if (body && scrollbarWidth > 0) {
-            body.style.paddingRight = `${currentPaddingRight + scrollbarWidth}px`;
-          }
+          dropdownScrollLock = { scrollY };
 
           window.scrollTo(0, scrollY);
           return;
@@ -2938,8 +2930,7 @@
 
         if (!dropdownScrollLock) return;
 
-        const { originalPaddingRight, scrollY } = dropdownScrollLock;
-        if (document.body) document.body.style.paddingRight = originalPaddingRight;
+        const { scrollY } = dropdownScrollLock;
         window.scrollTo(0, scrollY);
         dropdownScrollLock = null;
       };
@@ -3221,18 +3212,9 @@
         if (isActive) {
           if (searchScrollLock) return;
 
-          const body = document.body;
           const scrollY = window.scrollY;
-          const scrollbarWidth = Math.max(window.innerWidth - document.documentElement.clientWidth, 0);
-          const shouldCompensateScrollbar = !window.matchMedia('(max-width: 990px)').matches;
-          const originalPaddingRight = body?.style.paddingRight ?? '';
-          const currentPaddingRight = body ? parseFloat(window.getComputedStyle(body).paddingRight) || 0 : 0;
 
-          searchScrollLock = { originalPaddingRight, scrollY };
-
-          if (body && shouldCompensateScrollbar && scrollbarWidth > 0) {
-            body.style.paddingRight = `${currentPaddingRight + scrollbarWidth}px`;
-          }
+          searchScrollLock = { scrollY };
 
           document.documentElement.classList.add('site-header-search-open');
           document.body?.classList.add('site-header-search-open');
@@ -3246,8 +3228,7 @@
           return;
         }
 
-        const { originalPaddingRight, scrollY } = searchScrollLock;
-        if (document.body) document.body.style.paddingRight = originalPaddingRight;
+        const { scrollY } = searchScrollLock;
         document.documentElement.classList.remove('site-header-search-open');
         document.body?.classList.remove('site-header-search-open');
         window.scrollTo(0, scrollY);
