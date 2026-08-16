@@ -190,6 +190,11 @@
 
 <div class="site-header__search-drawer" id="site-header-search-drawer" data-site-header-search-drawer aria-hidden="true">
   <div class="site-header__search-drawer-backdrop" data-site-header-search-close></div>
+  <button class="site-header__search-drawer-pointer-close" type="button" data-site-header-search-pointer-close aria-hidden="true" tabindex="-1">
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M4 4 20 20M20 4 4 20"></path>
+    </svg>
+  </button>
   <aside class="site-header__search-drawer-panel" role="dialog" aria-modal="true" aria-labelledby="site-header-search-heading">
     <div class="site-header__search-drawer-header">
       <h2 id="site-header-search-heading">{{ 'header.search' | t }}</h2>
@@ -456,6 +461,50 @@
   .site-header__search-drawer.is-closing .site-header__search-drawer-backdrop {
     backdrop-filter: none;
     opacity: 0;
+  }
+
+  .site-header__search-drawer-pointer-close {
+    position: fixed;
+    top: var(--site-header-search-cursor-y, -100px);
+    left: var(--site-header-search-cursor-x, -100px);
+    z-index: 2;
+    display: flex;
+    width: 0;
+    height: 0;
+    padding: 0;
+    overflow: hidden;
+    border: 0;
+    border-radius: 50%;
+    background: #ffffff;
+    color: #0b0b0b;
+    pointer-events: none;
+    place-items: center;
+    transform: translate(-50%, -50%);
+    transition: width 200ms ease, height 200ms ease;
+  }
+
+  .site-header__search-drawer.is-pointer-close-visible .site-header__search-drawer-pointer-close {
+    width: clamp(5rem, 4.2vw, 6.4rem);
+    height: clamp(5rem, 4.2vw, 6.4rem);
+  }
+
+  .site-header__search-drawer-pointer-close svg {
+    width: 0;
+    height: 0;
+    fill: none;
+    stroke: currentColor;
+    stroke-linecap: round;
+    stroke-width: 1.5;
+    transition: width 200ms ease, height 200ms ease;
+  }
+
+  .site-header__search-drawer.is-pointer-close-visible .site-header__search-drawer-pointer-close svg {
+    width: clamp(2rem, 1.7vw, 2.2rem);
+    height: clamp(2rem, 1.7vw, 2.2rem);
+  }
+
+  .site-header__search-drawer.is-pointer-close-visible .site-header__search-drawer-backdrop {
+    cursor: none;
   }
 
   .site-header__search-drawer-panel {
@@ -2242,6 +2291,7 @@
     .site-header__search-drawer-backdrop,
     .site-header__search-drawer-panel,
     .site-header__search-drawer-close,
+    .site-header__search-drawer-pointer-close,
     .site-header__mega-menu-list a::after {
       transition: none;
       animation: none;
@@ -2323,6 +2373,10 @@
   }
 
   @media (max-width: 990px) {
+    .site-header__search-drawer-pointer-close {
+      display: none;
+    }
+
     .site-header__search-drawer {
       padding: 0.5rem;
     }
@@ -3202,12 +3256,33 @@
 
       const searchDrawer = document.querySelector('[data-site-header-search-drawer]');
       const searchDrawerPanel = searchDrawer?.querySelector('.site-header__search-drawer-panel');
+      const searchDrawerBackdrop = searchDrawer?.querySelector('.site-header__search-drawer-backdrop');
+      const searchPointerClose = searchDrawer?.querySelector('[data-site-header-search-pointer-close]');
       const searchInput = searchDrawer?.querySelector('#site-header-search-input');
       const searchToggles = [...header.querySelectorAll('[data-site-header-search-toggle]')];
       const searchTransitionDuration = 650;
       let searchDrawerOpen = false;
       let searchDrawerCloseTimer;
       let searchScrollLock;
+      const searchPointerCanFollow = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+      const isDesktopSearchDrawer = () => window.matchMedia('(min-width: 991px)').matches;
+      const setSearchPointerCloseVisible = (isVisible) => {
+        if (!searchDrawer) return;
+
+        searchDrawer.classList.toggle('is-pointer-close-visible', Boolean(isVisible && searchDrawerOpen && searchPointerCanFollow && isDesktopSearchDrawer()));
+      };
+      const resetSearchPointerClose = () => {
+        setSearchPointerCloseVisible(false);
+        searchPointerClose?.style.removeProperty('--site-header-search-cursor-x');
+        searchPointerClose?.style.removeProperty('--site-header-search-cursor-y');
+      };
+      const updateSearchPointerClosePosition = (event) => {
+        if (!searchPointerClose || !searchDrawerOpen || !searchPointerCanFollow || !isDesktopSearchDrawer()) return;
+
+        searchPointerClose.style.setProperty('--site-header-search-cursor-x', `${event.clientX}px`);
+        searchPointerClose.style.setProperty('--site-header-search-cursor-y', `${event.clientY}px`);
+        setSearchPointerCloseVisible(true);
+      };
       const updateSearchScrollLock = (isActive) => {
         if (isActive) {
           if (searchScrollLock) return;
@@ -3243,6 +3318,7 @@
           closeDropdowns();
           if (mobileMenuOpen) setMobileMenuOpen(false);
 
+          resetSearchPointerClose();
           searchDrawerOpen = true;
           searchDrawer.classList.remove('is-closing');
           searchDrawer.classList.add('is-open');
@@ -3257,6 +3333,7 @@
 
         if (!searchDrawerOpen && !searchDrawer.classList.contains('is-closing')) return;
 
+        resetSearchPointerClose();
         searchDrawerOpen = false;
         searchDrawer.classList.remove('is-open');
         searchDrawer.classList.add('is-closing');
@@ -3277,6 +3354,15 @@
       searchDrawer?.querySelectorAll('[data-site-header-search-close]').forEach((closeButton) => {
         closeButton.addEventListener('click', () => setSearchDrawerOpen(false));
       });
+      if (searchPointerCanFollow) {
+        searchDrawerBackdrop?.addEventListener('pointerenter', updateSearchPointerClosePosition);
+        searchDrawerBackdrop?.addEventListener('pointermove', updateSearchPointerClosePosition);
+        searchDrawerBackdrop?.addEventListener('pointerleave', () => setSearchPointerCloseVisible(false));
+        searchDrawerPanel?.addEventListener('pointerenter', () => setSearchPointerCloseVisible(false));
+        window.addEventListener('resize', () => {
+          if (!isDesktopSearchDrawer()) resetSearchPointerClose();
+        });
+      }
       const canHover = window.matchMedia('(hover: hover)').matches;
       const dropdownCloseDelay = 500;
       const dropdownUnderlineDuration = 180;
